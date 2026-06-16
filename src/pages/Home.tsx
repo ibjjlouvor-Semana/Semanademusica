@@ -390,7 +390,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("home")}>
-            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
             <div>
               <span className="font-display font-bold text-sm sm:text-base leading-tight block">
                 IV Semana de Música Cristã de Jijoca
@@ -427,7 +427,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="w-24 h-24 rounded-full border border-primary/20 bg-card/60 backdrop-blur-md flex items-center justify-center p-2.5 mx-auto mb-6 shadow-xl animate-fade-in animate-float">
-            <img src="/logo.png" alt="Semana de Música Logo" className="w-full h-full object-contain" />
+            <img src="/logo.png" alt="Semana de Música Logo" className="w-full h-full object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
           </div>
           <Badge variant="secondary" className="mb-6 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary border-primary/20 bg-primary/5 animate-fade-in">
             <Sparkles className="w-3.5 h-3.5 mr-1 inline" /> IV Edição • Jijoca de Jericoacoara
@@ -1391,7 +1391,7 @@ export default function Home() {
                       
                       <div className="text-center border-b pb-4 space-y-2">
                         <div className="flex items-center justify-center gap-4">
-                          <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" />
+                          <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
                           <div className="bg-white p-1 rounded border border-zinc-200 inline-block">
                             <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-10 object-contain" />
                           </div>
