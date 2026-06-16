@@ -390,16 +390,11 @@ export default function Home() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("home")}>
-            <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="Logo" className="w-9 h-9 object-contain" />
-              <div className="h-5 w-[1px] bg-border hidden sm:block"></div>
-              <div className="bg-white p-0.5 rounded border border-zinc-200 hidden sm:block">
-                <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-6 object-contain" />
-              </div>
-            </div>
+            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
             <div>
-              <span className="font-display font-bold text-base leading-none block">IV Semana de Música</span>
-              <span className="text-[10px] text-muted-foreground block mt-0.5">Realização: Igreja Bíblica</span>
+              <span className="font-display font-bold text-sm sm:text-base leading-tight block">
+                IV Semana de Música Cristã de Jijoca
+              </span>
             </div>
           </div>
 
