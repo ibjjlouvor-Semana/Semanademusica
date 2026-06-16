@@ -25,7 +25,8 @@ import {
   Youtube,
   Play,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1050,6 +1051,24 @@ export default function Home() {
                         </Select>
                       </div>
                     </div>
+
+                    {formData.hospedagem === "Sim" && (
+                      <div className="mt-4 p-4 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 text-xs text-muted-foreground space-y-2.5 animate-fade-in">
+                        <div className="flex items-start gap-2 text-blue-700 dark:text-blue-400 font-semibold">
+                          <Info className="w-4 h-4 mt-0.5 shrink-0" />
+                          <span>Informações importantes sobre a hospedagem:</span>
+                        </div>
+                        <p className="leading-relaxed text-zinc-600 dark:text-zinc-400">
+                          A hospedagem será organizada no prédio da igreja ou em residências de irmãos que gentilmente se disponibilizarem para acolher os participantes durante o evento. Pedimos que cada participante venha preparado para custear sua própria alimentação ao longo do dia.
+                        </p>
+                        <p className="leading-relaxed text-zinc-600 dark:text-zinc-400">
+                          Ressaltamos que, em alguns casos, o anfitrião (host) poderá oferecer as refeições ao hospedado como forma de cuidado e hospitalidade. No entanto, isso não é uma garantia, por isso é importante que todos se planejem para arcar com suas próprias refeições durante o período do evento.
+                        </p>
+                        <p className="leading-relaxed font-semibold text-blue-600 dark:text-blue-400">
+                          Agradecemos pela compreensão e colaboração.
+                        </p>
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-3 gap-2">
                       <div className="col-span-2 space-y-2">
