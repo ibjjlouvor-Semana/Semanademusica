@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-// Senha padrão local (pode ser customizada)
-const DEFAULT_PASSWORD = "adminJijoca2026";
+// Senha padrão local ou lida das variáveis de ambiente (.env)
+const DEFAULT_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "adminJijoca2026";
 
 export default function Login() {
   const [password, setPassword] = useState("");
@@ -86,9 +86,11 @@ export default function Login() {
           </form>
         </Card>
 
-        <p className="text-[10px] text-center text-muted-foreground">
-          Dica de desenvolvimento: Use a senha padrão <code>adminJijoca2026</code>
-        </p>
+        {import.meta.env.DEV && (
+          <p className="text-[10px] text-center text-muted-foreground">
+            Dica de desenvolvimento: Use a senha configurada no <code>.env</code>
+          </p>
+        )}
       </div>
     </div>
   );
