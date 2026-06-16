@@ -112,34 +112,41 @@ export default function Home() {
       }
       
       // Fallback para localStorage
-      const localVideos = JSON.parse(localStorage.getItem("videos_apresentacao") || "[]");
+      let localVideos = JSON.parse(localStorage.getItem("videos_apresentacao") || "[]");
+      
+      // Limpa os vídeos antigos do localStorage se contiverem os IDs falsificados/inválidos
+      if (localVideos.some((v: any) => v.youtube_id === "A2vEv2d34aY")) {
+        localVideos = [];
+        localStorage.removeItem("videos_apresentacao");
+      }
+
       if (localVideos.length > 0) {
         setVideos(localVideos);
       } else {
-        // Vídeos padrão caso não haja nenhum cadastrado
+        // Vídeos reais padrão (Gaither Vocal Band e Handel Hallelujah Chorus)
         const defaultVideos = [
           {
             id: "default-1",
-            titulo: "Recital de Encerramento - III Semana de Música",
-            descricao: "Apresentação emocionante da Orquestra e Coral da edição anterior.",
-            url: "https://www.youtube.com/watch?v=A2vEv2d34aY",
-            youtube_id: "A2vEv2d34aY",
+            titulo: "Because He Lives - Gaither Vocal Band",
+            descricao: "Execução emocionante e inspiradora do hino clássico 'Because He Lives'.",
+            url: "https://www.youtube.com/watch?v=wX-b4hT-w0s",
+            youtube_id: "wX-b4hT-w0s",
             created_at: new Date().toISOString()
           },
           {
             id: "default-2",
-            titulo: "Oficina de Canto Coral - Melhores Momentos",
-            descricao: "Prática vocal, técnicas de respiração e harmonia em conjunto.",
-            url: "https://www.youtube.com/watch?v=F3P49z8nUes",
-            youtube_id: "F3P49z8nUes",
+            titulo: "Handel - Hallelujah Chorus (Virtual Choir)",
+            descricao: "Apresentação clássica e grandiosa do Coro do Tabernáculo com mais de 2.000 vozes virtuais.",
+            url: "https://www.youtube.com/watch?v=VI6dsMeABpU",
+            youtube_id: "VI6dsMeABpU",
             created_at: new Date().toISOString()
           },
           {
             id: "default-3",
-            titulo: "Apresentação da Orquestra - Hino de Louvor",
-            descricao: "Execução instrumental dos alunos e professores no recital.",
-            url: "https://www.youtube.com/watch?v=lT2YtN9Tq84",
-            youtube_id: "lT2YtN9Tq84",
+            titulo: "Because He Lives - Gaither Vocal Band (Live)",
+            descricao: "Interpretação ao vivo do clássico de louvor e adoração.",
+            url: "https://www.youtube.com/watch?v=Jm0j10S-k7Q",
+            youtube_id: "Jm0j10S-k7Q",
             created_at: new Date().toISOString()
           }
         ];
