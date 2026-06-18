@@ -26,7 +26,8 @@ import {
   Play,
   ChevronLeft,
   ChevronRight,
-  Info
+  Info,
+  Heart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,6 +62,8 @@ export default function Home() {
     estado: "CE",
     igreja: "",
     hospedagem: "Não",
+    membro_familia: "Não",
+    membro_principal: "",
     opcao_escolhida: "Inscrição + Camisa Oficial", // Default
     tipo_participacao: "Coral",
     detalhe_participacao: "",
@@ -202,9 +205,15 @@ export default function Home() {
 
   // Obter valor total baseado na opção escolhida
   const getValorTotal = () => {
-    if (formData.opcao_escolhida === "Inscrição + Camisa Oficial") return 65;
-    if (formData.opcao_escolhida === "Apenas Camisa Oficial") return 45;
-    return 20;
+    let baseValue = 20;
+    if (formData.opcao_escolhida === "Inscrição + Camisa Oficial") baseValue = 65;
+    else if (formData.opcao_escolhida === "Apenas Camisa Oficial") baseValue = 45;
+    
+    // Promoção Família: R$ 10 de desconto se for o 2º ou mais membro
+    if (formData.membro_familia === "Sim" && baseValue > 10) {
+      baseValue -= 10;
+    }
+    return baseValue;
   };
 
   // Obter o passo visual atual e total baseado no caminho condicional
@@ -237,7 +246,8 @@ export default function Home() {
       if (!formData.telefone.trim()) return "WhatsApp / Telefone é obrigatório.";
       if (!formData.data_nascimento) return "Data de nascimento é obrigatória.";
       if (!formData.cidade.trim()) return "Cidade é obrigatória.";
-      if (!formData.estado.trim()) return "Estado é obrigatório.";
+      if (!formData.estado.trim()) return "Estado é obrigatória.";
+      if (formData.membro_familia === "Sim" && !formData.membro_principal.trim()) return "Informe o nome do membro principal da família.";
     }
     if (step === 2) {
       if (hasParticipation(formData.opcao_escolhida)) {
@@ -327,7 +337,9 @@ export default function Home() {
 
     const dataInscricao = {
       id: crypto.randomUUID().substring(0, 8).toUpperCase(),
-      nome: formData.nome,
+      nome: formData.membro_familia === "Sim" 
+        ? `${formData.nome} (Família de: ${formData.membro_principal})`
+        : formData.nome,
       email: formData.email,
       telefone: formData.telefone,
       data_nascimento: formData.data_nascimento,
@@ -422,74 +434,96 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="relative pt-12 pb-20 md:py-32 overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
-        <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px] pointer-events-none"></div>
+      <section id="home" className="relative pt-24 pb-16 md:pt-32 md:pb-32 overflow-hidden">
+        {/* Imagem de Fundo com Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img src="/hero-bg.png" alt="Background de Música" className="w-full h-full object-cover object-center opacity-100" />
+          <div className="absolute inset-0 bg-background/70 md:bg-gradient-to-r md:from-background/95 md:via-background/50 md:to-transparent"></div>
+        </div>
 
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="w-24 h-24 rounded-full border border-primary/20 bg-card/60 backdrop-blur-md flex items-center justify-center p-2.5 mx-auto mb-6 shadow-xl animate-fade-in animate-float">
-            <img src="/logo.png" alt="Semana de Música Logo" className="w-full h-full object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
-          </div>
-          <Badge variant="secondary" className="mb-6 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary border-primary/20 bg-primary/5 animate-fade-in">
-            <Sparkles className="w-3.5 h-3.5 mr-1 inline" /> IV Edição • Jijoca de Jericoacoara
-          </Badge>
-          
-          <h1 className="text-4xl md:text-7xl font-display font-bold max-w-4xl mx-auto leading-[1.15] mb-6 animate-fade-in">
-            Aprimore o seu talento para a <span className="gradient-text">Glória de Deus</span>
-          </h1>
-          
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-fade-in [animation-delay:100ms]">
-            Junte-se a dezenas de instrumentistas e vocalistas na IV Semana de Música Cristã. Escolha sua opção de participação ou adquira a blusa oficial.
-          </p>
+        <div className="absolute top-0 right-0 w-[60%] h-full bg-primary/20 blur-3xl pointer-events-none rounded-bl-[100px] z-0"></div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in [animation-delay:200ms]">
-            <Button size="lg" onClick={() => scrollToSection("inscricao")} className="w-full sm:w-auto h-12 px-8 flex items-center justify-center gap-2 text-base">
-              Iniciar Inscrição <ArrowRight className="w-5 h-5" />
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => scrollToSection("sobre")} className="w-full sm:w-auto h-12 px-8 text-base">
-              Saber mais
-            </Button>
-          </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center max-w-7xl mx-auto">
+            
+            {/* Left Column: Copy */}
+            <div className="text-left max-w-2xl">
+              <Badge variant="secondary" className="mb-6 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary border-primary/20 bg-primary/5 animate-fade-in">
+                <Sparkles className="w-3.5 h-3.5 mr-1.5 inline" /> IV Edição • 07 a 13 de Setembro
+              </Badge>
+              
+              <h1 className="text-5xl md:text-6xl lg:text-[4.5rem] font-display font-bold leading-[1.05] tracking-tighter mb-6 animate-fade-in">
+                Formando músicos.<br />Fortalecendo igrejas.<br /><span className="text-primary">Glorificando a Cristo.</span>
+              </h1>
+              
+              <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-[45ch] leading-relaxed animate-fade-in [animation-delay:100ms]">
+                Uma semana de aprendizado, comunhão e excelência musical para coralistas, instrumentistas e líderes cristãos de toda a região.
+              </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 max-w-4xl mx-auto animate-fade-in [animation-delay:300ms]">
-            <div className="glass-card p-4 rounded-2xl flex flex-col items-center">
-              <Calendar className="w-6 h-6 text-primary mb-2" />
-              <span className="font-semibold text-sm">07 a 13 de Setembro</span>
-              <span className="text-xs text-muted-foreground">Data do evento</span>
+              <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in [animation-delay:200ms]">
+                <Button size="lg" onClick={() => scrollToSection("inscricao")} className="w-full sm:w-auto h-12 px-8 flex items-center justify-center gap-2 text-base active:scale-[0.98] transition-transform">
+                  Quero Participar <ArrowRight className="w-5 h-5" />
+                </Button>
+                <Button size="lg" variant="outline" onClick={() => scrollToSection("cronograma")} className="w-full sm:w-auto h-12 px-8 text-base active:scale-[0.98] transition-transform">
+                  Ver Programação
+                </Button>
+              </div>
             </div>
-            <div className="glass-card p-4 rounded-2xl flex flex-col items-center">
-              <MapPin className="w-6 h-6 text-primary mb-2" />
-              <span className="font-semibold text-sm">Jijoca de Jericoacoara</span>
-              <span className="text-xs text-muted-foreground">Local das aulas</span>
+
+            {/* Right Column: Visual / Bento Grid */}
+            <div className="relative animate-fade-in [animation-delay:300ms] mx-auto lg:ml-auto lg:mr-0 w-full max-w-md">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent rounded-3xl -rotate-3 scale-105"></div>
+              <div className="bg-card border border-border/50 rounded-3xl p-8 relative shadow-2xl backdrop-blur-sm">
+                <div className="w-20 h-20 bg-primary/5 rounded-2xl flex items-center justify-center mb-8 border border-primary/10">
+                  <img src="/logo.png" alt="Semana de Música" className="w-12 h-12 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <Users className="w-5 h-5 text-primary mb-2" />
+                    <span className="block font-bold text-base mb-0.5">Coral e Orquestra</span>
+                    <span className="text-sm text-muted-foreground">Turmas abertas</span>
+                  </div>
+                  <div>
+                    <Music className="w-5 h-5 text-primary mb-2" />
+                    <span className="block font-bold text-base mb-0.5">Oficinas Práticas</span>
+                    <span className="text-sm text-muted-foreground">Aprenda e aperfeiçoe</span>
+                  </div>
+                  <div>
+                    <Award className="w-5 h-5 text-primary mb-2" />
+                    <span className="block font-bold text-base mb-0.5">Certificado 20h</span>
+                    <span className="text-sm text-muted-foreground">Para participantes</span>
+                  </div>
+                  <div>
+                    <Heart className="w-5 h-5 text-primary mb-2" />
+                    <span className="block font-bold text-base mb-0.5">Comunhão Cristã</span>
+                    <span className="text-sm text-muted-foreground">Fé e propósito</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="glass-card p-4 rounded-2xl flex flex-col items-center">
-              <Users className="w-6 h-6 text-primary mb-2" />
-              <span className="font-semibold text-sm">Coral & Orquestra</span>
-              <span className="text-xs text-muted-foreground">Inscrições abertas</span>
-            </div>
-            <div className="glass-card p-4 rounded-2xl flex flex-col items-center">
-              <Award className="w-6 h-6 text-primary mb-2" />
-              <span className="font-semibold text-sm">Certificado Digital</span>
-              <span className="text-xs text-muted-foreground">Incluso na participação</span>
-            </div>
+
           </div>
         </div>
       </section>
 
       {/* Sobre o Evento */}
-      <section id="sobre" className="py-20 border-t bg-secondary/30">
-        <div className="container mx-auto px-4 max-w-5xl">
+      <section id="sobre" className="py-24 border-t relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src="/sobre-bg.jpg" alt="Coral da Semana de Música" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-background/95 md:bg-background/90 backdrop-blur-sm"></div>
+        </div>
+        <div className="container mx-auto px-4 max-w-5xl relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">Sobre o Evento</span>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 leading-tight">
-                Um encontro focado no crescimento musical e espiritual
+              <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 leading-[1.1] tracking-tighter">
+                Uma tradição de adoração e aperfeiçoamento musical.
               </h2>
-              <p className="text-muted-foreground mb-4">
-                A Semana de Música Cristã de Jijoca nasceu com o propósito de capacitar músicos locais, regentes e ministros de louvor das igrejas da região.
+              <p className="text-muted-foreground mb-4 leading-relaxed">
+                Realizada anualmente pela Igreja Bíblica de Jijoca, a Semana de Música Cristã é um espaço dedicado à celebração e ao crescimento técnico da nossa congregação. Nosso foco é capacitar músicos e coralistas através de um repertório focado em hinos tradicionais, arranjos vocais exclusivos e peças instrumentais.
               </p>
-              <p className="text-muted-foreground mb-6">
-                Em nossa quarta edição, trazemos professores experientes para oferecer capacitação intensiva. As inscrições são validadas individualmente após confirmação do PIX da taxa correspondente.
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Durante esta edição, uniremos a teoria à prática, abordando temas teológicos essenciais da adoração comunitária. O encontro culminará em um grande concerto de encerramento, envolvendo nossa orquestra de instrumentos e o coral de vozes locais.
               </p>
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3">
@@ -523,9 +557,25 @@ export default function Home() {
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
                     <span className="font-semibold text-sm text-primary">R$ 45,00</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center pb-3 border-b border-border/50">
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Combo (Inscrição + Camisa)</span>
                     <span className="font-semibold text-sm text-primary">R$ 65,00</span>
+                  </div>
+                  <div className="bg-primary/5 rounded-lg p-3.5 border border-primary/20 mt-4">
+                    <h4 className="text-sm font-bold text-primary mb-1.5 flex items-center gap-2">
+                      <Users className="w-4 h-4" /> Promoção em Grupo
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                      Organize a caravana da sua igreja! A cada 10 inscrições, a <strong>11ª inscrição é totalmente grátis</strong>.
+                    </p>
+                    <a 
+                      href="https://wa.me/5588997808104" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold bg-background hover:bg-secondary px-2.5 py-1.5 rounded-md border border-border transition-colors text-foreground"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-primary" /> Entrar em contato: (88) 99780-8104
+                    </a>
                   </div>
                 </div>
               </div>
@@ -537,172 +587,174 @@ export default function Home() {
       {/* Cronograma / Programação */}
       <section id="cronograma" className="py-20 border-t bg-secondary/10">
         <div className="container mx-auto px-4 max-w-6xl text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">Cronograma</span>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Como será a Semana de Música?</h2>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-12">
+          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Cronograma da Semana</h2>
+          <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-12 leading-relaxed">
             Confira o cronograma completo das atividades da IV Semana de Música Cristã (07 a 13 de Setembro de 2026).
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto text-left">
             {/* Segunda-feira (07/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold">Segunda-feira</CardTitle>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 font-mono text-[10px]">07/Set</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">07/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-2.5">
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-500/20">
-                  <span className="font-bold font-mono">18:00</span>
-                  <span className="font-semibold">Credenciamento</span>
+              <CardContent className="pt-2 pb-4 space-y-0">
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Credenciamento</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="font-bold font-mono">18:15</span>
-                  <span className="font-semibold">Culto</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:15</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">
-                  <span className="font-bold font-mono">19:15</span>
-                  <span className="font-semibold">Lanche</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:15</span>
+                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-                  <span className="font-bold font-mono">19:30</span>
-                  <span className="font-semibold">Ensaio</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:30</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                  <span className="font-bold font-mono">22:00</span>
-                  <span className="font-semibold">Encerramento</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Terça-feira (08/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold">Terça-feira</CardTitle>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 font-mono text-[10px]">08/Set</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">08/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-2.5">
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-500/20">
-                  <span className="font-bold font-mono">18:00</span>
-                  <span className="font-semibold">Oficinas / Prática</span>
+              <CardContent className="pt-2 pb-4 space-y-0">
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Oficinas / Prática</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">
-                  <span className="font-bold font-mono">19:00</span>
-                  <span className="font-semibold">Lanche</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
+                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-                  <span className="font-bold font-mono">19:15</span>
-                  <span className="font-semibold">Ensaio</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                  <span className="font-bold font-mono">22:00</span>
-                  <span className="font-semibold">Encerramento</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Quarta-feira (09/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold">Quarta-feira</CardTitle>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 font-mono text-[10px]">09/Set</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">09/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-2.5">
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-500/20">
-                  <span className="font-bold font-mono">18:00</span>
-                  <span className="font-semibold">Oficinas / Prática</span>
+              <CardContent className="pt-2 pb-4 space-y-0">
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Oficinas / Prática</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">
-                  <span className="font-bold font-mono">19:00</span>
-                  <span className="font-semibold">Lanche</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
+                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-                  <span className="font-bold font-mono">19:15</span>
-                  <span className="font-semibold">Ensaio</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                  <span className="font-bold font-mono">22:00</span>
-                  <span className="font-semibold">Encerramento</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Quinta-feira (10/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold">Quinta-feira</CardTitle>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 font-mono text-[10px]">10/Set</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">10/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-2.5">
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="font-bold font-mono">18:00</span>
-                  <span className="font-semibold">Culto</span>
+              <CardContent className="pt-2 pb-4 space-y-0">
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">
-                  <span className="font-bold font-mono">19:00</span>
-                  <span className="font-semibold">Lanche</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
+                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-                  <span className="font-bold font-mono">19:15</span>
-                  <span className="font-semibold">Ensaio Geral</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio Geral</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                  <span className="font-bold font-mono">22:00</span>
-                  <span className="font-semibold">Encerramento</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Sexta-feira (11/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold">Sexta-feira</CardTitle>
-                  <Badge className="bg-primary/20 text-primary border-primary/20 font-mono text-[10px]">11/Set</Badge>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">11/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-2.5">
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="font-bold font-mono">18:00</span>
-                  <span className="font-semibold">Culto</span>
+              <CardContent className="pt-2 pb-4 space-y-0">
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-500/20">
-                  <span className="font-bold font-mono">19:00</span>
-                  <span className="font-semibold">Lanche</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
+                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-                  <span className="font-bold font-mono">19:15</span>
-                  <span className="font-semibold">Ensaio Geral</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio Geral</span>
                 </div>
-                <div className="flex items-center justify-between text-xs p-2 rounded-lg bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20">
-                  <span className="font-bold font-mono">22:00</span>
-                  <span className="font-semibold">Encerramento</span>
+                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
+                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Sábado (12/Set) */}
-            <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-md">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/40">
+            <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-md bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Sábado</CardTitle>
-                  <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/20 font-mono text-[10px]">12/Set</Badge>
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-primary" />
+                    Sábado
+                  </CardTitle>
+                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">12/Set</Badge>
                 </div>
               </CardHeader>
-              <CardContent className="pt-4 space-y-3">
-                <div className="flex items-center justify-between text-xs p-3.5 rounded-lg bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
-                  <span className="font-bold font-mono text-sm">17:30</span>
-                  <span className="font-bold text-sm">Concerto de Encerramento</span>
+              <CardContent className="pt-4 pb-4 space-y-4">
+                <div className="flex items-center gap-4 py-1 group">
+                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">17:30</span>
+                  <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">Concerto de Encerramento</span>
                 </div>
-                <p className="text-xs text-muted-foreground p-3 border border-dashed rounded-lg bg-secondary/10">
-                  Apresentação oficial de encerramento de todas as oficinas, orquestra e coral para a comunidade de Jijoca.
+                <p className="text-xs text-muted-foreground p-3 border border-border/50 rounded-lg bg-secondary/30 leading-relaxed">
+                  Apresentação oficial de encerramento de todas as oficinas, orquestra e coral para a comunidade de Jijoca. Traga sua família!
                 </p>
               </CardContent>
             </Card>
@@ -711,18 +763,21 @@ export default function Home() {
       </section>
 
       {/* Oficinas */}
-      <section id="oficinas" className="py-20 border-t bg-secondary/20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section id="oficinas" className="py-24 border-t relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src="/oficinas-bg.jpg" alt="Regente e Oficinas" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-background/95 md:bg-background/90 backdrop-blur-[2px]"></div>
+        </div>
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
           <div className="text-center max-w-xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">Nossos Focos</span>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Escolha a sua Área de Atuação</h2>
-            <p className="text-muted-foreground text-sm">
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Escolha a sua Área de Atuação</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Você pode participar ativamente na grande orquestra ou no coral de vozes que se apresentará no recital final.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            <Card className="hover:scale-[1.02] hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <Card className="hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">
@@ -747,13 +802,13 @@ export default function Home() {
                   scrollToSection("inscricao");
                   setStep(1);
                   toast.success("Opção 'Inscrição + Camisa' e foco 'Coral' selecionados!");
-                }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1">
+                }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1 active:scale-[0.98] transition-transform">
                   Escolher Coral <ArrowRight className="w-4 h-4" />
                 </Button>
               </CardFooter>
             </Card>
 
-            <Card className="hover:scale-[1.02] hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+            <Card className="hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">
@@ -778,13 +833,72 @@ export default function Home() {
                   scrollToSection("inscricao");
                   setStep(1);
                   toast.success("Opção 'Inscrição + Camisa' e foco 'Orquestra' selecionados!");
-                }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1">
+                }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1 active:scale-[0.98] transition-transform">
                   Escolher Orquestra <ArrowRight className="w-4 h-4" />
                 </Button>
               </CardFooter>
             </Card>
           </div>
         </div>
+      </section>
+
+      {/* Galeria de Fotos (Cinematic Marquee) */}
+      <section id="galeria" className="py-24 border-t bg-background relative overflow-hidden flex flex-col justify-center">
+        {/* Glow de fundo para profundidade */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 max-w-6xl relative z-10 mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="max-w-xl">
+              <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Nossos Registros</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                A beleza e a intensidade da adoração comunitária registradas em nossas edições passadas.
+              </p>
+            </div>
+            <Badge variant="outline" className="hidden md:inline-flex rounded-full px-4 py-1.5 border-primary/20 text-primary">
+              <Sparkles className="w-3.5 h-3.5 mr-2" /> Galeria Oficial
+            </Badge>
+          </div>
+        </div>
+
+        {/* Linha 1: Deslizando para a Esquerda (Fotos 1 a 5, duplicadas para loop infinito) */}
+        <div className="relative flex overflow-hidden group/marquee mb-6 mask-image-linear-horizontal w-full">
+          <div className="flex animate-marquee gap-6 whitespace-nowrap w-max px-3 group-hover/marquee:[animation-play-state:paused]">
+            {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map((num, i) => (
+              <div key={i} className="w-[280px] h-[350px] md:w-[400px] md:h-[450px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-border/50 group relative bg-secondary/20">
+                <img 
+                  src={`/galeria/${num}.jpg`} 
+                  alt={`Momento ${num}`} 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                  onError={(e) => e.currentTarget.src = `https://placehold.co/400x450/1f2937/ffffff?text=Sua+Foto+${num}.jpg`}
+                />
+                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[1px] flex items-center justify-center">
+                   <Heart className="w-8 h-8 text-primary shadow-sm transform scale-50 group-hover:scale-100 transition-transform duration-300" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Linha 2: Deslizando para a Direita (Fotos 6 a 10, duplicadas para loop infinito) */}
+        <div className="relative flex overflow-hidden group/marquee w-full">
+          <div className="flex animate-marquee-reverse gap-6 whitespace-nowrap w-max px-3 group-hover/marquee:[animation-play-state:paused] -ml-[150px]">
+            {[6, 7, 8, 9, 10, 6, 7, 8, 9, 10].map((num, i) => (
+              <div key={i} className="w-[280px] h-[350px] md:w-[400px] md:h-[450px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-border/50 group relative bg-secondary/20">
+                <img 
+                  src={`/galeria/${num}.jpg`} 
+                  alt={`Momento ${num}`} 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                  onError={(e) => e.currentTarget.src = `https://placehold.co/400x450/1f2937/ffffff?text=Sua+Foto+${num}.jpg`}
+                />
+                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[1px] flex items-center justify-center">
+                   <Heart className="w-8 h-8 text-primary shadow-sm transform scale-50 group-hover:scale-100 transition-transform duration-300" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </section>
 
       {/* Galeria de Vídeos / Edições Anteriores */}
@@ -1050,6 +1164,43 @@ export default function Home() {
                           </SelectContent>
                         </Select>
                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="membro_familia">Faz parte de uma família já inscrita?</Label>
+                        <Select
+                          value={formData.membro_familia}
+                          onValueChange={(val) => handleSelectChange("membro_familia", val)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione..." />
+                          </SelectTrigger>
+                          <SelectContent className="bg-popover border text-foreground">
+                            <SelectItem value="Não" className="hover:bg-accent focus:bg-accent">Não (Inscrição Única / Principal)</SelectItem>
+                            <SelectItem value="Sim" className="hover:bg-accent focus:bg-accent">Sim, sou o 2º (ou mais) membro</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {formData.membro_familia === "Sim" ? (
+                        <div className="space-y-2 animate-fade-in">
+                          <Label htmlFor="membro_principal">Nome do Titular da Família <span className="text-red-500">*</span></Label>
+                          <Input 
+                            id="membro_principal" 
+                            name="membro_principal" 
+                            placeholder="Quem pagará o valor integral?" 
+                            value={formData.membro_principal} 
+                            onChange={handleInputChange} 
+                            className="border-primary/50 focus-visible:ring-primary"
+                          />
+                          <p className="text-[10px] text-primary font-medium mt-1">
+                            Você ganhará R$ 10 de desconto automático!
+                          </p>
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
                     </div>
 
                     {formData.hospedagem === "Sim" && (
