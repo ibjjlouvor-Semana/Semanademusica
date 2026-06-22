@@ -457,7 +457,7 @@ export default function Home() {
             {/* Badge */}
             <div className="mb-4 md:mb-5 lg:mb-6 animate-fade-in">
               <span className="inline-flex items-center px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[10px] lg:text-[11px] font-semibold tracking-widest text-[#6B705C] bg-[#F5F3EE] shadow-sm border border-[#6B705C]/10">
-                <Sparkles className="hidden md:inline-block w-3 lg:w-3.5 h-3 lg:h-3.5 mr-2" /> IV EDIÇÃO • 07 A 13 DE SETEMBRO
+                IV EDIÇÃO • 07 A 13 DE SETEMBRO
               </span>
             </div>
             
