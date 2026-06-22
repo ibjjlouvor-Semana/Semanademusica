@@ -562,24 +562,79 @@ export default function Home() {
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
                     <span className="font-semibold text-sm text-primary">R$ 45,00</span>
                   </div>
-                  <div className="bg-primary/5 rounded-lg p-3.5 border border-primary/20 mt-4">
-                    <h4 className="text-sm font-bold text-primary mb-1.5 flex items-center gap-2">
-                      <Users className="w-4 h-4" /> Promoção em Grupo
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-2">
-                      Organize a caravana da sua igreja! A cada 10 inscrições, a <strong>11ª inscrição é totalmente grátis</strong>.
-                    </p>
-                    <a 
-                      href="https://wa.me/5588997808104" 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold bg-background hover:bg-secondary px-2.5 py-1.5 rounded-md border border-border transition-colors text-foreground"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-primary" /> Entrar em contato: (88) 99780-8104
-                    </a>
-                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Seção Exclusiva de Promoções */}
+          <div className="mt-20">
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">Vantagens</span>
+              <h2 className="text-3xl font-display font-bold">Promoções Especiais</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              
+              {/* Card Promoção Família */}
+              <div className="glass-card p-6 rounded-3xl border-l-4 border-l-primary relative overflow-hidden shadow-lg hover:shadow-xl transition-all group">
+                <div className="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                  R$ 10 de Desconto
+                </div>
+                <h3 className="font-display font-bold text-xl mb-3 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-primary" /> Promoção Família
+                </h3>
+                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+                  Traga quem você ama para adorar a Deus junto com você! O segundo membro da família (e os seguintes) ganha <strong>R$ 10,00 de desconto</strong> na inscrição.
+                </p>
+                
+                <div className="bg-white/40 dark:bg-black/10 rounded-xl p-4 border border-border/50">
+                  <h4 className="text-xs font-bold uppercase text-primary mb-3">Como participar:</h4>
+                  <ol className="space-y-3 text-xs text-muted-foreground relative border-l-2 border-primary/20 ml-2 pl-4">
+                    <li className="relative">
+                      <span className="absolute -left-[23px] top-0 bg-background border-2 border-primary/50 text-primary w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold">1</span>
+                      O 1º membro da família faz a inscrição <strong className="text-foreground">normalmente</strong>.
+                    </li>
+                    <li className="relative">
+                      <span className="absolute -left-[23px] top-0 bg-background border-2 border-primary/50 text-primary w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold">2</span>
+                      Os demais membros acessam o formulário e marcam <strong className="text-foreground">"Sim"</strong> para Membro de Família.
+                    </li>
+                    <li className="relative">
+                      <span className="absolute -left-[23px] top-0 bg-background border-2 border-primary/50 text-primary w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold">3</span>
+                      No formulário, informe o nome do 1º membro (o Membro Principal). O desconto é <strong className="text-foreground">automático</strong>!
+                    </li>
+                  </ol>
+                </div>
+              </div>
+
+              {/* Card Caravana */}
+              <div className="glass-card p-6 rounded-3xl border-l-4 border-l-accent relative overflow-hidden shadow-lg hover:shadow-xl transition-all group">
+                <div className="absolute top-0 right-0 bg-accent/10 text-accent text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                  Inscrição Grátis
+                </div>
+                <h3 className="font-display font-bold text-xl mb-3 flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-accent" /> Caravana da Igreja
+                </h3>
+                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+                  Organize um grupo na sua igreja local e venham juntos aprender e crescer musicalmente! A cada 10 inscrições fechadas em grupo, a <strong>11ª inscrição é totalmente por nossa conta</strong>.
+                </p>
+                
+                <div className="bg-white/40 dark:bg-black/10 rounded-xl p-4 border border-border/50">
+                  <h4 className="text-xs font-bold uppercase text-accent mb-3">Como organizar:</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+                    Reúna o pessoal, faça a lista dos membros e entre em contato diretamente com nossa organização pelo WhatsApp para validarmos a cortesia da sua caravana.
+                  </p>
+                  <a 
+                    href="https://wa.me/5588997808104" 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="inline-flex w-full justify-center items-center gap-2 text-sm font-semibold bg-accent hover:bg-accent/90 text-accent-foreground px-4 py-2.5 rounded-xl transition-colors shadow-sm"
+                  >
+                    <Phone className="w-4 h-4" /> Entrar em contato via WhatsApp
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
