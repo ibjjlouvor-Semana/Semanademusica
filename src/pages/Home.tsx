@@ -35,6 +35,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase, isUsingPlaceholder } from "@/integrations/supabase/client";
@@ -648,173 +649,80 @@ export default function Home() {
             Confira o cronograma completo das atividades da IV Semana de Música Cristã (07 a 13 de Setembro de 2026).
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto text-left">
-            {/* Segunda-feira (07/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Segunda-feira</CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">07/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2 pb-4 space-y-0">
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Credenciamento</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:15</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:15</span>
-                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:30</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
-                </div>
-              </CardContent>
-            </Card>
+          <Tabs defaultValue="segunda" className="w-full max-w-3xl mx-auto text-left">
+            <TabsList className="grid grid-cols-3 md:grid-cols-6 h-auto p-1.5 bg-background/50 border border-border/50 mb-8 rounded-2xl shadow-sm">
+              <TabsTrigger value="segunda" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Segunda</span><span className="text-[10px] opacity-70">07/Set</span></TabsTrigger>
+              <TabsTrigger value="terca" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Terça</span><span className="text-[10px] opacity-70">08/Set</span></TabsTrigger>
+              <TabsTrigger value="quarta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quarta</span><span className="text-[10px] opacity-70">09/Set</span></TabsTrigger>
+              <TabsTrigger value="quinta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quinta</span><span className="text-[10px] opacity-70">10/Set</span></TabsTrigger>
+              <TabsTrigger value="sexta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sexta</span><span className="text-[10px] opacity-70">11/Set</span></TabsTrigger>
+              <TabsTrigger value="sabado" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sábado</span><span className="text-[10px] opacity-70">12/Set</span></TabsTrigger>
+            </TabsList>
 
-            {/* Terça-feira (08/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Terça-feira</CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">08/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2 pb-4 space-y-0">
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Oficinas / Prática</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
-                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
-                </div>
-              </CardContent>
-            </Card>
+            {[
+              { id: "segunda", dia: "Segunda-feira", data: "07/Set", eventos: [
+                { h: "18:00", t: "Credenciamento" }, { h: "18:15", t: "Culto" }, { h: "19:15", t: "Lanche", sec: true }, { h: "19:30", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              ]},
+              { id: "terca", dia: "Terça-feira", data: "08/Set", eventos: [
+                { h: "18:00", t: "Oficinas / Prática" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              ]},
+              { id: "quarta", dia: "Quarta-feira", data: "09/Set", eventos: [
+                { h: "18:00", t: "Oficinas / Prática" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              ]},
+              { id: "quinta", dia: "Quinta-feira", data: "10/Set", eventos: [
+                { h: "18:00", t: "Culto" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio Geral" }, { h: "22:00", t: "Encerramento" }
+              ]},
+              { id: "sexta", dia: "Sexta-feira", data: "11/Set", eventos: [
+                { h: "18:00", t: "Culto" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio Geral" }, { h: "22:00", t: "Encerramento" }
+              ]}
+            ].map(dia => (
+              <TabsContent key={dia.id} value={dia.id} className="animate-in fade-in zoom-in-95 duration-300">
+                <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-lg border-t-4 border-t-primary">
+                  <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-xl font-display font-bold">{dia.dia}</CardTitle>
+                      <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-xs">{dia.data}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-2 pb-4 space-y-0">
+                    {dia.eventos.map((ev, i) => (
+                      <div key={i} className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
+                        <span className={`text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors ${ev.sec ? 'text-muted-foreground bg-secondary group-hover:bg-secondary/80' : 'text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground'}`}>
+                          {ev.h}
+                        </span>
+                        <span className={`font-medium text-sm md:text-base transition-colors ${ev.sec ? 'text-muted-foreground' : 'text-foreground/80 group-hover:text-foreground'}`}>
+                          {ev.t}
+                        </span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            ))}
 
-            {/* Quarta-feira (09/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Quarta-feira</CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">09/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2 pb-4 space-y-0">
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Oficinas / Prática</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
-                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quinta-feira (10/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Quinta-feira</CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">10/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2 pb-4 space-y-0">
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
-                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio Geral</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Sexta-feira (11/Set) */}
-            <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold">Sexta-feira</CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">11/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-2 pb-4 space-y-0">
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">18:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Culto</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-secondary/80 transition-colors">19:00</span>
-                  <span className="font-medium text-sm text-muted-foreground transition-colors">Lanche</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">19:15</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Ensaio Geral</span>
-                </div>
-                <div className="flex items-center gap-4 py-2.5 border-b border-border/40 last:border-0 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">22:00</span>
-                  <span className="font-medium text-sm text-foreground/80 group-hover:text-foreground transition-colors">Encerramento</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Sábado (12/Set) */}
-            <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-md bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <CardHeader className="pb-3 border-b border-white/5 bg-secondary/20">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-primary" />
-                    Sábado
-                  </CardTitle>
-                  <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-[10px]">12/Set</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4 pb-4 space-y-4">
-                <div className="flex items-center gap-4 py-1 group">
-                  <span className="text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 w-[52px] text-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">17:30</span>
-                  <span className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">Concerto de Encerramento</span>
-                </div>
-                <p className="text-xs text-muted-foreground p-3 border border-border/50 rounded-lg bg-secondary/30 leading-relaxed">
-                  Apresentação oficial de encerramento de todas as oficinas, orquestra e coral para a comunidade de Jijoca. Traga sua família!
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+            <TabsContent value="sabado" className="animate-in fade-in zoom-in-95 duration-300">
+              <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-lg border-t-4 border-t-accent bg-gradient-to-br from-accent/5 to-transparent">
+                <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-xl font-display font-bold flex items-center gap-2">
+                      <Trophy className="w-5 h-5 text-accent" />
+                      Sábado (Concerto)
+                    </CardTitle>
+                    <Badge className="bg-accent/10 text-accent border-accent/20 font-mono text-xs">12/Set</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6 pb-6 space-y-5">
+                  <div className="flex items-center gap-4 py-2 group">
+                    <span className="text-sm font-mono font-semibold text-accent bg-accent/10 px-3 py-1.5 rounded-md shrink-0 w-[70px] text-center group-hover:bg-accent group-hover:text-accent-foreground transition-colors">17:30</span>
+                    <span className="font-bold text-base text-foreground group-hover:text-accent transition-colors">Concerto Oficial de Encerramento</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground p-5 border border-border/50 rounded-xl bg-background/50 leading-relaxed">
+                    Apresentação oficial de encerramento de todas as oficinas, grande orquestra e coral para a comunidade da região. Convide sua igreja e traga sua família para celebrar a Deus conosco!
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
