@@ -446,7 +446,7 @@ export default function Home() {
       <section id="home" className="relative min-h-[calc(100vh-80px)] overflow-hidden flex items-center py-10 lg:py-0">
         {/* Imagem de Fundo Consolidada (Hero Definitivo fornecido pelo usuário) */}
         <div className="absolute inset-0 z-0">
-          <img src="/hero-definitivo..jpeg" alt="Background Paisagem" className="w-full h-full object-cover object-center md:object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
+          <img src="/hero-definitivo..jpeg" alt="Background Paisagem" className="w-full h-full object-cover object-[80%_center] md:object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
         </div>
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
