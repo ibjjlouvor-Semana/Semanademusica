@@ -452,17 +452,17 @@ export default function Home() {
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
         <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
-          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-[-15vh] md:mt-8">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-[-5vh] md:mt-8">
             
             {/* Badge */}
-            <div className="mb-8 md:mb-5 lg:mb-6 animate-fade-in">
+            <div className="mb-4 md:mb-5 lg:mb-6 animate-fade-in">
               <span className="inline-flex items-center px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[10px] lg:text-[11px] font-semibold tracking-widest text-[#6B705C] bg-[#F5F3EE] shadow-sm border border-[#6B705C]/10">
                 <Sparkles className="hidden md:inline-block w-3 lg:w-3.5 h-3 lg:h-3.5 mr-2" /> IV EDIÇÃO • 07 A 13 DE SETEMBRO
               </span>
             </div>
             
             {/* Logo Permanecei Nele */}
-            <div className="mb-5 lg:mb-6 animate-fade-in [animation-delay:100ms] -ml-1">
+            <div className="mb-3 md:mb-6 lg:mb-6 animate-fade-in [animation-delay:100ms] -ml-1">
               <img 
                 src="/logo-permanecei.png" 
                 alt="Permanecei Nele" 
@@ -471,13 +471,13 @@ export default function Home() {
             </div>
             
             {/* Referência Bíblica */}
-            <div className="flex items-center gap-3 lg:gap-4 mb-4 animate-fade-in [animation-delay:200ms]">
+            <div className="flex items-center gap-3 lg:gap-4 mb-3 md:mb-4 animate-fade-in [animation-delay:200ms]">
               <div className="h-px w-6 lg:w-8 bg-[#6B705C]/60"></div>
               <p className="text-[#6B705C] font-bold tracking-[0.3em] lg:tracking-[0.4em] uppercase text-xs lg:text-sm">1 JOÃO</p>
             </div>
 
-            {/* Texto de apoio (removido a caixa de vidro, pois a nova imagem mobile já possui fundo claro) */}
-            <p className="font-sans max-w-[260px] md:max-w-none text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
+            {/* Texto de apoio */}
+            <p className="font-sans max-w-[260px] md:max-w-none text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-6 md:mb-8 animate-fade-in [animation-delay:300ms] font-normal">
               Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
             </p>
 
