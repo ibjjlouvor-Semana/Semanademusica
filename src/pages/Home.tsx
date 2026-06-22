@@ -447,7 +447,7 @@ export default function Home() {
         {/* Imagem de Fundo Consolidada (Art Direction para Mobile e Desktop) */}
         <div className="absolute inset-0 z-0">
           <img src="/hero-definitivo..jpeg" alt="Background Paisagem Desktop" className="hidden md:block w-full h-full object-cover object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
-          <img src="/hero-mobile.png" alt="Background Paisagem Mobile" className="block md:hidden w-full h-full object-cover object-center opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
+          <img src="/hero-mobile.png" alt="Background Paisagem Mobile" className="block md:hidden w-full h-full object-cover object-bottom opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
         </div>
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
