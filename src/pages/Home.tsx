@@ -678,20 +678,20 @@ export default function Home() {
               ]}
             ].map(dia => (
               <TabsContent key={dia.id} value={dia.id} className="animate-in fade-in zoom-in-95 duration-300">
-                <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-lg border-t-4 border-t-primary">
-                  <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+                <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-primary rounded-3xl">
+                  <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
                     <div className="flex justify-between items-center">
-                      <CardTitle className="text-xl font-display font-bold">{dia.dia}</CardTitle>
-                      <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-xs">{dia.data}</Badge>
+                      <CardTitle className="text-2xl md:text-3xl font-display font-bold text-foreground/90">{dia.dia}</CardTitle>
+                      <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-sm px-4 py-1.5 shadow-sm">{dia.data}</Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-2 pb-4 space-y-0">
+                  <CardContent className="pt-2 pb-6 space-y-0 px-4 md:px-6">
                     {dia.eventos.map((ev, i) => (
-                      <div key={i} className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
-                        <span className={`text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors ${ev.sec ? 'text-muted-foreground bg-secondary group-hover:bg-secondary/80' : 'text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground'}`}>
+                      <div key={i} className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
+                        <span className={`text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors ${ev.sec ? 'text-muted-foreground bg-secondary/60 group-hover:bg-secondary' : 'text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md'}`}>
                           {ev.h}
                         </span>
-                        <span className={`font-medium text-sm md:text-base transition-colors ${ev.sec ? 'text-muted-foreground' : 'text-foreground/80 group-hover:text-foreground'}`}>
+                        <span className={`font-semibold text-base md:text-lg transition-colors ${ev.sec ? 'text-muted-foreground' : 'text-foreground/90 group-hover:text-primary'}`}>
                           {ev.t}
                         </span>
                       </div>
@@ -702,22 +702,22 @@ export default function Home() {
             ))}
 
             <TabsContent value="sabado" className="animate-in fade-in zoom-in-95 duration-300">
-              <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-lg border-t-4 border-t-accent bg-gradient-to-br from-accent/5 to-transparent">
-                <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+              <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-accent bg-gradient-to-br from-accent/5 to-transparent rounded-3xl">
+                <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl font-display font-bold flex items-center gap-2">
-                      <Trophy className="w-5 h-5 text-accent" />
+                    <CardTitle className="text-2xl md:text-3xl font-display font-bold flex items-center gap-3 text-foreground/90">
+                      <Trophy className="w-6 h-6 md:w-8 md:h-8 text-accent" />
                       Sábado (Concerto)
                     </CardTitle>
-                    <Badge className="bg-accent/10 text-accent border-accent/20 font-mono text-xs">12/Set</Badge>
+                    <Badge className="bg-accent/10 text-accent border-accent/20 font-mono text-sm px-4 py-1.5 shadow-sm">12/Set</Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 pb-6 space-y-5">
-                  <div className="flex items-center gap-4 py-2 group">
-                    <span className="text-sm font-mono font-semibold text-accent bg-accent/10 px-3 py-1.5 rounded-md shrink-0 w-[70px] text-center group-hover:bg-accent group-hover:text-accent-foreground transition-colors">17:30</span>
-                    <span className="font-bold text-base text-foreground group-hover:text-accent transition-colors">Concerto Oficial de Encerramento</span>
+                <CardContent className="pt-6 pb-8 space-y-6 px-6 md:px-8">
+                  <div className="flex items-center gap-5 py-4 border-b border-border/40 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
+                    <span className="text-sm font-mono font-bold text-accent bg-accent/10 px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner group-hover:bg-accent group-hover:text-accent-foreground transition-colors">17:30</span>
+                    <span className="font-semibold text-base md:text-lg text-foreground/90 group-hover:text-accent transition-colors">Concerto Oficial de Encerramento</span>
                   </div>
-                  <p className="text-sm text-muted-foreground p-5 border border-border/50 rounded-xl bg-background/50 leading-relaxed">
+                  <p className="text-base text-foreground/80 p-6 border border-border/50 rounded-2xl bg-background/50 leading-relaxed font-medium shadow-sm">
                     Apresentação oficial de encerramento de todas as oficinas, grande orquestra e coral para a comunidade da região. Convide sua igreja e traga sua família para celebrar a Deus conosco!
                   </p>
                 </CardContent>
@@ -725,27 +725,27 @@ export default function Home() {
             </TabsContent>
 
             <TabsContent value="domingo" className="animate-in fade-in zoom-in-95 duration-300">
-              <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-lg border-t-4 border-t-primary">
-                <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+              <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-primary rounded-3xl">
+                <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl font-display font-bold">Domingo</CardTitle>
-                    <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-xs">13/Set</Badge>
+                    <CardTitle className="text-2xl md:text-3xl font-display font-bold text-foreground/90">Domingo</CardTitle>
+                    <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-sm px-4 py-1.5 shadow-sm">13/Set</Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-2 pb-4 space-y-0">
-                  <div className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
-                    <span className="text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground">
+                <CardContent className="pt-2 pb-6 space-y-0 px-4 md:px-6">
+                  <div className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
+                    <span className="text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md">
                       08:00
                     </span>
-                    <span className="font-medium text-sm md:text-base transition-colors text-foreground/80 group-hover:text-foreground">
+                    <span className="font-semibold text-base md:text-lg transition-colors text-foreground/90 group-hover:text-primary">
                       Culto Matinal
                     </span>
                   </div>
-                  <div className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
-                    <span className="text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground">
+                  <div className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
+                    <span className="text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md">
                       18:00
                     </span>
-                    <span className="font-bold text-sm md:text-base transition-colors text-foreground/80 group-hover:text-primary">
+                    <span className="font-semibold text-base md:text-lg transition-colors text-foreground/90 group-hover:text-primary">
                       Culto Noturno e Apresentação do Coral e Orquestra
                     </span>
                   </div>
