@@ -452,7 +452,7 @@ export default function Home() {
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
         <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
-          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8 mb-32 md:mb-0">
             
             {/* Badge */}
             <div className="mb-5 lg:mb-6 animate-fade-in">
@@ -477,7 +477,7 @@ export default function Home() {
             </div>
 
             {/* Texto de apoio (removido a caixa de vidro, pois a nova imagem mobile já possui fundo claro) */}
-            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
+            <p className="font-sans max-w-[260px] md:max-w-none text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
               Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
             </p>
 
