@@ -476,7 +476,7 @@ export default function Home() {
             </div>
 
             {/* Texto de apoio restaurado conforme o mockup */}
-            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
+            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#5E654C] mb-8 animate-fade-in [animation-delay:300ms] font-medium bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-sm md:bg-transparent md:backdrop-blur-none md:p-0 md:border-none md:shadow-none md:font-normal">
               Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
             </p>
 
