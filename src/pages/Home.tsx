@@ -650,13 +650,14 @@ export default function Home() {
           </p>
           
           <Tabs defaultValue="segunda" className="w-full max-w-3xl mx-auto text-left">
-            <TabsList className="grid grid-cols-3 md:grid-cols-6 h-auto p-1.5 bg-background/50 border border-border/50 mb-8 rounded-2xl shadow-sm">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 h-auto p-1.5 bg-background/50 border border-border/50 mb-8 rounded-2xl shadow-sm gap-1">
               <TabsTrigger value="segunda" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Segunda</span><span className="text-[10px] opacity-70">07/Set</span></TabsTrigger>
               <TabsTrigger value="terca" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Terça</span><span className="text-[10px] opacity-70">08/Set</span></TabsTrigger>
               <TabsTrigger value="quarta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quarta</span><span className="text-[10px] opacity-70">09/Set</span></TabsTrigger>
               <TabsTrigger value="quinta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quinta</span><span className="text-[10px] opacity-70">10/Set</span></TabsTrigger>
               <TabsTrigger value="sexta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sexta</span><span className="text-[10px] opacity-70">11/Set</span></TabsTrigger>
               <TabsTrigger value="sabado" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sábado</span><span className="text-[10px] opacity-70">12/Set</span></TabsTrigger>
+              <TabsTrigger value="domingo" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Domingo</span><span className="text-[10px] opacity-70">13/Set</span></TabsTrigger>
             </TabsList>
 
             {[
@@ -719,6 +720,35 @@ export default function Home() {
                   <p className="text-sm text-muted-foreground p-5 border border-border/50 rounded-xl bg-background/50 leading-relaxed">
                     Apresentação oficial de encerramento de todas as oficinas, grande orquestra e coral para a comunidade da região. Convide sua igreja e traga sua família para celebrar a Deus conosco!
                   </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="domingo" className="animate-in fade-in zoom-in-95 duration-300">
+              <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-lg border-t-4 border-t-primary">
+                <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-xl font-display font-bold">Domingo</CardTitle>
+                    <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-xs">13/Set</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2 pb-4 space-y-0">
+                  <div className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
+                    <span className="text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground">
+                      08:00
+                    </span>
+                    <span className="font-medium text-sm md:text-base transition-colors text-foreground/80 group-hover:text-foreground">
+                      Culto Matinal
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 py-3 md:py-4 border-b border-border/40 last:border-0 group">
+                    <span className="text-xs md:text-sm font-mono font-semibold px-3 py-1.5 rounded-md shrink-0 w-[60px] md:w-[70px] text-center transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground">
+                      18:00
+                    </span>
+                    <span className="font-bold text-sm md:text-base transition-colors text-foreground/80 group-hover:text-primary">
+                      Culto Noturno e Apresentação do Coral e Orquestra
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
