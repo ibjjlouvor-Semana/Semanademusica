@@ -444,9 +444,10 @@ export default function Home() {
 
       {/* Hero Section */}
       <section id="home" className="relative min-h-[calc(100vh-80px)] overflow-hidden flex items-center py-10 lg:py-0">
-        {/* Imagem de Fundo Consolidada (Hero Definitivo fornecido pelo usuário) */}
+        {/* Imagem de Fundo Consolidada (Art Direction para Mobile e Desktop) */}
         <div className="absolute inset-0 z-0">
-          <img src="/hero-definitivo..jpeg" alt="Background Paisagem" className="w-full h-full object-cover object-[80%_center] md:object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
+          <img src="/hero-definitivo..jpeg" alt="Background Paisagem Desktop" className="hidden md:block w-full h-full object-cover object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
+          <img src="/hero-mobile.png" alt="Background Paisagem Mobile" className="block md:hidden w-full h-full object-cover object-center opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
         </div>
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
@@ -475,8 +476,8 @@ export default function Home() {
               <p className="text-[#6B705C] font-bold tracking-[0.3em] lg:tracking-[0.4em] uppercase text-xs lg:text-sm">1 JOÃO</p>
             </div>
 
-            {/* Texto de apoio restaurado conforme o mockup */}
-            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#5E654C] mb-8 animate-fade-in [animation-delay:300ms] font-medium bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-sm md:bg-transparent md:backdrop-blur-none md:p-0 md:border-none md:shadow-none md:font-normal">
+            {/* Texto de apoio (removido a caixa de vidro, pois a nova imagem mobile já possui fundo claro) */}
+            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
               Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
             </p>
 
