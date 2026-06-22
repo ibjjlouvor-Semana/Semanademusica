@@ -714,7 +714,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent className="pt-6 pb-8 space-y-6 px-6 md:px-8">
                   <div className="flex items-center gap-5 py-4 border-b border-border/40 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
-                    <span className="text-sm font-mono font-bold text-accent bg-accent/10 px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner group-hover:bg-accent group-hover:text-accent-foreground transition-colors">17:30</span>
+                    <span className="text-sm font-mono font-bold text-accent bg-accent/10 px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner group-hover:bg-accent group-hover:text-accent-foreground transition-colors">19:00</span>
                     <span className="font-semibold text-base md:text-lg text-foreground/90 group-hover:text-accent transition-colors">Concerto Oficial de Encerramento</span>
                   </div>
                   <p className="text-base text-foreground/80 p-6 border border-border/50 rounded-2xl bg-background/50 leading-relaxed font-medium shadow-sm">
