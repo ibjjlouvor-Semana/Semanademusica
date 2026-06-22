@@ -181,32 +181,42 @@ export default function Dashboard() {
 
   // Lançamento automático de PIX ao aprovar inscrição
   // Separa o valor da inscrição (Semana de Musica) do valor da camisa (LOJA)
-  const createPixTransaction = async (nomeParticipante: string, opcaoEscolhida: string) => {
+  const createPixTransaction = async (nomeParticipante: string, opcaoEscolhida: string, valor_total?: string) => {
     const data = new Date().toISOString().split("T")[0];
     const transactions: any[] = [];
 
-    const temInscricao = opcaoEscolhida !== "Apenas Camisa Oficial";
-    const temCamisa = opcaoEscolhida !== "Apenas Inscrição";
+    const temInscricao = opcaoEscolhida.includes("Lote") || opcaoEscolhida.includes("Inscrição");
+    const temCamisa = opcaoEscolhida.includes("Camisa");
+    
+    // Identificar o valor real pago, para aplicar descontos (ex: familia) corretamente
+    const valorPago = valor_total ? parseFloat(valor_total) : 0;
+    
+    // Camisa é sempre 45 se houver. O resto é o valor da inscrição
+    let valorCamisa = temCamisa ? 45.00 : 0;
+    let valorInscricao = temInscricao ? (valorPago - valorCamisa) : 0;
+    
+    // Evitar valores negativos em caso de dados inconsistentes
+    if (valorInscricao < 0) valorInscricao = 0;
 
-    if (temInscricao) {
+    if (temInscricao && valorInscricao > 0) {
       transactions.push({
         id: crypto.randomUUID().substring(0, 8).toUpperCase(),
         descricao: `Inscrição - ${nomeParticipante} (PIX)`,
         tipo: "Entrada",
         centro_custo: "Semana de Musica",
-        valor: 20.00,
+        valor: valorInscricao,
         data,
         created_at: new Date().toISOString(),
       });
     }
 
-    if (temCamisa) {
+    if (temCamisa && valorCamisa > 0) {
       transactions.push({
         id: crypto.randomUUID().substring(0, 8).toUpperCase(),
         descricao: `Camisa Oficial - ${nomeParticipante} (PIX)`,
         tipo: "Entrada",
         centro_custo: "Loja",
-        valor: 45.00,
+        valor: valorCamisa,
         data,
         created_at: new Date().toISOString(),
       });
@@ -221,8 +231,8 @@ export default function Dashboard() {
         localStorage.setItem("financeiro_transacoes", JSON.stringify([...antigas, ...transactions]));
       }
       const msgs: string[] = [];
-      if (temInscricao) msgs.push("R$ 20,00 → Semana de Musica");
-      if (temCamisa)    msgs.push("R$ 45,00 → Loja");
+      if (temInscricao && valorInscricao > 0) msgs.push(`R$ ${valorInscricao.toFixed(2)} → Semana de Musica`);
+      if (temCamisa && valorCamisa > 0)    msgs.push(`R$ ${valorCamisa.toFixed(2)} → Loja`);
       toast.success(`Lançamentos automáticos: ${msgs.join(" · ")}`);
     } catch (err: any) {
       console.error("Erro ao criar transação automática:", err);
@@ -230,8 +240,8 @@ export default function Dashboard() {
     }
   };
 
-  // Confirmar/Aprovar Inscrição e lançar PIX automático (inscrição → Semana de Musica, camisa → Loja)
-  const handleApprove = async (id: string, nomeParticipante: string, opcaoEscolhida: string) => {
+  // Confirmar/Aprovar Inscrição e lançar PIX automático
+  const handleApprove = async (id: string, nomeParticipante: string, opcaoEscolhida: string, telefone?: string, valor_total?: string) => {
     try {
       if (!isUsingPlaceholder) {
         const { error } = await supabase
@@ -252,9 +262,20 @@ export default function Dashboard() {
       toast.success(`Inscrição de ${nomeParticipante} confirmada!`);
       
       // Lançar transações separadas: inscrição (Semana de Musica) e/ou camisa (Loja)
-      await createPixTransaction(nomeParticipante, opcaoEscolhida);
+      await createPixTransaction(nomeParticipante, opcaoEscolhida, valor_total);
       
-      loadData();
+      await loadData(); // Aguardar os dados serem recarregados antes de abrir a aba do wpp
+
+      // Abrir WhatsApp com mensagem automática
+      if (telefone) {
+        const phone = telefone.replace(/\D/g, ''); // Limpar caracteres não numéricos
+        if (phone.length >= 10) {
+          const primeiroNome = nomeParticipante.split(" ")[0];
+          const msg = `Olá ${primeiroNome}, Graça e Paz! \uD83D\uDE4F\n\nSua inscrição na IV Semana de Música Cristã foi realizada com sucesso!\n\nLhe esperamos dia 07 de setembro. Esteja orando por nós!!`;
+          const waLink = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+          window.open(waLink, "_blank");
+        }
+      }
     } catch (error: any) {
       console.error(error);
       toast.error("Erro ao aprovar inscrição: " + error.message);
@@ -917,10 +938,10 @@ export default function Dashboard() {
                                 {ins.status === "Pendente" && (
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', parseFloat(ins.valor_total || '20'))}
+                                    onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
                                     className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
                                   >
-                                    <Check className="w-3.5 h-3.5" /> Confirmar PIX
+                                    <Check className="w-3.5 h-3.5" /> Aprovar & Avisar
                                   </Button>
                                 )}
                                 <Button 

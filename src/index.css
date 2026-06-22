@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,36 +6,38 @@
 
 @layer base {
   :root {
-    --background: 215 50% 98%;
-    --foreground: 215 47% 11%;
+    /* Warm Off-White / Beige for Light Mode Background */
+    --background: 40 33% 98%;
+    /* Deep Earthy Green/Brown for text */
+    --foreground: 75 30% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 47% 11%;
+    --card: 40 33% 98%;
+    --card-foreground: 75 30% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 47% 11%;
+    --popover: 40 33% 98%;
+    --popover-foreground: 75 30% 15%;
 
-    /* Slate Blue from the Church Logo */
-    --primary: 215 50% 36%;
-    --primary-foreground: 0 0% 100%;
+    /* Olive Green from 'Nele' */
+    --primary: 75 17% 32%;
+    --primary-foreground: 40 33% 98%;
 
-    --secondary: 215 25% 95%;
-    --secondary-foreground: 215 50% 20%;
+    --secondary: 75 15% 90%;
+    --secondary-foreground: 75 30% 20%;
 
-    --muted: 215 25% 95%;
-    --muted-foreground: 215 16% 45%;
+    --muted: 75 10% 90%;
+    --muted-foreground: 75 15% 45%;
 
-    /* Bright Sky Blue as accent */
-    --accent: 199 89% 48%;
-    --accent-foreground: 0 0% 100%;
+    /* Golden Amber as accent (matching the sun/fields) */
+    --accent: 35 60% 50%;
+    --accent-foreground: 40 33% 98%;
 
-    --popover-card: 0 0% 100%;
+    --popover-card: 40 33% 98%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 20% 90%;
-    --input: 215 20% 90%;
-    --ring: 215 50% 36%;
+    --border: 75 15% 85%;
+    --input: 75 15% 85%;
+    --ring: 75 17% 32%;
 
     --radius: 1rem;
 
@@ -43,33 +45,43 @@
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 38 92% 15%;
-    --info: 199 89% 48%;
+    --info: 35 60% 50%;
     --info-foreground: 0 0% 100%;
 
-    --font-display: 'Space Grotesk', sans-serif;
+    --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
   }
 
   .dark {
-    --background: 215 40% 7%;
-    --foreground: 210 40% 98%;
-    --card: 215 35% 10%;
-    --card-foreground: 210 40% 98%;
-    --popover: 215 35% 10%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 215 55% 52%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 215 25% 15%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 25% 14%;
-    --muted-foreground: 215 15% 65%;
-    --accent: 199 89% 48%;
+    /* Deep Forest/Earth Dark Mode */
+    --background: 75 25% 9%;
+    --foreground: 40 20% 90%;
+    
+    --card: 75 20% 12%;
+    --card-foreground: 40 20% 90%;
+    
+    --popover: 75 20% 12%;
+    --popover-foreground: 40 20% 90%;
+    
+    /* Lighter Olive for visibility in dark mode */
+    --primary: 75 25% 45%;
+    --primary-foreground: 75 25% 9%;
+    
+    --secondary: 75 25% 15%;
+    --secondary-foreground: 40 20% 90%;
+    
+    --muted: 75 20% 15%;
+    --muted-foreground: 75 15% 65%;
+    
+    --accent: 35 60% 50%;
     --accent-foreground: 0 0% 100%;
+    
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 215 25% 17%;
-    --input: 215 25% 17%;
-    --ring: 215 55% 52%;
+    
+    --border: 75 20% 18%;
+    --input: 75 20% 18%;
+    --ring: 75 25% 45%;
   }
 }
 
@@ -80,9 +92,10 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    /* Soft warm glow matching the new landscape */
     background-image: 
-      radial-gradient(at 0% 0%, hsla(215, 50%, 36%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(199, 89%, 48%, 0.05) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(75, 17%, 32%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(35, 60%, 50%, 0.04) 0px, transparent 50%);
     background-attachment: fixed;
   }
 

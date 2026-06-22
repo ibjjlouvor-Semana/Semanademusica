@@ -18,6 +18,7 @@ import {
   Trophy,
   Activity,
   Award,
+  Lock,
   Database,
   Printer,
   QrCode,
@@ -64,7 +65,7 @@ export default function Home() {
     hospedagem: "Não",
     membro_familia: "Não",
     membro_principal: "",
-    opcao_escolhida: "Inscrição + Camisa Oficial", // Default
+    opcao_escolhida: "Primeiro Lote", // Default
     tipo_participacao: "Coral",
     detalhe_participacao: "",
     descricao_experiencia: "",
@@ -196,18 +197,21 @@ export default function Home() {
   };
 
   const hasParticipation = (opcao: string) => {
-    return opcao === "Apenas Inscrição" || opcao === "Inscrição + Camisa Oficial";
+    return opcao.includes("Lote") || opcao === "Apenas Inscrição" || opcao === "Inscrição + Camisa Oficial";
   };
 
   const hasShirt = (opcao: string) => {
-    return opcao === "Apenas Camisa Oficial" || opcao === "Inscrição + Camisa Oficial";
+    return opcao.includes("Camisa");
   };
 
   // Obter valor total baseado na opção escolhida
   const getValorTotal = () => {
-    let baseValue = 20;
-    if (formData.opcao_escolhida === "Inscrição + Camisa Oficial") baseValue = 65;
+    let baseValue = 0;
+    if (formData.opcao_escolhida === "Primeiro Lote") baseValue = 110;
+    else if (formData.opcao_escolhida === "Primeiro Lote + Camisa Oficial") baseValue = 155;
     else if (formData.opcao_escolhida === "Apenas Camisa Oficial") baseValue = 45;
+    else if (formData.opcao_escolhida === "Segundo Lote") baseValue = 120;
+    else if (formData.opcao_escolhida === "Terceiro Lote") baseValue = 130;
     
     // Promoção Família: R$ 10 de desconto se for o 2º ou mais membro
     if (formData.membro_familia === "Sim" && baseValue > 10) {
@@ -398,35 +402,40 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen bg-[#F5F3EE] text-foreground transition-colors duration-300 relative">
+      {/* Background Fixo Global (Textura Partitura) */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="/bg-partitura.png" 
+          alt="Textura Partitura" 
+          className="absolute left-0 top-0 w-full md:w-[70%] h-full object-cover opacity-[0.40] mix-blend-multiply"
+          style={{ maskImage: "linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%)", WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%)" }}
+        />
+      </div>
       {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      {/* Header (80px height) */}
+      <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md h-[80px] flex items-center">
+        <div className="container mx-auto px-4 lg:px-[120px] flex items-center justify-between w-full">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("home")}>
-            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
+            {/* Logo com máscara CSS para pegar a exata cor 'primary' do tema */}
+            <div className="w-10 h-10 bg-[#6B705C]" style={{ maskImage: "url(/logo.png)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center", WebkitMaskImage: "url(/logo.png)", WebkitMaskSize: "contain", WebkitMaskRepeat: "no-repeat", WebkitMaskPosition: "center" }} aria-label="Logo"></div>
             <div>
-              <span className="font-display font-bold text-sm sm:text-base leading-tight block">
+              <span className="font-display font-bold text-sm sm:text-base leading-tight block text-[#5E654C]">
                 IV Semana de Música Cristã de Jijoca
               </span>
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <button onClick={() => scrollToSection("sobre")} className="hover:text-primary transition-colors">Sobre</button>
-            <button onClick={() => scrollToSection("cronograma")} className="hover:text-primary transition-colors">Programação</button>
-            <button onClick={() => scrollToSection("oficinas")} className="hover:text-primary transition-colors">Oficinas</button>
-            <button onClick={() => scrollToSection("videos")} className="hover:text-primary transition-colors">Vídeos</button>
-            <button onClick={() => scrollToSection("inscricao")} className="hover:text-primary transition-colors">Inscrição</button>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-[#6B705C]">
+            <button onClick={() => scrollToSection("sobre")} className="hover:text-[#5E654C] transition-colors">Sobre</button>
+            <button onClick={() => scrollToSection("cronograma")} className="hover:text-[#5E654C] transition-colors">Programação</button>
+            <button onClick={() => scrollToSection("oficinas")} className="hover:text-[#5E654C] transition-colors">Oficinas</button>
+            <button onClick={() => scrollToSection("videos")} className="hover:text-[#5E654C] transition-colors">Vídeos</button>
+            <button onClick={() => scrollToSection("inscricao")} className="hover:text-[#5E654C] transition-colors">Inscrição</button>
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link to="/dashboard">
-              <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-2">
-                <Database className="w-4 h-4" />
-                Painel
-              </Button>
-            </Link>
-            <Button size="sm" onClick={() => scrollToSection("inscricao")} className="bg-primary hover:bg-primary/90">
+            <Button onClick={() => scrollToSection("inscricao")} className="bg-[#5E654C] hover:bg-[#5E654C]/90 text-white h-10 rounded-full px-6">
               Inscrever-se
             </Button>
           </div>
@@ -434,85 +443,76 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="relative pt-24 pb-16 md:pt-32 md:pb-32 overflow-hidden">
-        {/* Imagem de Fundo com Overlay */}
+      <section id="home" className="relative min-h-[calc(100vh-80px)] overflow-hidden flex items-center py-10 lg:py-0">
+        {/* Imagem de Fundo Consolidada (Hero Definitivo fornecido pelo usuário) */}
         <div className="absolute inset-0 z-0">
-          <img src="/hero-bg.png" alt="Background de Música" className="w-full h-full object-cover object-center opacity-100" />
-          <div className="absolute inset-0 bg-background/70 md:bg-gradient-to-r md:from-background/95 md:via-background/50 md:to-transparent"></div>
+          <img src="/hero-definitivo..jpeg" alt="Background Paisagem" className="w-full h-full object-cover object-center md:object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
         </div>
 
-        <div className="absolute top-0 right-0 w-[60%] h-full bg-primary/20 blur-3xl pointer-events-none rounded-bl-[100px] z-0"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center max-w-7xl mx-auto">
+        {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
+        <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8">
             
-            {/* Left Column: Copy */}
-            <div className="text-left max-w-2xl">
-              <Badge variant="secondary" className="mb-6 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary border-primary/20 bg-primary/5 animate-fade-in">
-                <Sparkles className="w-3.5 h-3.5 mr-1.5 inline" /> IV Edição • 07 a 13 de Setembro
-              </Badge>
-              
-              <h1 className="text-5xl md:text-6xl lg:text-[4.5rem] font-display font-bold leading-[1.05] tracking-tighter mb-6 animate-fade-in">
-                Formando músicos.<br />Fortalecendo igrejas.<br /><span className="text-primary">Glorificando a Cristo.</span>
-              </h1>
-              
-              <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-[45ch] leading-relaxed animate-fade-in [animation-delay:100ms]">
-                Uma semana de aprendizado, comunhão e excelência musical para coralistas, instrumentistas e líderes cristãos de toda a região.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in [animation-delay:200ms]">
-                <Button size="lg" onClick={() => scrollToSection("inscricao")} className="w-full sm:w-auto h-12 px-8 flex items-center justify-center gap-2 text-base active:scale-[0.98] transition-transform">
-                  Quero Participar <ArrowRight className="w-5 h-5" />
-                </Button>
-                <Button size="lg" variant="outline" onClick={() => scrollToSection("cronograma")} className="w-full sm:w-auto h-12 px-8 text-base active:scale-[0.98] transition-transform">
-                  Ver Programação
-                </Button>
-              </div>
+            {/* Badge */}
+            <div className="mb-5 lg:mb-6 animate-fade-in">
+              <span className="inline-flex items-center px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[10px] lg:text-[11px] font-semibold tracking-widest text-[#6B705C] bg-[#F5F3EE] shadow-sm border border-[#6B705C]/10">
+                <Sparkles className="w-3 lg:w-3.5 h-3 lg:h-3.5 mr-2" /> IV EDIÇÃO • 07 A 13 DE SETEMBRO
+              </span>
+            </div>
+            
+            {/* Logo Permanecei Nele */}
+            <div className="mb-5 lg:mb-6 animate-fade-in [animation-delay:100ms] -ml-1">
+              <img 
+                src="/logo-permanecei.png" 
+                alt="Permanecei Nele" 
+                className="w-auto h-[120px] md:h-[180px] lg:h-[220px] xl:h-[260px] max-w-full object-contain object-left mix-blend-multiply"
+              />
+            </div>
+            
+            {/* Referência Bíblica */}
+            <div className="flex items-center gap-3 lg:gap-4 mb-4 animate-fade-in [animation-delay:200ms]">
+              <div className="h-px w-6 lg:w-8 bg-[#6B705C]/60"></div>
+              <p className="text-[#6B705C] font-bold tracking-[0.3em] lg:tracking-[0.4em] uppercase text-xs lg:text-sm">1 JOÃO</p>
             </div>
 
-            {/* Right Column: Visual / Bento Grid */}
-            <div className="relative animate-fade-in [animation-delay:300ms] mx-auto lg:ml-auto lg:mr-0 w-full max-w-md">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent rounded-3xl -rotate-3 scale-105"></div>
-              <div className="bg-card border border-border/50 rounded-3xl p-8 relative shadow-2xl backdrop-blur-sm">
-                <div className="w-20 h-20 bg-primary/5 rounded-2xl flex items-center justify-center mb-8 border border-primary/10">
-                  <img src="/logo.png" alt="Semana de Música" className="w-12 h-12 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <Users className="w-5 h-5 text-primary mb-2" />
-                    <span className="block font-bold text-base mb-0.5">Coral e Orquestra</span>
-                    <span className="text-sm text-muted-foreground">Turmas abertas</span>
-                  </div>
-                  <div>
-                    <Music className="w-5 h-5 text-primary mb-2" />
-                    <span className="block font-bold text-base mb-0.5">Oficinas Práticas</span>
-                    <span className="text-sm text-muted-foreground">Aprenda e aperfeiçoe</span>
-                  </div>
-                  <div>
-                    <Award className="w-5 h-5 text-primary mb-2" />
-                    <span className="block font-bold text-base mb-0.5">Certificado 20h</span>
-                    <span className="text-sm text-muted-foreground">Para participantes</span>
-                  </div>
-                  <div>
-                    <Heart className="w-5 h-5 text-primary mb-2" />
-                    <span className="block font-bold text-base mb-0.5">Comunhão Cristã</span>
-                    <span className="text-sm text-muted-foreground">Fé e propósito</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Texto de apoio restaurado conforme o mockup */}
+            <p className="font-sans text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-8 animate-fade-in [animation-delay:300ms] font-normal">
+              Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
+            </p>
 
+            {/* Botões */}
+            <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in [animation-delay:400ms]">
+              <Button 
+                onClick={() => scrollToSection("inscricao")} 
+                className="h-[50px] lg:h-[55px] w-full sm:w-[220px] lg:w-[240px] rounded-[14px] bg-[#5E654C] hover:bg-[#4A503A] text-white text-base lg:text-lg font-medium shadow-xl shadow-[#5E654C]/20 transition-all hover:-translate-y-1"
+              >
+                Quero Participar <ArrowRight className="w-4 lg:w-5 h-4 lg:h-5 ml-2" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={() => scrollToSection("cronograma")} 
+                className="h-[50px] lg:h-[55px] w-full sm:w-[200px] lg:w-[220px] rounded-[14px] bg-white/80 backdrop-blur-sm border-[#E5E7EB] text-[#6B705C] text-base lg:text-lg font-medium hover:bg-white hover:text-[#5E654C] transition-all hover:-translate-y-1"
+              >
+                Ver Programação
+              </Button>
+            </div>
           </div>
+        </div>
+
+        {/* Mouse Scroll Indicator do Mockup */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center animate-bounce opacity-70 hidden sm:flex cursor-pointer" onClick={() => scrollToSection("sobre")}>
+          <div className="w-[28px] h-[42px] rounded-full border-[1.5px] border-[#6B705C] flex justify-center p-1.5 mb-1.5">
+            <div className="w-1 h-2.5 rounded-full bg-[#6B705C] animate-pulse"></div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B705C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
         </div>
       </section>
 
       {/* Sobre o Evento */}
       <section id="sobre" className="py-24 border-t relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img src="/sobre-bg.jpg" alt="Coral da Semana de Música" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-background/95 md:bg-background/90 backdrop-blur-sm"></div>
-        </div>
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -550,16 +550,16 @@ export default function Home() {
                     <span className="font-semibold text-sm">20 horas/aula</span>
                   </div>
                   <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Inscrição</span>
-                    <span className="font-semibold text-sm text-primary">R$ 20,00</span>
+                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Inscrição (1º Lote)</span>
+                    <span className="font-semibold text-sm text-primary">R$ 110,00</span>
                   </div>
                   <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
-                    <span className="font-semibold text-sm text-primary">R$ 45,00</span>
+                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Inscrição (1º Lote) + Camisa Oficial</span>
+                    <span className="font-semibold text-sm text-primary">R$ 155,00</span>
                   </div>
                   <div className="flex justify-between items-center pb-3 border-b border-border/50">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Combo (Inscrição + Camisa)</span>
-                    <span className="font-semibold text-sm text-primary">R$ 65,00</span>
+                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
+                    <span className="font-semibold text-sm text-primary">R$ 45,00</span>
                   </div>
                   <div className="bg-primary/5 rounded-lg p-3.5 border border-primary/20 mt-4">
                     <h4 className="text-sm font-bold text-primary mb-1.5 flex items-center gap-2">
@@ -764,10 +764,6 @@ export default function Home() {
 
       {/* Oficinas */}
       <section id="oficinas" className="py-24 border-t relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img src="/oficinas-bg.jpg" alt="Regente e Oficinas" className="w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-background/95 md:bg-background/90 backdrop-blur-[2px]"></div>
-        </div>
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
           <div className="text-center max-w-xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Escolha a sua Área de Atuação</h2>
@@ -843,9 +839,9 @@ export default function Home() {
       </section>
 
       {/* Galeria de Fotos (Cinematic Marquee) */}
-      <section id="galeria" className="py-24 border-t bg-background relative overflow-hidden flex flex-col justify-center">
+      <section id="galeria" className="py-24 border-t bg-white/30 backdrop-blur-sm relative overflow-hidden flex flex-col justify-center">
         {/* Glow de fundo para profundidade */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
         <div className="container mx-auto px-4 max-w-6xl relative z-10 mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -1065,22 +1061,22 @@ export default function Home() {
                       <div className="grid grid-cols-1 gap-2.5">
                         {[
                           { 
-                            id: "Inscrição + Camisa Oficial", 
-                            nome: "Inscrição + Camisa Oficial", 
-                            valor: "R$ 65,00", 
-                            desc: "Inscrição no evento + Blusa oficial (Tulip/Clássica)." 
+                            id: "Primeiro Lote", 
+                            nome: "Apenas Inscrição (1º Lote)", 
+                            valor: "R$ 110,00", 
+                            desc: "Garante sua entrada na IV Semana de Música." 
                           },
                           { 
-                            id: "Apenas Inscrição", 
-                            nome: "Apenas Inscrição", 
-                            valor: "R$ 20,00", 
-                            desc: "Inscrição nas oficinas, palestras e certificado." 
+                            id: "Primeiro Lote + Camisa Oficial", 
+                            nome: "Inscrição + Camisa Oficial", 
+                            valor: "R$ 155,00", 
+                            desc: "Inscrição (1º Lote) e a Camisa oficial do evento." 
                           },
                           { 
                             id: "Apenas Camisa Oficial", 
                             nome: "Apenas Camisa Oficial", 
                             valor: "R$ 45,00", 
-                            desc: "Blusa oficial comemorativa da IV Semana de Música." 
+                            desc: "Somente a blusa comemorativa (não inclui entrada)." 
                           }
                         ].map((opcao) => (
                           <div
@@ -1126,11 +1122,11 @@ export default function Home() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="telefone">WhatsApp / Telefone</Label>
+                        <Label htmlFor="telefone">Número do WhatsApp <span className="text-red-500">*</span></Label>
                         <Input 
                           id="telefone" 
                           name="telefone" 
-                          placeholder="(88) 99999-9999" 
+                          placeholder="Ex: (88) 99999-9999" 
                           value={formData.telefone} 
                           onChange={handleInputChange} 
                         />
@@ -1768,8 +1764,11 @@ export default function Home() {
               <p className="text-xs flex items-center gap-2"><Phone className="w-3.5 h-3.5" /> (88) 99999-1234</p>
             </div>
           </div>
-          <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-xs text-zinc-600">
+          <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-xs text-zinc-600 flex items-center justify-center gap-2">
             <p>© {new Date().getFullYear()} IV Semana de Música Cristã de Jijoca. Todos os direitos reservados.</p>
+            <Link to="/dashboard" className="text-zinc-800 hover:text-zinc-500 transition-colors" title="Acesso Administrativo">
+              <Lock className="w-3 h-3" />
+            </Link>
           </div>
         </div>
       </footer>
