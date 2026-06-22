@@ -452,7 +452,7 @@ export default function Home() {
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
         <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
-          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8 mb-[18vh] md:mb-0">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-[-15vh] md:mt-8">
             
             {/* Badge */}
             <div className="mb-8 md:mb-5 lg:mb-6 animate-fade-in">
