@@ -452,12 +452,12 @@ export default function Home() {
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
         <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
-          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8 mb-32 md:mb-0">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-8 mb-[18vh] md:mb-0">
             
             {/* Badge */}
-            <div className="mb-5 lg:mb-6 animate-fade-in">
+            <div className="mb-8 md:mb-5 lg:mb-6 animate-fade-in">
               <span className="inline-flex items-center px-3 lg:px-4 py-1 lg:py-1.5 rounded-full text-[10px] lg:text-[11px] font-semibold tracking-widest text-[#6B705C] bg-[#F5F3EE] shadow-sm border border-[#6B705C]/10">
-                <Sparkles className="w-3 lg:w-3.5 h-3 lg:h-3.5 mr-2" /> IV EDIÇÃO • 07 A 13 DE SETEMBRO
+                <Sparkles className="hidden md:inline-block w-3 lg:w-3.5 h-3 lg:h-3.5 mr-2" /> IV EDIÇÃO • 07 A 13 DE SETEMBRO
               </span>
             </div>
             
@@ -466,7 +466,7 @@ export default function Home() {
               <img 
                 src="/logo-permanecei.png" 
                 alt="Permanecei Nele" 
-                className="w-auto h-[120px] md:h-[180px] lg:h-[220px] xl:h-[260px] max-w-full object-contain object-left mix-blend-multiply"
+                className="w-auto h-[170px] sm:h-[190px] md:h-[180px] lg:h-[220px] xl:h-[260px] max-w-full object-contain object-left mix-blend-multiply"
               />
             </div>
             
