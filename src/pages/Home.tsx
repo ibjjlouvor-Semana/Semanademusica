@@ -896,11 +896,7 @@ export default function Home() {
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
         <div className="container mx-auto px-4 max-w-[1320px] relative z-10">
           <div className="text-center max-w-xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">Edições Anteriores</span>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Apresentações Passadas</h2>
-            <p className="text-muted-foreground text-sm">
-              Assista a momentos especiais de louvor, recitais de encerramento e oficinas de nossas edições anteriores.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-widest">EDIÇÕES ANTERIORES</h2>
           </div>
 
           {videos.length === 0 ? (
