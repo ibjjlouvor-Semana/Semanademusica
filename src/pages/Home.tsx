@@ -1724,38 +1724,42 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-zinc-950 text-zinc-400 py-16 border-t border-zinc-800">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {/* Coluna 1: Marcas */}
-            <div className="space-y-8 flex flex-col items-center md:items-start text-center md:text-left">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8 items-start">
+            {/* Coluna 1: Logo Principal */}
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-4">
               <div className="flex items-center gap-3">
                 <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
-                <span className="font-display font-bold text-white text-lg">IV Semana de Música</span>
+                <span className="font-display font-bold text-white text-lg leading-tight">IV Semana<br/>de Música</span>
               </div>
-              
-              <div>
-                <span className="text-[10px] uppercase font-bold text-zinc-600 tracking-wider block mb-3">Realização Oficial</span>
-                <div className="bg-white p-3 rounded-xl inline-block shadow-md hover:scale-[1.03] transition-all duration-200 border border-zinc-200">
-                  <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-9 object-contain" />
-                </div>
+              <p className="text-xs text-zinc-500 leading-relaxed max-w-[200px]">
+                Dedicado à capacitação e adoração através da música cristã.
+              </p>
+            </div>
+            
+            {/* Coluna 2: Realização */}
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-4">
+              <h4 className="font-bold text-white text-sm uppercase tracking-widest">Realização Oficial</h4>
+              <div className="bg-white p-3 rounded-xl inline-block shadow-md hover:scale-[1.03] transition-all duration-200 border border-zinc-200">
+                <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-10 object-contain" />
               </div>
             </div>
             
-            {/* Coluna 2: Info */}
-            <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
+            {/* Coluna 3: Info */}
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-4">
               <h4 className="font-bold text-white text-sm uppercase tracking-widest">Informações</h4>
               <ul className="space-y-3">
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Calendar className="w-4 h-4 text-zinc-500" /> 07 a 13 de Setembro de 2026</li>
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><MapPin className="w-4 h-4 text-zinc-500" /> Jijoca de Jericoacoara, Ceará</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center sm:justify-start"><Calendar className="w-4 h-4 text-zinc-500 shrink-0" /> 07 a 13 de Setembro</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center sm:justify-start text-left"><MapPin className="w-4 h-4 text-zinc-500 shrink-0" /> Jijoca de Jericoacoara, CE</li>
               </ul>
             </div>
 
-            {/* Coluna 3: Contato */}
-            <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
+            {/* Coluna 4: Contato */}
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-4">
               <h4 className="font-bold text-white text-sm uppercase tracking-widest">Contato / Dúvidas</h4>
               <ul className="space-y-3">
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Mail className="w-4 h-4 text-zinc-500" /> ibjjlouvor@gmail.com</li>
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Phone className="w-4 h-4 text-zinc-500" /> (88) 99780-8104</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center sm:justify-start"><Mail className="w-4 h-4 text-zinc-500 shrink-0" /> ibjjlouvor@gmail.com</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center sm:justify-start"><Phone className="w-4 h-4 text-zinc-500 shrink-0" /> (88) 99780-8104</li>
               </ul>
             </div>
           </div>
