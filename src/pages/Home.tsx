@@ -1723,35 +1723,40 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-zinc-950 text-zinc-400 py-12 border-t border-zinc-800">
+      <footer className="bg-zinc-950 text-zinc-400 py-16 border-t border-zinc-800">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2.5">
-                <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-                <span className="font-display font-bold text-white text-base">IV Semana de Música</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            {/* Coluna 1: Marcas */}
+            <div className="space-y-8 flex flex-col items-center md:items-start text-center md:text-left">
+              <div className="flex items-center gap-3">
+                <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+                <span className="font-display font-bold text-white text-lg">IV Semana de Música</span>
               </div>
-              <p className="text-xs text-zinc-500">
-                Uma realização voluntária das igrejas evangélicas de Jijoca de Jericoacoara - CE. Dedicado à capacitação e adoração.
-              </p>
-              <div className="pt-4 border-t border-zinc-800/60 mt-4">
-                <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider block mb-2">Realização Oficial</span>
+              
+              <div>
+                <span className="text-[10px] uppercase font-bold text-zinc-600 tracking-wider block mb-3">Realização Oficial</span>
                 <div className="bg-white p-3 rounded-xl inline-block shadow-md hover:scale-[1.03] transition-all duration-200 border border-zinc-200">
-                  <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-10 object-contain" />
+                  <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-9 object-contain" />
                 </div>
               </div>
             </div>
             
-            <div className="space-y-2">
-              <h4 className="font-bold text-white text-sm">Informações</h4>
-              <p className="text-xs flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> 07 a 13 de Setembro de 2026</p>
-              <p className="text-xs flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Jijoca de Jericoacoara, Ceará</p>
+            {/* Coluna 2: Info */}
+            <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
+              <h4 className="font-bold text-white text-sm uppercase tracking-widest">Informações</h4>
+              <ul className="space-y-3">
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Calendar className="w-4 h-4 text-zinc-500" /> 07 a 13 de Setembro de 2026</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><MapPin className="w-4 h-4 text-zinc-500" /> Jijoca de Jericoacoara, Ceará</li>
+              </ul>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="font-bold text-white text-sm">Contato / Dúvidas</h4>
-              <p className="text-xs flex items-center gap-2"><Mail className="w-3.5 h-3.5" /> contato@semanademusicajijoca.com.br</p>
-              <p className="text-xs flex items-center gap-2"><Phone className="w-3.5 h-3.5" /> (88) 99999-1234</p>
+            {/* Coluna 3: Contato */}
+            <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
+              <h4 className="font-bold text-white text-sm uppercase tracking-widest">Contato / Dúvidas</h4>
+              <ul className="space-y-3">
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Mail className="w-4 h-4 text-zinc-500" /> contato@semanademusicajijoca.com.br</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Phone className="w-4 h-4 text-zinc-500" /> (88) 99999-1234</li>
+              </ul>
             </div>
           </div>
           <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-xs text-zinc-600 flex items-center justify-center gap-2">
