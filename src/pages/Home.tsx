@@ -479,7 +479,7 @@ export default function Home() {
 
             {/* Texto de apoio */}
             <p className="font-sans max-w-[260px] md:max-w-none text-base md:text-lg lg:text-[22px] xl:text-[24px] leading-[1.4] text-[#6B705C] mb-6 md:mb-8 animate-fade-in [animation-delay:300ms] font-normal">
-              Uma semana de aperfeiçoamento musical, comunhão e crescimento espiritual para corais, instrumentistas, regentes e líderes de louvor do Ceará.
+              Uma semana para crescer em louvor, adoração e comunhão, para a glória de Deus.
             </p>
 
             {/* Botões */}
