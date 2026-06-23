@@ -1754,8 +1754,8 @@ export default function Home() {
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
               <h4 className="font-bold text-white text-sm uppercase tracking-widest">Contato / Dúvidas</h4>
               <ul className="space-y-3">
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Mail className="w-4 h-4 text-zinc-500" /> contato@semanademusicajijoca.com.br</li>
-                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Phone className="w-4 h-4 text-zinc-500" /> (88) 99999-1234</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Mail className="w-4 h-4 text-zinc-500" /> ibjjlouvor@gmail.com</li>
+                <li className="text-sm flex items-center gap-2.5 justify-center md:justify-start"><Phone className="w-4 h-4 text-zinc-500" /> (88) 99780-8104</li>
               </ul>
             </div>
           </div>
