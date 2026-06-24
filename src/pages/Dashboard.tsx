@@ -758,6 +758,36 @@ export default function Dashboard() {
     toast.success("Resumo para gráfica exportado!");
   };
 
+  const exportFinanceiroExcel = () => {
+    const wb = XLSX.utils.book_new();
+
+    const headers = ["Data", "Descrição", "Centro de Custo", "Tipo", "Valor (R$)"];
+    const rows = filteredTransacoes.map((i) => [
+      new Date(i.data).toLocaleDateString('pt-BR'),
+      i.descricao,
+      i.centro_custo,
+      i.tipo,
+      i.valor
+    ]);
+
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+    const resumoHeaders = ["", ""];
+    const resumoRows = [
+      ["Total Receitas", receitasTotais],
+      ["Total Despesas", despesasTotais],
+      ["Saldo", saldoGeral]
+    ];
+    
+    XLSX.utils.sheet_add_aoa(ws, [[]], { origin: -1 });
+    XLSX.utils.sheet_add_aoa(ws, [["RESUMO"]], { origin: -1 });
+    XLSX.utils.sheet_add_aoa(ws, [resumoHeaders, ...resumoRows], { origin: -1 });
+
+    XLSX.utils.book_append_sheet(wb, ws, "Relatório Financeiro");
+    XLSX.writeFile(wb, `financeiro_export_${new Date().toISOString().split("T")[0]}.xlsx`);
+    toast.success("Relatório financeiro exportado com sucesso!");
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
       {/* Header */}
@@ -1139,13 +1169,16 @@ export default function Dashboard() {
                   </div>
                   
                   {/* Busca e Mock Fin */}
-                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full">
                     {isUsingPlaceholder && (
-                      <Button variant="outline" size="sm" onClick={handleAddMockFin} className="border-dashed text-xs flex items-center gap-1 self-start">
+                      <Button variant="outline" size="sm" onClick={handleAddMockFin} className="border-dashed text-xs flex items-center gap-1 self-start shrink-0">
                         <Plus className="w-3.5 h-3.5" /> Falso Lançamento
                       </Button>
                     )}
-                    <div className="relative w-full sm:w-64 ml-auto">
+                    <Button size="sm" onClick={exportFinanceiroExcel} className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white self-start shrink-0">
+                      <Download className="w-4 h-4" /> Exportar Relatório (.xlsx)
+                    </Button>
+                    <div className="relative w-full sm:w-64 sm:ml-auto shrink-0">
                       <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                       <Input 
                         placeholder="Buscar por descrição..." 
