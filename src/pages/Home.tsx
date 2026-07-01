@@ -55,7 +55,10 @@ export default function Home() {
   const [paymentSettings, setPaymentSettings] = useState({
     pix_inscricao: "pix@semanademusicajijoca.com.br",
     pix_inscricao_blusa: "pix@semanademusicajijoca.com.br",
-    pix_blusa: "pix@semanademusicajijoca.com.br"
+    pix_blusa: "pix@semanademusicajijoca.com.br",
+    cartao_inscricao: "",
+    cartao_inscricao_blusa: "",
+    cartao_blusa: ""
   });
 
   React.useEffect(() => {
@@ -66,7 +69,10 @@ export default function Home() {
       setPaymentSettings({
         pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
         pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
-        pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br"
+        pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
+        cartao_inscricao: parsed.cartao_inscricao || "",
+        cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
+        cartao_blusa: parsed.cartao_blusa || ""
       });
     }
   }, []);
@@ -78,8 +84,16 @@ export default function Home() {
     return paymentSettings.pix_inscricao;
   };
 
+  const getCurrentCartaoLink = () => {
+    const op = formData.opcao_escolhida;
+    if (op === "Apenas Camisa Oficial") return paymentSettings.cartao_blusa;
+    if (op.includes("Camisa Oficial")) return paymentSettings.cartao_inscricao_blusa;
+    return paymentSettings.cartao_inscricao;
+  };
+
   // Estados do formulário de inscrição
   const [step, setStep] = useState(1);
+  const [metodoPagamento, setMetodoPagamento] = useState("PIX");
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -1479,40 +1493,91 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* QR Code PIX */}
-                    <div className="flex flex-col items-center justify-center p-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
-                      <div className="w-40 h-40 bg-white p-2.5 rounded-xl border flex items-center justify-center relative overflow-hidden">
-                        <img 
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(getCurrentPixKey())}&margin=0`}
-                          alt="QR Code PIX"
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                      <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
-                        Escaneie para Pagar
-                      </span>
-                    </div>
-
-                    {/* Copia e Cola */}
-                    <div className="space-y-1.5">
-                      <Label className="text-xs text-muted-foreground">Chave PIX Copia e Cola:</Label>
-                      <div className="flex gap-2">
-                        <Input 
-                          readOnly 
-                          value={getCurrentPixKey()} 
-                          className="font-mono text-xs h-9 bg-secondary/30 select-all"
-                        />
+                    {/* Seleção de Método de Pagamento */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Forma de Pagamento</Label>
+                      <div className="grid grid-cols-2 gap-2">
                         <Button 
-                          type="button" 
-                          size="icon" 
-                          variant="outline" 
-                          onClick={handleCopyPix}
-                          className="h-9 w-9 shrink-0 active:scale-95"
+                          type="button"
+                          variant={metodoPagamento === "PIX" ? "default" : "outline"}
+                          className={`h-12 ${metodoPagamento === "PIX" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
+                          onClick={() => setMetodoPagamento("PIX")}
                         >
-                          <Copy className="w-4 h-4" />
+                          PIX (Sem Taxas)
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant={metodoPagamento === "CARTAO" ? "default" : "outline"}
+                          className={`h-12 ${metodoPagamento === "CARTAO" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
+                          onClick={() => setMetodoPagamento("CARTAO")}
+                        >
+                          Cartão de Crédito
                         </Button>
                       </div>
                     </div>
+
+                    {metodoPagamento === "PIX" && (
+                      <>
+                        {/* QR Code PIX */}
+                        <div className="flex flex-col items-center justify-center p-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
+                          <div className="w-40 h-40 bg-white p-2.5 rounded-xl border flex items-center justify-center relative overflow-hidden">
+                            <img 
+                              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(getCurrentPixKey())}&margin=0`}
+                              alt="QR Code PIX"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
+                            Escaneie para Pagar
+                          </span>
+                        </div>
+
+                        {/* Copia e Cola */}
+                        <div className="space-y-1.5">
+                          <Label className="text-xs text-muted-foreground">Chave PIX Copia e Cola:</Label>
+                          <div className="flex gap-2">
+                            <Input 
+                              readOnly 
+                              value={getCurrentPixKey()} 
+                              className="font-mono text-xs h-9 bg-secondary/30 select-all"
+                            />
+                            <Button 
+                              type="button" 
+                              size="icon" 
+                              variant="outline" 
+                              onClick={handleCopyPix}
+                              className="h-9 w-9 shrink-0 active:scale-95"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {metodoPagamento === "CARTAO" && (
+                      <div className="flex flex-col items-center justify-center p-6 bg-secondary/30 rounded-2xl border border-border text-center space-y-4">
+                        <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm">Pagamento Seguro via Cartão</h4>
+                          <p className="text-xs text-muted-foreground mt-1 max-w-[250px]">
+                            Você será redirecionado para o nosso ambiente de pagamento seguro (Mercado Pago/PagSeguro).
+                          </p>
+                        </div>
+                        <Button 
+                          type="button"
+                          onClick={() => window.open(getCurrentCartaoLink(), "_blank")}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12"
+                        >
+                          PAGAR COM CARTÃO AGORA
+                        </Button>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-2 font-semibold">
+                          Retorne aqui e clique em Concluir após o pagamento.
+                        </p>
+                      </div>
+                    )}
 
                     {/* Termo de Consentimento */}
                     <div className="flex items-start space-x-2.5 pt-2">

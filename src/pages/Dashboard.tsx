@@ -87,11 +87,14 @@ export default function Dashboard() {
     data: new Date().toISOString().split("T")[0]
   });
 
-  // Configurações Pix
+  // Configurações Pix & Cartão
   const [paymentSettings, setPaymentSettings] = useState({
     pix_inscricao: "",
     pix_inscricao_blusa: "",
-    pix_blusa: ""
+    pix_blusa: "",
+    cartao_inscricao: "",
+    cartao_inscricao_blusa: "",
+    cartao_blusa: ""
   });
 
   useEffect(() => {
@@ -2017,7 +2020,40 @@ export default function Dashboard() {
                       onChange={(e) => setPaymentSettings({...paymentSettings, pix_blusa: e.target.value})}
                     />
                   </div>
-                  <Button type="submit" className="bg-primary hover:bg-primary/90">
+                  
+                  <div className="pt-4 border-t">
+                    <h4 className="text-md font-semibold mb-4 mt-2">Links de Pagamento (Cartão de Crédito)</h4>
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="cartao_inscricao">Link Externo - Apenas Inscrição</Label>
+                        <Input 
+                          id="cartao_inscricao"
+                          placeholder="Ex: https://mpago.la/..."
+                          value={paymentSettings.cartao_inscricao || ""}
+                          onChange={(e) => setPaymentSettings({...paymentSettings, cartao_inscricao: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cartao_inscricao_blusa">Link Externo - Inscrição + Blusa</Label>
+                        <Input 
+                          id="cartao_inscricao_blusa"
+                          placeholder="Ex: https://mpago.la/..."
+                          value={paymentSettings.cartao_inscricao_blusa || ""}
+                          onChange={(e) => setPaymentSettings({...paymentSettings, cartao_inscricao_blusa: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cartao_blusa">Link Externo - Somente Blusa</Label>
+                        <Input 
+                          id="cartao_blusa"
+                          placeholder="Ex: https://mpago.la/..."
+                          value={paymentSettings.cartao_blusa || ""}
+                          onChange={(e) => setPaymentSettings({...paymentSettings, cartao_blusa: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <Button type="submit" className="bg-primary hover:bg-primary/90 w-full mt-4">
                     Salvar Configurações
                   </Button>
                 </form>
