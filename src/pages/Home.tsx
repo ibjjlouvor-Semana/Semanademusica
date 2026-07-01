@@ -28,7 +28,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Info,
-  Heart
+  Heart,
+  Shirt,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -552,65 +554,158 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Sobre o Evento */}
-      <section id="sobre" className="py-24 border-t relative overflow-hidden">
-        <div className="container mx-auto px-4 max-w-5xl relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 leading-[1.1] tracking-tighter">
-                "Louvem ao Senhor, todas as nações; exaltem-no, todos os povos!" 
-                <span className="block text-xl md:text-2xl mt-2 text-primary font-medium tracking-normal opacity-90">Salmo 117.1</span>
-              </h2>
-              <p className="text-muted-foreground mb-4 leading-relaxed">
+      {/* Sobre o Evento e Valores */}
+      <section id="sobre" className="py-24 relative overflow-hidden bg-[#FDFBF7]">
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            
+            {/* Coluna Esquerda - Texto */}
+            <div className="pl-4 md:pl-8">
+              <div className="relative">
+                <span className="absolute -top-10 -left-12 text-8xl font-serif text-[#B38C53] opacity-60 leading-none">“</span>
+                <h2 className="text-[2.75rem] leading-[1.1] font-serif font-bold mb-6 text-[#2E3B2A] tracking-tight relative z-10">
+                  Louvem ao Senhor,<br/>todas as nações;<br/>exaltem-no, todos os<br/>povos!
+                </h2>
+              </div>
+              
+              <div className="flex items-center gap-4 mb-8 mt-4">
+                <div className="w-12 h-[1px] bg-[#B38C53]"></div>
+                <span className="text-[#B38C53] font-medium text-lg">Salmo 117.1</span>
+              </div>
+              
+              <p className="text-[#4D5A42] text-[15px] mb-6 leading-[1.7]">
                 Comprometida com a reverência e a excelência na adoração ao Senhor, a Igreja Bíblica de Jijoca promove anualmente a Semana de Música Cristã. Nosso objetivo é incentivar músicos e coralistas a buscarem o aperfeiçoamento de suas habilidades por meio de um repertório focado em cânticos saudáveis e arranjos vocais e instrumentais, oferecendo ao Senhor uma adoração genuína e bela.
               </p>
-              <p className="text-muted-foreground mb-8 leading-relaxed">
+              
+              <p className="text-[#4D5A42] text-[15px] mb-12 leading-[1.7]">
                 Nesta edição, uniremos a teoria à prática, abordando temas teológicos que fundamentam a adoração e promovem o crescimento espiritual. Nossa semana culminará em um grande concerto de encerramento, reunindo nossa orquestra e o grande coral.
               </p>
-              <div className="flex flex-col gap-3">
+              
+              <div className="flex flex-col sm:flex-row gap-6 mt-8">
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center"><Check className="w-3.5 h-3.5" /></div>
-                  <span className="text-sm font-medium">Aulas práticas coletivas com especialistas</span>
+                  <div className="w-9 h-9 rounded-full border border-[#2E3B2A] flex items-center justify-center shrink-0">
+                    <BookOpen className="w-4 h-4 text-[#2E3B2A]" strokeWidth={2} />
+                  </div>
+                  <span className="text-xs text-[#2E3B2A] font-medium leading-tight max-w-[100px]">Aulas práticas coletivas com especialistas</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center"><Check className="w-3.5 h-3.5" /></div>
-                  <span className="text-sm font-medium">Material didático de apoio em PDF</span>
+                  <div className="w-9 h-9 rounded-full border border-[#2E3B2A] flex items-center justify-center shrink-0">
+                    <Download className="w-4 h-4 text-[#2E3B2A]" strokeWidth={2} />
+                  </div>
+                  <span className="text-xs text-[#2E3B2A] font-medium leading-tight max-w-[100px]">Material didático de apoio em PDF</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center"><Check className="w-3.5 h-3.5" /></div>
-                  <span className="text-sm font-medium">Recital de encerramento no último dia</span>
+                  <div className="w-9 h-9 rounded-full border border-[#2E3B2A] flex items-center justify-center shrink-0">
+                    <Music className="w-4 h-4 text-[#2E3B2A]" strokeWidth={2} />
+                  </div>
+                  <span className="text-xs text-[#2E3B2A] font-medium leading-tight max-w-[100px]">Recital de encerramento no último dia</span>
                 </div>
               </div>
             </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-accent/10 rounded-2xl filter blur-xl opacity-70"></div>
-              <div className="glass-card p-6 rounded-3xl relative z-10 shadow-2xl space-y-6">
-                <h3 className="font-display font-bold text-xl mb-4 text-center">Valores da Edição IV</h3>
-                <div className="space-y-4">
 
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Inscrição (1º Lote - até 31/07)</span>
-                    <span className="font-semibold text-sm text-primary">R$ 110,00</span>
+            {/* Coluna Direita - Valores */}
+            <div className="relative">
+              <div className="bg-[#FCFAF8] p-8 md:p-12 rounded-[2rem] shadow-[0_15px_40px_rgba(0,0,0,0.03)] border border-[#E8E4D9]">
+                
+                {/* Header do Card */}
+                <div className="flex flex-col items-center mb-10">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#B38C53] flex items-center justify-center mb-6">
+                    <Music className="w-5 h-5 text-[#B38C53]" strokeWidth={2.5} />
                   </div>
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Inscrição (1º Lote - até 31/07) + Camisa Oficial</span>
-                    <span className="font-semibold text-sm text-primary">R$ 155,00</span>
+                  <div className="flex items-center w-full justify-center gap-6">
+                    <div className="h-[1px] w-12 bg-gradient-to-l from-[#B38C53] to-transparent"></div>
+                    <h3 className="font-serif font-bold text-2xl text-[#2E3B2A] whitespace-nowrap">Valores da Edição IV</h3>
+                    <div className="h-[1px] w-12 bg-gradient-to-r from-[#B38C53] to-transparent"></div>
                   </div>
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-zinc-400" /> Apenas Inscrição (2º Lote - até 23/08)</span>
-                    <span className="font-semibold text-sm text-zinc-500">R$ 120,00</span>
+                  <div className="mt-3 text-[#B38C53]">
+                     {/* Leaf decoration simple svg */}
+                     <svg width="40" height="12" viewBox="0 0 40 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6C23 6 25 3 25 3C25 3 24 8 20 8C16 8 15 3 15 3C15 3 17 6 20 6Z" fill="currentColor"/>
+                        <path d="M12 7C14 7 16 5 16 5C16 5 15 9 12 9C9 9 8 5 8 5C8 5 10 7 12 7Z" fill="currentColor"/>
+                        <path d="M28 7C25 7 23 5 23 5C23 5 24 9 28 9C31 9 32 5 32 5C32 5 30 7 28 7Z" fill="currentColor"/>
+                        <path d="M5 8.5C7 8.5 8 7 8 7C8 7 7 10.5 5 10.5C3 10.5 2 7 2 7C2 7 3 8.5 5 8.5Z" fill="currentColor"/>
+                        <path d="M35 8.5C33 8.5 32 7 32 7C32 7 33 10.5 35 10.5C37 10.5 38 7 38 7C38 7 37 8.5 35 8.5Z" fill="currentColor"/>
+                        <rect x="18" y="7" width="4" height="1" fill="currentColor"/>
+                     </svg>
                   </div>
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-zinc-400" /> Apenas Inscrição (3º Lote - a partir de 24/08)</span>
-                    <span className="font-semibold text-sm text-zinc-500">R$ 130,00</span>
+                </div>
+
+                {/* Lista de Valores */}
+                <div className="space-y-3">
+                  
+                  {/* Item 1 */}
+                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                        <User className="w-5 h-5" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] text-xs">(1º Lote – até 31/07)</span>
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 110,00</span>
                   </div>
-                  <div className="flex justify-between items-center pb-3 border-b border-border/50">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
-                    <span className="font-semibold text-sm text-primary">R$ 45,00</span>
+
+                  {/* Item 2 */}
+                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#A48045] text-white flex items-center justify-center shrink-0">
+                        <Shirt className="w-5 h-5" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição <span className="font-normal">(1º Lote – até 31/07)</span></span>
+                        <span className="text-[#2E3B2A] text-xs">+ Camisa Oficial</span>
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#A48045] whitespace-nowrap">R$ 155,00</span>
                   </div>
+
+                  {/* Item 3 */}
+                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                        <User className="w-5 h-5" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] text-xs">(2º Lote – até 23/08)</span>
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 120,00</span>
+                  </div>
+
+                  {/* Item 4 */}
+                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                        <User className="w-5 h-5" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] text-xs">(3º Lote – a partir de 24/08)</span>
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 130,00</span>
+                  </div>
+
+                  {/* Item 5 */}
+                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                        <Shirt className="w-5 h-5" strokeWidth={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Camisa Oficial</span>
+                      </div>
+                    </div>
+                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 45,00</span>
+                  </div>
+
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* Seção Exclusiva de Promoções */}
