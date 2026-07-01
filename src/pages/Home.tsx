@@ -885,9 +885,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-xl">
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Nossos Registros</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                A beleza e a intensidade da adoração comunitária registradas em nossas edições passadas.
-              </p>
+
             </div>
             <Badge variant="outline" className="hidden md:inline-flex rounded-full px-4 py-1.5 border-primary/20 text-primary">
               <Sparkles className="w-3.5 h-3.5 mr-2" /> Galeria Oficial
