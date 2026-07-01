@@ -34,7 +34,9 @@ import {
   Coffee,
   Mic2,
   Church,
-  CalendarDays
+  CalendarDays,
+  MicVocal,
+  Guitar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -793,8 +795,8 @@ export default function Home() {
                   { id: "terca", dia: "Terça", data: "08/Set", icon: BookOpen },
                   { id: "quarta", dia: "Quarta", data: "09/Set", icon: Mic2 },
                   { id: "quinta", dia: "Quinta", data: "10/Set", icon: Music },
-                  { id: "sexta", dia: "Sexta", data: "11/Set", icon: (props: any) => <span className={props.className} style={{fontSize: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', filter: props.className?.includes('active') ? 'none' : 'grayscale(1) sepia(1) hue-rotate(5deg) saturate(3)'}}>🎤</span> },
-                  { id: "sabado", dia: "Sábado", data: "12/Set", icon: (props: any) => <span className={props.className} style={{fontSize: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', filter: props.className?.includes('active') ? 'none' : 'grayscale(1) sepia(1) hue-rotate(5deg) saturate(3)'}}>🎻</span> },
+                  { id: "sexta", dia: "Sexta", data: "11/Set", icon: MicVocal },
+                  { id: "sabado", dia: "Sábado", data: "12/Set", icon: Guitar },
                   { id: "domingo", dia: "Domingo", data: "13/Set", icon: Church }
                 ].map((item) => (
                   <TabsTrigger 
