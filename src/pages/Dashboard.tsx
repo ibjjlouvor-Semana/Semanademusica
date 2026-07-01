@@ -410,7 +410,7 @@ export default function Dashboard() {
     const detalhesOrq = ["Violino I", "Violoncelo", "Trompete", "Flauta"];
     const cidades = ["Jijoca de Jericoacoara", "Cruz", "Acaraú"];
     const tamanhos = ["P", "M", "G", "GG"];
-    const estilos = ["Azul Royal - OFICIAL", "Azul Marinho - OFICIAL"];
+    const estilos = ["Verde", "OffWhite"];
     const tiposCamisa = ["Masculino", "Feminino (Baby Look)"];
 
     const opcaoItem = opcoesList[Math.floor(Math.random() * opcoesList.length)];
@@ -672,16 +672,16 @@ export default function Dashboard() {
   const tamanhoOrder = ["PP", "P", "M", "G", "GG", "XG"];
   const tamanhoTotais = tamanhoOrder.map((tam) => ({
     tamanho: tam,
-    azulRoyal: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Azul Royal - OFICIAL" && i.camisa_tipo === "Masculino").length,
-    azulRoyalBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Azul Royal - OFICIAL" && i.camisa_tipo === "Feminino (Baby Look)").length,
-    azulMarinho: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Azul Marinho - OFICIAL" && i.camisa_tipo === "Masculino").length,
-    azulMarinhoBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Azul Marinho - OFICIAL" && i.camisa_tipo === "Feminino (Baby Look)").length,
+    azulRoyal: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length,
+    azulRoyalBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length,
+    azulMarinho: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length,
+    azulMarinhoBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length,
   }));
 
-  const totalAzulRoyal = todasCamisas.filter((i) => i.camisa_estilo === "Azul Royal - OFICIAL" && i.camisa_tipo === "Masculino").length;
-  const totalAzulRoyalBaby = todasCamisas.filter((i) => i.camisa_estilo === "Azul Royal - OFICIAL" && i.camisa_tipo === "Feminino (Baby Look)").length;
-  const totalAzulMarinho = todasCamisas.filter((i) => i.camisa_estilo === "Azul Marinho - OFICIAL" && i.camisa_tipo === "Masculino").length;
-  const totalAzulMarinhoBaby = todasCamisas.filter((i) => i.camisa_estilo === "Azul Marinho - OFICIAL" && i.camisa_tipo === "Feminino (Baby Look)").length;
+  const totalAzulRoyal = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length;
+  const totalAzulRoyalBaby = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length;
+  const totalAzulMarinho = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length;
+  const totalAzulMarinhoBaby = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length;
 
   // XLSX export function
   const exportCSV = () => {
@@ -751,19 +751,19 @@ export default function Dashboard() {
     lines.push("");
     lines.push("=== RESUMO POR MODELO E TAMANHO ===");
     lines.push("");
-    lines.push("AZUL ROYAL - OFICIAL (Masculino)");
+    lines.push("VERDE (Masculino)");
     tamanhoTotais.forEach((t) => { if (t.azulRoyal > 0) lines.push(`  ${t.tamanho}: ${t.azulRoyal} un.`); });
     lines.push(`  TOTAL: ${totalAzulRoyal} un.`);
     lines.push("");
-    lines.push("AZUL ROYAL - OFICIAL (Baby Look / Feminino)");
+    lines.push("VERDE (Baby Look / Feminino)");
     tamanhoTotais.forEach((t) => { if (t.azulRoyalBaby > 0) lines.push(`  ${t.tamanho}: ${t.azulRoyalBaby} un.`); });
     lines.push(`  TOTAL: ${totalAzulRoyalBaby} un.`);
     lines.push("");
-    lines.push("AZUL MARINHO - OFICIAL (Masculino)");
+    lines.push("OFFWHITE (Masculino)");
     tamanhoTotais.forEach((t) => { if (t.azulMarinho > 0) lines.push(`  ${t.tamanho}: ${t.azulMarinho} un.`); });
     lines.push(`  TOTAL: ${totalAzulMarinho} un.`);
     lines.push("");
-    lines.push("AZUL MARINHO - OFICIAL (Baby Look / Feminino)");
+    lines.push("OFFWHITE (Baby Look / Feminino)");
     tamanhoTotais.forEach((t) => { if (t.azulMarinhoBaby > 0) lines.push(`  ${t.tamanho}: ${t.azulMarinhoBaby} un.`); });
     lines.push(`  TOTAL: ${totalAzulMarinhoBaby} un.`);
     lines.push("");
@@ -1710,8 +1710,8 @@ export default function Dashboard() {
                       </SelectTrigger>
                       <SelectContent className="bg-popover border text-foreground">
                         <SelectItem value="Todos" className="hover:bg-accent focus:bg-accent text-xs">Todos os estilos</SelectItem>
-                        <SelectItem value="Azul Royal - OFICIAL" className="hover:bg-accent focus:bg-accent text-xs">🟤 Azul Royal - OFICIAL</SelectItem>
-                        <SelectItem value="Azul Marinho - OFICIAL" className="hover:bg-accent focus:bg-accent text-xs">⚫ Azul Marinho - OFICIAL</SelectItem>
+                        <SelectItem value="Verde" className="hover:bg-accent focus:bg-accent text-xs">👕 Verde</SelectItem>
+                        <SelectItem value="OffWhite" className="hover:bg-accent focus:bg-accent text-xs">👕 OffWhite</SelectItem>
                       </SelectContent>
                     </Select>
                     {/* Filtro Tipo */}
@@ -1795,10 +1795,10 @@ export default function Dashboard() {
                               <div className="flex items-center gap-2">
                                 <span
                                   className="w-3 h-3 rounded-full shrink-0 border"
-                                  style={{ backgroundColor: ins.camisa_estilo === "Azul Royal - OFICIAL" ? "#6B1D2F" : "#18181B" }}
+                                  style={{ backgroundColor: ins.camisa_estilo === "Verde" ? "#4C5F38" : "#F5F5F0", color: ins.camisa_estilo === "OffWhite" ? "#000" : "#fff" }}
                                 />
                                 <span className="text-xs font-medium">
-                                  {ins.camisa_estilo === "Azul Royal - OFICIAL" ? "TULIP" : "CLÁSSICA"}
+                                  {ins.camisa_estilo === "Verde" ? "VERDE" : "OFFWHITE"}
                                 </span>
                               </div>
                             </td>

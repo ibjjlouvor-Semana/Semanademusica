@@ -95,7 +95,7 @@ export default function Home() {
     tipo_participacao: "Coral",
     detalhe_participacao: "",
     descricao_experiencia: "",
-    camisa_estilo: "Azul Royal - OFICIAL",
+    camisa_estilo: "Verde",
     camisa_tipo: "Masculino",
     camisa_tamanho: "M",
     camisa_obs: "",
@@ -1366,10 +1366,11 @@ export default function Home() {
                     {/* Estilo da Blusa */}
                     <div className="space-y-2">
                       <Label className="text-sm font-semibold">Selecione o Estilo da Blusa</Label>
+                      <img src="/camisas.jpg" alt="Modelos das Blusas" className="w-full h-auto object-cover rounded-xl border border-border/50 mb-4" />
                       <div className="grid grid-cols-2 gap-4">
                         {[
-                          { id: "Azul Royal - OFICIAL", nome: "Azul Royal (OFICIAL)", desc: "Cor Azul Royal com estampa branca", hex: "#1E3E8C" },
-                          { id: "Azul Marinho - OFICIAL", nome: "Azul Marinho (OFICIAL)", desc: "Cor Azul Marinho com estampa branca", hex: "#0F2D59" }
+                          { id: "Verde", nome: "Blusa Verde", desc: "Cor verde com estampa clássica", hex: "#4C5F38" },
+                          { id: "OffWhite", nome: "Blusa OffWhite", desc: "Cor OffWhite com estampa clássica", hex: "#F5F5F0" }
                         ].map((estilo) => (
                           <div
                             key={estilo.id}
@@ -1707,7 +1708,7 @@ export default function Home() {
                         tipo_participacao: "Coral",
                         detalhe_participacao: "",
                         descricao_experiencia: "",
-                        camisa_estilo: "Azul Royal - OFICIAL",
+                        camisa_estilo: "Verde",
                         camisa_tipo: "Masculino",
                         camisa_tamanho: "M",
                         camisa_obs: "",
