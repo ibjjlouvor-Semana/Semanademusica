@@ -1145,6 +1145,7 @@ export default function Dashboard() {
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione..." />
                           </SelectTrigger>
+                          <SelectContent className="bg-popover border text-foreground">
                             {centrosDeCusto.map(cc => (
                               <SelectItem key={cc} value={cc} className="hover:bg-accent focus:bg-accent">{cc}</SelectItem>
                             ))}
