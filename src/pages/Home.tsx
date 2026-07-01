@@ -26,6 +26,7 @@ import {
   Youtube,
   Play,
   ChevronLeft,
+  ChevronRight,
   Info,
   Heart,
   Shirt,
