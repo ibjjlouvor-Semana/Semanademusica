@@ -622,7 +622,7 @@ export default function Home() {
                   <Users className="w-5 h-5 text-primary" /> Promoção Família
                 </h3>
                 <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                  Traga sua família para louvar a Deus junto com você! O segundo membro da família (e os seguintes) ganham <strong>R$ 10,00 de desconto</strong> na inscrição. <span className="block mt-1 text-xs opacity-80">(Válido somente para Cônjuges, Filhos e Irmãos)</span>
+                  Traga sua família para louvar a Deus junto com você! O segundo membro da família (e os seguintes) ganham <strong>R$ 10,00 de desconto</strong> na inscrição. <span className="block mt-1 text-xs opacity-80">(Válido somente para Cônjuges, Filhos e Irmãos. Exclusivo para pagamentos via PIX)</span>
                 </p>
                 
                 <div className="bg-white/40 dark:bg-black/10 rounded-xl p-4 border border-border/50">
