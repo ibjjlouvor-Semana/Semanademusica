@@ -595,6 +595,14 @@ export default function Home() {
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Inscrição (1º Lote) + Camisa Oficial</span>
                     <span className="font-semibold text-sm text-primary">R$ 155,00</span>
                   </div>
+                  <div className="flex justify-between items-center pb-2 border-b">
+                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-zinc-400" /> Apenas Inscrição (2º Lote)</span>
+                    <span className="font-semibold text-sm text-zinc-500">R$ 120,00</span>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b">
+                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-zinc-400" /> Apenas Inscrição (3º Lote)</span>
+                    <span className="font-semibold text-sm text-zinc-500">R$ 130,00</span>
+                  </div>
                   <div className="flex justify-between items-center pb-3 border-b border-border/50">
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Camisa Oficial</span>
                     <span className="font-semibold text-sm text-primary">R$ 45,00</span>
