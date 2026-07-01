@@ -558,13 +558,14 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 leading-[1.1] tracking-tighter">
-                Uma tradição de adoração e aperfeiçoamento musical.
+                "Louvem ao Senhor, todas as nações; exaltem-no, todos os povos!" 
+                <span className="block text-xl md:text-2xl mt-2 text-primary font-medium tracking-normal opacity-90">Salmo 117.1</span>
               </h2>
               <p className="text-muted-foreground mb-4 leading-relaxed">
-                Realizada anualmente pela Igreja Bíblica de Jijoca, a Semana de Música Cristã é um espaço dedicado à celebração e ao crescimento técnico da nossa congregação. Nosso foco é capacitar músicos e coralistas através de um repertório focado em hinos tradicionais, arranjos vocais exclusivos e peças instrumentais.
+                Comprometida com a reverência e a excelência na adoração ao Senhor, a Igreja Bíblica de Jijoca promove anualmente a Semana de Música Cristã. Nosso objetivo é incentivar músicos e coralistas a buscarem o aperfeiçoamento de suas habilidades por meio de um repertório focado em cânticos saudáveis e arranjos vocais e instrumentais, oferecendo ao Senhor uma adoração genuína e bela.
               </p>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Durante esta edição, uniremos a teoria à prática, abordando temas teológicos essenciais da adoração comunitária. O encontro culminará em um grande concerto de encerramento, envolvendo nossa orquestra de instrumentos e o coral de vozes locais.
+                Nesta edição, uniremos a teoria à prática, abordando temas teológicos que fundamentam a adoração e promovem o crescimento espiritual. Nossa semana culminará em um grande concerto de encerramento, reunindo nossa orquestra e o grande coral.
               </p>
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3">
