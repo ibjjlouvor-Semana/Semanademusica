@@ -647,19 +647,7 @@ export default function Home() {
                     <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 110,00</span>
                   </div>
 
-                  {/* Item 2 */}
-                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-[#A48045] text-white flex items-center justify-center shrink-0">
-                        <Shirt className="w-5 h-5" strokeWidth={2} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição <span className="font-normal">(1º Lote – até 31/07)</span></span>
-                        <span className="text-[#2E3B2A] text-xs">+ Camisa Oficial</span>
-                      </div>
-                    </div>
-                    <span className="font-bold text-[#A48045] whitespace-nowrap">R$ 155,00</span>
-                  </div>
+
 
                   {/* Item 3 */}
                   <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
