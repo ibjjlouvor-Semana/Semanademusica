@@ -590,9 +590,9 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full border border-[#2E3B2A] flex items-center justify-center shrink-0">
-                    <Download className="w-4 h-4 text-[#2E3B2A]" strokeWidth={2} />
+                    <Printer className="w-4 h-4 text-[#2E3B2A]" strokeWidth={2} />
                   </div>
-                  <span className="text-xs text-[#2E3B2A] font-medium leading-tight max-w-[100px]">Material didático de apoio em PDF</span>
+                  <span className="text-xs text-[#2E3B2A] font-medium leading-tight max-w-[100px]">Material didático de apoio impresso</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-full border border-[#2E3B2A] flex items-center justify-center shrink-0">
