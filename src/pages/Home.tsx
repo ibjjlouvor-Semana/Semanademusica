@@ -897,7 +897,7 @@ export default function Home() {
 
         {/* Linha 1: Deslizando para a Esquerda (Fotos 1 a 5, duplicadas para loop infinito) */}
         <div className="relative flex overflow-hidden group/marquee mb-6 mask-image-linear-horizontal w-full">
-          <div className="flex animate-marquee gap-6 whitespace-nowrap w-max px-3 group-hover/marquee:[animation-play-state:paused]">
+          <div className="flex animate-marquee gap-6 whitespace-nowrap w-max px-3">
             {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map((num, i) => (
               <div key={i} className="w-[280px] h-[350px] md:w-[400px] md:h-[450px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-border/50 group relative bg-secondary/20">
                 <img 
@@ -916,7 +916,7 @@ export default function Home() {
 
         {/* Linha 2: Deslizando para a Direita (Fotos 6 a 10, duplicadas para loop infinito) */}
         <div className="relative flex overflow-hidden group/marquee w-full">
-          <div className="flex animate-marquee-reverse gap-6 whitespace-nowrap w-max px-3 group-hover/marquee:[animation-play-state:paused] -ml-[150px]">
+          <div className="flex animate-marquee-reverse gap-6 whitespace-nowrap w-max px-3 -ml-[150px]">
             {[6, 7, 8, 9, 10, 6, 7, 8, 9, 10].map((num, i) => (
               <div key={i} className="w-[280px] h-[350px] md:w-[400px] md:h-[450px] rounded-3xl overflow-hidden shrink-0 shadow-lg border border-border/50 group relative bg-secondary/20">
                 <img 
