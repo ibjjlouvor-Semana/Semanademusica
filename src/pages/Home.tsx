@@ -26,11 +26,14 @@ import {
   Youtube,
   Play,
   ChevronLeft,
-  ChevronRight,
   Info,
   Heart,
   Shirt,
-  Download
+  Download,
+  Coffee,
+  Mic2,
+  Church,
+  CalendarDays
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -770,116 +773,119 @@ export default function Home() {
       </section>
 
       {/* Cronograma / Programação */}
-      <section id="cronograma" className="py-20 border-t bg-secondary/10">
-        <div className="container mx-auto px-4 max-w-6xl text-center">
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 tracking-tighter">Cronograma da Semana</h2>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-12 leading-relaxed">
-            Confira o cronograma completo das atividades da IV Semana de Música Cristã (07 a 13 de Setembro de 2026).
-          </p>
+      <section id="cronograma" className="py-20 border-t bg-[#FDFBF7]">
+        <div className="container mx-auto px-4 max-w-5xl text-center relative">
           
-          <Tabs defaultValue="segunda" className="w-full max-w-3xl mx-auto text-left">
-            <TabsList className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 h-auto p-1.5 bg-background/50 border border-border/50 mb-8 rounded-2xl shadow-sm gap-1">
-              <TabsTrigger value="segunda" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Segunda</span><span className="text-[10px] opacity-70">07/Set</span></TabsTrigger>
-              <TabsTrigger value="terca" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Terça</span><span className="text-[10px] opacity-70">08/Set</span></TabsTrigger>
-              <TabsTrigger value="quarta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quarta</span><span className="text-[10px] opacity-70">09/Set</span></TabsTrigger>
-              <TabsTrigger value="quinta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Quinta</span><span className="text-[10px] opacity-70">10/Set</span></TabsTrigger>
-              <TabsTrigger value="sexta" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sexta</span><span className="text-[10px] opacity-70">11/Set</span></TabsTrigger>
-              <TabsTrigger value="sabado" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Sábado</span><span className="text-[10px] opacity-70">12/Set</span></TabsTrigger>
-              <TabsTrigger value="domingo" className="py-2.5 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all flex flex-col gap-1"><span className="font-semibold text-xs md:text-sm">Domingo</span><span className="text-[10px] opacity-70">13/Set</span></TabsTrigger>
-            </TabsList>
+          <div className="flex flex-col items-center mb-8">
+            <Music className="w-8 h-8 text-[#B38C53] mb-4" strokeWidth={1.5} />
+            <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-[#2E3B2A] tracking-tight">Cronograma da Semana</h2>
+            <p className="text-[#4D5A42] text-sm max-w-xl mx-auto leading-relaxed">
+              Confira o cronograma completo das atividades da IV Semana de Música Cristã <br className="hidden sm:block"/>(07 a 13 de Setembro de 2026).
+            </p>
+          </div>
+          
+          <Tabs defaultValue="segunda" className="w-full mx-auto text-left">
+            <div className="bg-[#FCFAF8] p-2 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E8E4D9] mb-8 overflow-x-auto scrollbar-hide">
+              <TabsList className="flex md:grid md:grid-cols-7 h-auto bg-transparent min-w-[600px] gap-2">
+                {[
+                  { id: "segunda", dia: "Segunda", data: "07/Set", icon: CalendarDays },
+                  { id: "terca", dia: "Terça", data: "08/Set", icon: BookOpen },
+                  { id: "quarta", dia: "Quarta", data: "09/Set", icon: Mic2 },
+                  { id: "quinta", dia: "Quinta", data: "10/Set", icon: Music },
+                  { id: "sexta", dia: "Sexta", data: "11/Set", icon: Users },
+                  { id: "sabado", dia: "Sábado", data: "12/Set", icon: Users },
+                  { id: "domingo", dia: "Domingo", data: "13/Set", icon: Church }
+                ].map((item) => (
+                  <TabsTrigger 
+                    key={item.id}
+                    value={item.id} 
+                    className="py-3 px-4 md:px-2 rounded-xl border-none
+                    data-[state=active]:bg-[#5C6652] data-[state=active]:text-white data-[state=active]:shadow-lg
+                    data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#2E3B2A] data-[state=inactive]:hover:bg-[#f5f3ed]
+                    transition-all flex flex-col gap-1 items-center relative group"
+                  >
+                    <item.icon className={`w-5 h-5 mb-1 ${item.id === 'segunda' ? '' : 'text-[#B38C53]'} group-data-[state=active]:text-[#B38C53]`} strokeWidth={1.5} />
+                    <span className="font-bold text-sm">{item.dia}</span>
+                    <span className="text-[11px] opacity-80">{item.data}</span>
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-[#5C6652] opacity-0 data-[state=active]:opacity-100 group-data-[state=active]:opacity-100 transition-opacity"></div>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
 
             {[
-              { id: "segunda", dia: "Segunda-feira", data: "07/Set", eventos: [
-                { h: "18:00", t: "Credenciamento" }, { h: "18:15", t: "Culto" }, { h: "19:15", t: "Lanche", sec: true }, { h: "19:30", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              { id: "segunda", dia: "Segunda-feira", dataEx: "07 de Setembro", data: "07/Set", eventos: [
+                { h: "18:00", icon: Users, t: "Credenciamento" }, { h: "18:15", icon: Church, t: "Culto" }, { h: "19:15", icon: Coffee, t: "Lanche" }, { h: "19:30", icon: Music, t: "Ensaio" }, { h: "22:00", icon: Heart, t: "Encerramento" }
               ]},
-              { id: "terca", dia: "Terça-feira", data: "08/Set", eventos: [
-                { h: "18:00", t: "Oficinas / Prática" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              { id: "terca", dia: "Terça-feira", dataEx: "08 de Setembro", data: "08/Set", eventos: [
+                { h: "18:00", icon: BookOpen, t: "Oficinas / Prática" }, { h: "19:00", icon: Coffee, t: "Lanche" }, { h: "19:15", icon: Music, t: "Ensaio" }, { h: "22:00", icon: Heart, t: "Encerramento" }
               ]},
-              { id: "quarta", dia: "Quarta-feira", data: "09/Set", eventos: [
-                { h: "18:00", t: "Oficinas / Prática" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio" }, { h: "22:00", t: "Encerramento" }
+              { id: "quarta", dia: "Quarta-feira", dataEx: "09 de Setembro", data: "09/Set", eventos: [
+                { h: "18:00", icon: Mic2, t: "Oficinas / Prática" }, { h: "19:00", icon: Coffee, t: "Lanche" }, { h: "19:15", icon: Music, t: "Ensaio" }, { h: "22:00", icon: Heart, t: "Encerramento" }
               ]},
-              { id: "quinta", dia: "Quinta-feira", data: "10/Set", eventos: [
-                { h: "18:00", t: "Culto" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio Geral" }, { h: "22:00", t: "Encerramento" }
+              { id: "quinta", dia: "Quinta-feira", dataEx: "10 de Setembro", data: "10/Set", eventos: [
+                { h: "18:00", icon: Church, t: "Culto" }, { h: "19:00", icon: Coffee, t: "Lanche" }, { h: "19:15", icon: Music, t: "Ensaio Geral" }, { h: "22:00", icon: Heart, t: "Encerramento" }
               ]},
-              { id: "sexta", dia: "Sexta-feira", data: "11/Set", eventos: [
-                { h: "18:00", t: "Culto" }, { h: "19:00", t: "Lanche", sec: true }, { h: "19:15", t: "Ensaio Geral" }, { h: "22:00", t: "Encerramento" }
+              { id: "sexta", dia: "Sexta-feira", dataEx: "11 de Setembro", data: "11/Set", eventos: [
+                { h: "18:00", icon: Church, t: "Culto" }, { h: "19:00", icon: Coffee, t: "Lanche" }, { h: "19:15", icon: Music, t: "Ensaio Geral" }, { h: "22:00", icon: Heart, t: "Encerramento" }
+              ]},
+              { id: "sabado", dia: "Sábado", dataEx: "12 de Setembro", data: "12/Set", eventos: [
+                { h: "19:00", icon: Trophy, t: "Concerto Oficial de Encerramento" }
+              ]},
+              { id: "domingo", dia: "Domingo", dataEx: "13 de Setembro", data: "13/Set", eventos: [
+                { h: "08:00", icon: Church, t: "Culto Matinal" }, { h: "18:00", icon: Users, t: "Culto Noturno e Apresentação" }
               ]}
             ].map(dia => (
               <TabsContent key={dia.id} value={dia.id} className="animate-in fade-in zoom-in-95 duration-300">
-                <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-primary rounded-3xl">
-                  <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
-                    <div className="flex justify-between items-center">
-                      <CardTitle className="text-2xl md:text-3xl font-display font-bold text-foreground/90">{dia.dia}</CardTitle>
-                      <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-sm px-4 py-1.5 shadow-sm">{dia.data}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-2 pb-6 space-y-0 px-4 md:px-6">
-                    {dia.eventos.map((ev, i) => (
-                      <div key={i} className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
-                        <span className={`text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors ${ev.sec ? 'text-muted-foreground bg-secondary/60 group-hover:bg-secondary' : 'text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md'}`}>
-                          {ev.h}
-                        </span>
-                        <span className={`font-semibold text-base md:text-lg transition-colors ${ev.sec ? 'text-muted-foreground' : 'text-foreground/90 group-hover:text-primary'}`}>
-                          {ev.t}
-                        </span>
+                <div className="bg-[#FCFAF8] rounded-[2rem] shadow-[0_15px_40px_rgba(0,0,0,0.03)] border border-[#E8E4D9] p-6 md:p-10 relative">
+                  
+                  <div className="flex justify-between items-center mb-10 pb-6 border-b border-[#E8E4D9]">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-[#f4ebd9] flex items-center justify-center shrink-0">
+                         <CalendarDays className="w-6 h-6 text-[#2E3B2A]" strokeWidth={1.5} />
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
+                      <div>
+                        <h3 className="text-2xl md:text-3xl font-serif font-bold text-[#2E3B2A]">{dia.dia}</h3>
+                        <p className="text-[#B38C53] font-medium">{dia.dataEx}</p>
+                      </div>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-2 bg-[#f4ebd9] px-4 py-2 rounded-full text-[#2E3B2A] font-semibold text-sm">
+                      <CalendarDays className="w-4 h-4" />
+                      {dia.data}
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    {/* Linha vertical principal */}
+                    <div className="absolute left-[9px] top-4 bottom-4 w-[2px] bg-[#B38C53]/30"></div>
+                    
+                    <div className="space-y-0">
+                      {dia.eventos.map((ev, i) => (
+                        <div key={i} className="relative flex items-center py-6 border-b border-[#E8E4D9]/60 last:border-0 group">
+                          {/* Bolinha na linha */}
+                          <div className="absolute left-[4.5px] w-[11px] h-[11px] rounded-full border-2 border-[#B38C53] bg-[#FCFAF8] z-10"></div>
+                          
+                          <div className="flex items-center flex-1 pl-12 gap-4 md:gap-8">
+                            <div className="flex items-center gap-2 bg-[#f4ebd9]/60 px-4 py-2 rounded-xl text-[#4D5A42] font-semibold text-sm w-[100px] shrink-0 justify-center">
+                              <Clock className="w-4 h-4" /> {ev.h}
+                            </div>
+                            
+                            <div className="w-10 h-10 rounded-xl bg-[#f4ebd9]/60 flex items-center justify-center shrink-0">
+                              <ev.icon className="w-5 h-5 text-[#4D5A42]" strokeWidth={2} />
+                            </div>
+                            
+                            <span className="font-bold text-[#2E3B2A] text-lg">
+                              {ev.t}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
               </TabsContent>
             ))}
-
-            <TabsContent value="sabado" className="animate-in fade-in zoom-in-95 duration-300">
-              <Card className="glass-card flex flex-col justify-start border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-accent bg-gradient-to-br from-accent/5 to-transparent rounded-3xl">
-                <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-2xl md:text-3xl font-display font-bold flex items-center gap-3 text-foreground/90">
-                      <Trophy className="w-6 h-6 md:w-8 md:h-8 text-accent" />
-                      Sábado (Concerto)
-                    </CardTitle>
-                    <Badge className="bg-accent/10 text-accent border-accent/20 font-mono text-sm px-4 py-1.5 shadow-sm">12/Set</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-6 pb-8 space-y-6 px-6 md:px-8">
-                  <div className="flex items-center gap-5 py-4 border-b border-border/40 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
-                    <span className="text-sm font-mono font-bold text-accent bg-accent/10 px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner group-hover:bg-accent group-hover:text-accent-foreground transition-colors">19:00</span>
-                    <span className="font-semibold text-base md:text-lg text-foreground/90 group-hover:text-accent transition-colors">Concerto Oficial de Encerramento</span>
-                  </div>
-                  <p className="text-base text-foreground/80 p-6 border border-border/50 rounded-2xl bg-background/50 leading-relaxed font-medium shadow-sm">
-                    Apresentação oficial de encerramento de todas as oficinas, grande orquestra e coral para a comunidade da região. Convide sua igreja e traga sua família para celebrar a Deus conosco!
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="domingo" className="animate-in fade-in zoom-in-95 duration-300">
-              <Card className="glass-card flex flex-col justify-between border-white/10 overflow-hidden shadow-2xl border-t-4 border-t-primary rounded-3xl">
-                <CardHeader className="pb-5 border-b border-white/5 bg-secondary/10 px-6 md:px-8 pt-6 md:pt-8">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-2xl md:text-3xl font-display font-bold text-foreground/90">Domingo</CardTitle>
-                    <Badge className="bg-primary/10 text-primary border-primary/20 font-mono text-sm px-4 py-1.5 shadow-sm">13/Set</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-2 pb-6 space-y-0 px-4 md:px-6">
-                  <div className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
-                    <span className="text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md">
-                      08:00
-                    </span>
-                    <span className="font-semibold text-base md:text-lg transition-colors text-foreground/90 group-hover:text-primary">
-                      Culto Matinal
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-5 py-4 border-b border-border/40 last:border-0 group hover:bg-black/5 dark:hover:bg-white/5 px-2 rounded-xl transition-all duration-300">
-                    <span className="text-sm font-mono font-bold px-4 py-2 rounded-xl shrink-0 w-[75px] md:w-[85px] text-center shadow-inner transition-colors text-primary bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-md">
-                      18:00
-                    </span>
-                    <span className="font-semibold text-base md:text-lg transition-colors text-foreground/90 group-hover:text-primary">
-                      Culto Noturno e Apresentação do Coral e Orquestra
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
           </Tabs>
         </div>
       </section>
