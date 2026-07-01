@@ -50,9 +50,34 @@ const OFICINAS = [
   { id: "regencia", nome: "Regência Coral & Teoria Musical", professor: "Prof. Lucas Rocha", descricao: "Leitura de partitura, gestos de regência e harmonia." },
 ];
 
-const CHAVE_PIX = "pix@semanademusicajijoca.com.br";
-
 export default function Home() {
+  // Configurações Pix
+  const [paymentSettings, setPaymentSettings] = useState({
+    pix_inscricao: "pix@semanademusicajijoca.com.br",
+    pix_inscricao_blusa: "pix@semanademusicajijoca.com.br",
+    pix_blusa: "pix@semanademusicajijoca.com.br"
+  });
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem("payment_settings");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Fallbacks caso os valores venham vazios do painel
+      setPaymentSettings({
+        pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+        pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+        pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br"
+      });
+    }
+  }, []);
+
+  const getCurrentPixKey = () => {
+    const op = formData.opcao_escolhida;
+    if (op === "Apenas Camisa Oficial") return paymentSettings.pix_blusa;
+    if (op.includes("Camisa Oficial")) return paymentSettings.pix_inscricao_blusa;
+    return paymentSettings.pix_inscricao;
+  };
+
   // Estados do formulário de inscrição
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -322,7 +347,7 @@ export default function Home() {
 
   // Copiar chave PIX
   const handleCopyPix = () => {
-    navigator.clipboard.writeText(CHAVE_PIX);
+    navigator.clipboard.writeText(getCurrentPixKey());
     toast.success("Chave PIX copiada com sucesso!");
   };
 
@@ -1455,28 +1480,12 @@ export default function Home() {
 
                     {/* QR Code PIX */}
                     <div className="flex flex-col items-center justify-center p-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
-                      <div className="w-40 h-40 bg-zinc-50 p-2.5 rounded-xl border flex items-center justify-center relative">
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
-                          <QrCode className="w-24 h-24" />
-                        </div>
-                        <svg className="w-full h-full text-zinc-900" viewBox="0 0 100 100" fill="currentColor">
-                          <rect x="0" y="0" width="22" height="22" />
-                          <rect x="6" y="6" width="10" height="10" fill="white" />
-                          <rect x="0" y="78" width="22" height="22" />
-                          <rect x="6" y="84" width="10" height="10" fill="white" />
-                          <rect x="78" y="0" width="22" height="22" />
-                          <rect x="84" y="6" width="10" height="10" fill="white" />
-                          <rect x="35" y="10" width="8" height="8" />
-                          <rect x="50" y="15" width="15" height="6" />
-                          <rect x="35" y="35" width="12" height="12" />
-                          <rect x="15" y="45" width="8" height="18" />
-                          <rect x="55" y="35" width="10" height="25" />
-                          <rect x="75" y="45" width="15" height="10" />
-                          <rect x="35" y="60" width="10" height="10" />
-                          <rect x="45" y="78" width="12" height="15" />
-                          <rect x="70" y="70" width="20" height="20" />
-                          <rect x="76" y="76" width="8" height="8" fill="white" />
-                        </svg>
+                      <div className="w-40 h-40 bg-white p-2.5 rounded-xl border flex items-center justify-center relative overflow-hidden">
+                        <img 
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(getCurrentPixKey())}&margin=0`}
+                          alt="QR Code PIX"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
                         Escaneie para Pagar
@@ -1489,7 +1498,7 @@ export default function Home() {
                       <div className="flex gap-2">
                         <Input 
                           readOnly 
-                          value={CHAVE_PIX} 
+                          value={getCurrentPixKey()} 
                           className="font-mono text-xs h-9 bg-secondary/30 select-all"
                         />
                         <Button 

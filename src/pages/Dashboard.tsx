@@ -28,7 +28,8 @@ import {
   Filter,
   PackageCheck,
   Package,
-  Youtube
+  Youtube,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -85,6 +86,26 @@ export default function Dashboard() {
     valor: "",
     data: new Date().toISOString().split("T")[0]
   });
+
+  // Configurações Pix
+  const [paymentSettings, setPaymentSettings] = useState({
+    pix_inscricao: "",
+    pix_inscricao_blusa: "",
+    pix_blusa: ""
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem("payment_settings");
+    if (saved) {
+      setPaymentSettings(JSON.parse(saved));
+    }
+  }, []);
+
+  const handleSavePaymentSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem("payment_settings", JSON.stringify(paymentSettings));
+    toast.success("Configurações Pix salvas com sucesso!");
+  };
 
   const handleToggleEntrega = async (id: string, nomeParticipante: string, jaEntregue: boolean) => {
     const novoValor = !jaEntregue;
@@ -840,6 +861,9 @@ export default function Dashboard() {
             </TabsTrigger>
             <TabsTrigger value="videos" className="rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-semibold">
               <Youtube className="w-4 h-4" /> Vídeos Galeria
+            </TabsTrigger>
+            <TabsTrigger value="configuracoes" className="rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-semibold">
+              <Settings className="w-4 h-4" /> Configurações
             </TabsTrigger>
           </TabsList>
 
@@ -1953,6 +1977,52 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* ABA 6: CONFIGURAÇÕES */}
+          <TabsContent value="configuracoes" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Configurações de Pagamento (PIX)</CardTitle>
+                <CardDescription>
+                  Insira as chaves PIX (formato "Copia e Cola") para as diferentes opções de inscrição. Essas chaves serão exibidas para o participante na tela de pagamento gerando um QR Code dinâmico.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSavePaymentSettings} className="space-y-6 max-w-2xl">
+                  <div className="space-y-2">
+                    <Label htmlFor="pix_inscricao">Pix - Apenas Inscrição</Label>
+                    <Input 
+                      id="pix_inscricao"
+                      placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
+                      value={paymentSettings.pix_inscricao}
+                      onChange={(e) => setPaymentSettings({...paymentSettings, pix_inscricao: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pix_inscricao_blusa">Pix - Inscrição + Blusa</Label>
+                    <Input 
+                      id="pix_inscricao_blusa"
+                      placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
+                      value={paymentSettings.pix_inscricao_blusa}
+                      onChange={(e) => setPaymentSettings({...paymentSettings, pix_inscricao_blusa: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pix_blusa">Pix - Somente Blusa</Label>
+                    <Input 
+                      id="pix_blusa"
+                      placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
+                      value={paymentSettings.pix_blusa}
+                      onChange={(e) => setPaymentSettings({...paymentSettings, pix_blusa: e.target.value})}
+                    />
+                  </div>
+                  <Button type="submit" className="bg-primary hover:bg-primary/90">
+                    Salvar Configurações
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </TabsContent>
 
         </Tabs>
