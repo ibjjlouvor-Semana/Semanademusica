@@ -586,10 +586,7 @@ export default function Home() {
               <div className="glass-card p-6 rounded-3xl relative z-10 shadow-2xl space-y-6">
                 <h3 className="font-display font-bold text-xl mb-4 text-center">Valores da Edição IV</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="text-muted-foreground text-sm flex items-center gap-2"><Clock className="w-4 h-4 text-primary" /> Carga Horária</span>
-                    <span className="font-semibold text-sm">20 horas/aula</span>
-                  </div>
+
                   <div className="flex justify-between items-center pb-2 border-b">
                     <span className="text-muted-foreground text-sm flex items-center gap-2"><Trophy className="w-4 h-4 text-primary" /> Apenas Inscrição (1º Lote)</span>
                     <span className="font-semibold text-sm text-primary">R$ 110,00</span>

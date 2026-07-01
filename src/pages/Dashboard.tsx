@@ -97,12 +97,31 @@ export default function Dashboard() {
     cartao_blusa: ""
   });
 
+  const [centrosDeCusto, setCentrosDeCusto] = useState(["Semana de Musica", "Loja"]);
+
   useEffect(() => {
     const saved = localStorage.getItem("payment_settings");
     if (saved) {
       setPaymentSettings(JSON.parse(saved));
     }
+    
+    const savedCentros = localStorage.getItem("financeiro_centros_custo");
+    if (savedCentros) {
+      setCentrosDeCusto(JSON.parse(savedCentros));
+    }
   }, []);
+
+  const [novoCentroCusto, setNovoCentroCusto] = useState("");
+  const handleAddCentroCusto = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!novoCentroCusto.trim()) return;
+    if (centrosDeCusto.includes(novoCentroCusto.trim())) return toast.error("Centro de custo já existe!");
+    const novaLista = [...centrosDeCusto, novoCentroCusto.trim()];
+    setCentrosDeCusto(novaLista);
+    localStorage.setItem("financeiro_centros_custo", JSON.stringify(novaLista));
+    setNovoCentroCusto("");
+    toast.success("Centro de Custo adicionado!");
+  };
 
   const handleSavePaymentSettings = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1036,9 +1055,10 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col text-xs text-muted-foreground gap-0.5">
-                    <span>Semana de Música: <strong>R$ {transacoes.filter(t => t.tipo === "Entrada" && t.centro_custo === "Semana de Musica").reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
-                    <span>Loja: <strong>R$ {transacoes.filter(t => t.tipo === "Entrada" && t.centro_custo === "Loja").reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
+                  <div className="flex flex-col text-xs text-muted-foreground gap-1">
+                    {centrosDeCusto.map(cc => (
+                      <span key={cc}>{cc}: <strong>R$ {transacoes.filter(t => t.tipo === "Entrada" && t.centro_custo === cc).reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -1053,9 +1073,10 @@ export default function Dashboard() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col text-xs text-muted-foreground gap-0.5">
-                    <span>Semana de Música: <strong>R$ {transacoes.filter(t => t.tipo === "Saída" && t.centro_custo === "Semana de Musica").reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
-                    <span>Loja: <strong>R$ {transacoes.filter(t => t.tipo === "Saída" && t.centro_custo === "Loja").reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
+                  <div className="flex flex-col text-xs text-muted-foreground gap-1">
+                    {centrosDeCusto.map(cc => (
+                      <span key={cc}>{cc}: <strong>R$ {transacoes.filter(t => t.tipo === "Saída" && t.centro_custo === cc).reduce((s,c)=>s+parseFloat(c.valor), 0).toFixed(2)}</strong></span>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -1124,9 +1145,9 @@ export default function Dashboard() {
                           <SelectTrigger>
                             <SelectValue placeholder="Selecione..." />
                           </SelectTrigger>
-                          <SelectContent className="bg-popover border text-foreground">
-                            <SelectItem value="Semana de Musica" className="hover:bg-accent focus:bg-accent">Semana de Música</SelectItem>
-                            <SelectItem value="Loja" className="hover:bg-accent focus:bg-accent">Loja</SelectItem>
+                            {centrosDeCusto.map(cc => (
+                              <SelectItem key={cc} value={cc} className="hover:bg-accent focus:bg-accent">{cc}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
@@ -1178,18 +1199,16 @@ export default function Dashboard() {
                     </div>
 
                     {/* Filtros de Centro de Custo */}
-                    <div className="flex items-center gap-2">
-                      {["Todos", "Semana de Musica", "Loja"].map((centro) => (
+                    <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
+                      {["Todos", ...centrosDeCusto].map((centro) => (
                         <Button 
                           key={centro}
                           size="sm"
                           variant={centroFiltro === centro ? "default" : "outline"}
                           onClick={() => setCentroFiltro(centro)}
-                          className="text-xs h-8"
+                          className="text-xs h-8 whitespace-nowrap"
                         >
-                          {centro === "Todos" && "Todos"}
-                          {centro === "Semana de Musica" && "Semana de Música"}
-                          {centro === "Loja" && "Loja"}
+                          {centro}
                         </Button>
                       ))}
                     </div>
@@ -1252,7 +1271,7 @@ export default function Dashboard() {
                               <td className="px-6 py-4 text-xs">
                                 <Badge variant="secondary" className="flex items-center gap-1 w-fit bg-secondary/80">
                                   <Tag className="w-3 h-3" />
-                                  {trans.centro_custo === "Semana de Musica" ? "Semana de Música" : "Loja"}
+                                  {trans.centro_custo}
                                 </Badge>
                               </td>
                               <td className="px-6 py-4 font-mono font-bold whitespace-nowrap">
