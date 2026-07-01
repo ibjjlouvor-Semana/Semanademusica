@@ -1690,21 +1690,15 @@ export default function Home() {
                       </div>
 
                       <div className="flex flex-col items-center justify-center pt-2">
-                        <div className="w-20 h-20 bg-zinc-100 p-2 rounded-lg border flex items-center justify-center">
-                          <svg className="w-full h-full text-zinc-800" viewBox="0 0 100 100" fill="currentColor">
-                            <rect x="0" y="0" width="20" height="20" />
-                            <rect x="0" y="80" width="20" height="20" />
-                            <rect x="80" y="0" width="20" height="20" />
-                            <rect x="25" y="25" width="10" height="10" />
-                            <rect x="45" y="10" width="10" height="30" />
-                            <rect x="10" y="45" width="30" height="10" />
-                            <rect x="65" y="45" width="25" height="10" />
-                            <rect x="45" y="65" width="10" height="25" />
-                            <rect x="65" y="65" width="20" height="20" />
-                          </svg>
+                        <div className="w-20 h-20 bg-zinc-100 p-1.5 rounded-lg border flex items-center justify-center">
+                          <img 
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${inscricaoConfirmada.id}&margin=0`}
+                            alt="QR Code de Credenciamento"
+                            className="w-full h-full object-contain"
+                          />
                         </div>
                         <span className="text-[8px] text-zinc-400 font-semibold mt-2 uppercase tracking-widest text-center">
-                          Apresente este código no credenciamento <br /> ou verifique seu e-mail
+                          A confirmação da sua inscrição será enviada via whatsapp
                         </span>
                       </div>
                     </div>

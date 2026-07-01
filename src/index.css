@@ -138,3 +138,22 @@
 .animate-marquee-reverse {
   animation: marquee 35s linear infinite reverse;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #voucher-print, #voucher-print * {
+    visibility: visible;
+  }
+  #voucher-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+}
