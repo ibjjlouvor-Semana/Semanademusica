@@ -63,6 +63,8 @@ export default function Home() {
   const [paymentSettings, setPaymentSettings] = useState({
     pix_inscricao: "pix@semanademusicajijoca.com.br",
     pix_inscricao_blusa: "pix@semanademusicajijoca.com.br",
+    pix_inscricao_familia: "pix@semanademusicajijoca.com.br",
+    pix_inscricao_blusa_familia: "pix@semanademusicajijoca.com.br",
     pix_blusa: "pix@semanademusicajijoca.com.br",
     cartao_inscricao: "",
     cartao_inscricao_blusa: "",
@@ -77,6 +79,8 @@ export default function Home() {
       setPaymentSettings({
         pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
         pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+        pix_inscricao_familia: parsed.pix_inscricao_familia || "pix@semanademusicajijoca.com.br",
+        pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || "pix@semanademusicajijoca.com.br",
         pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
         cartao_inscricao: parsed.cartao_inscricao || "",
         cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
@@ -87,9 +91,10 @@ export default function Home() {
 
   const getCurrentPixKey = () => {
     const op = formData.opcao_escolhida;
+    const isFamilia = formData.membro_familia === "Sim" && formData.membro_principal.length > 2;
     if (op === "Apenas Camisa Oficial") return paymentSettings.pix_blusa;
-    if (op.includes("Camisa Oficial")) return paymentSettings.pix_inscricao_blusa;
-    return paymentSettings.pix_inscricao;
+    if (op.includes("Camisa Oficial")) return isFamilia ? paymentSettings.pix_inscricao_blusa_familia : paymentSettings.pix_inscricao_blusa;
+    return isFamilia ? paymentSettings.pix_inscricao_familia : paymentSettings.pix_inscricao;
   };
 
   const getCurrentCartaoLink = () => {
@@ -491,7 +496,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="relative min-h-[calc(100vh-80px)] overflow-hidden flex items-center py-10 lg:py-0">
+      <section id="hero" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden print:hidden">
         {/* Imagem de Fundo Consolidada (Art Direction para Mobile e Desktop) */}
         <div className="absolute inset-0 z-0">
           <img src="/hero-definitivo..jpeg" alt="Background Paisagem Desktop" className="hidden md:block w-full h-full object-cover object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
@@ -561,7 +566,7 @@ export default function Home() {
       </section>
 
       {/* Sobre o Evento e Valores */}
-      <section id="sobre" className="py-24 relative overflow-hidden bg-[#FDFBF7]">
+      <section id="sobre" className="py-24 relative overflow-hidden bg-[#FDFBF7] print:hidden">
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             
@@ -776,7 +781,7 @@ export default function Home() {
       </section>
 
       {/* Cronograma / Programação */}
-      <section id="cronograma" className="py-20 border-t bg-[#FDFBF7]">
+      <section id="cronograma" className="py-20 border-t bg-secondary/10 print:hidden">
         <div className="container mx-auto px-4 max-w-5xl text-center relative">
           
           <div className="flex flex-col items-center mb-8">
@@ -1704,7 +1709,7 @@ export default function Home() {
                 {step === 5 && inscricaoConfirmada && (
                   <div className="space-y-6">
                     {/* Mensagem Principal */}
-                    <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl text-center space-y-2">
+                    <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl text-center space-y-2 print:hidden">
                       <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-1 animate-pulse">
                         <Clock className="w-6 h-6" />
                       </div>
@@ -1715,8 +1720,8 @@ export default function Home() {
                     </div>
 
                     {/* Voucher de Inscrição */}
-                    <div id="voucher-print" className="p-6 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-6 text-zinc-900 dark:text-zinc-50 shadow-md relative overflow-hidden">
-                      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent"></div>
+                    <div id="voucher-print" className="p-6 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-6 text-zinc-900 dark:text-zinc-50 shadow-md relative overflow-hidden print:shadow-none print:border-none print:p-0">
+                      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent print:hidden"></div>
                       
                       <div className="text-center border-b pb-4 space-y-2">
                         <div className="flex items-center justify-center gap-4">
@@ -1805,7 +1810,7 @@ export default function Home() {
 
               </CardContent>
 
-              <CardFooter className="flex justify-between border-t pt-4">
+              <CardFooter className="flex justify-between border-t pt-4 print:hidden">
                 {step === 1 && (
                   <>
                     <div></div>
@@ -1890,7 +1895,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-zinc-950 text-zinc-400 py-16 border-t border-zinc-800">
+      <footer className="bg-zinc-950 text-zinc-400 py-16 border-t border-zinc-800 print:hidden">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8 items-start">
             {/* Coluna 1: Logo Principal */}

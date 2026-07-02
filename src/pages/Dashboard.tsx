@@ -91,6 +91,8 @@ export default function Dashboard() {
   const [paymentSettings, setPaymentSettings] = useState({
     pix_inscricao: "",
     pix_inscricao_blusa: "",
+    pix_inscricao_familia: "",
+    pix_inscricao_blusa_familia: "",
     pix_blusa: "",
     cartao_inscricao: "",
     cartao_inscricao_blusa: "",
@@ -2020,6 +2022,24 @@ export default function Dashboard() {
                       placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
                       value={paymentSettings.pix_inscricao}
                       onChange={(e) => setPaymentSettings({...paymentSettings, pix_inscricao: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-1 mt-4">
+                    <Label htmlFor="pix_inscricao_familia">Pix - Desconto Família (Apenas Inscrição)</Label>
+                    <Input 
+                      id="pix_inscricao_familia"
+                      placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
+                      value={paymentSettings.pix_inscricao_familia}
+                      onChange={(e) => setPaymentSettings({...paymentSettings, pix_inscricao_familia: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="pix_inscricao_blusa_familia">Pix - Desconto Família (Inscrição + Blusa)</Label>
+                    <Input 
+                      id="pix_inscricao_blusa_familia"
+                      placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
+                      value={paymentSettings.pix_inscricao_blusa_familia}
+                      onChange={(e) => setPaymentSettings({...paymentSettings, pix_inscricao_blusa_familia: e.target.value})}
                     />
                   </div>
                   <div className="space-y-2">
