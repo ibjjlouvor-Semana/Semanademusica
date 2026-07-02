@@ -1186,6 +1186,30 @@ export default function Dashboard() {
                             ))}
                           </SelectContent>
                         </Select>
+                        <div className="flex gap-2 mt-2">
+                          <Input 
+                            placeholder="Novo centro..." 
+                            value={novoCentroCusto} 
+                            onChange={(e) => setNovoCentroCusto(e.target.value)} 
+                            className="h-8 text-xs" 
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAddCentroCusto(e as any);
+                              }
+                            }}
+                          />
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 px-2 shrink-0"
+                            onClick={(e) => handleAddCentroCusto(e as any)}
+                            title="Adicionar novo Centro de Custo"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
 
