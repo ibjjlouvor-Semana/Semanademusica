@@ -72,21 +72,47 @@ export default function Home() {
   });
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("payment_settings");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Fallbacks caso os valores venham vazios do painel
-      setPaymentSettings({
-        pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
-        pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
-        pix_inscricao_familia: parsed.pix_inscricao_familia || parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
-        pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
-        pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
-        cartao_inscricao: parsed.cartao_inscricao || "",
-        cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
-        cartao_blusa: parsed.cartao_blusa || ""
-      });
-    }
+    const carregarConfiguracoes = async () => {
+      try {
+        if (!isUsingPlaceholder) {
+          const { data, error } = await supabase.from('configuracoes').select('valor').eq('chave', 'payment_settings').maybeSingle();
+          if (data && data.valor) {
+            const parsed = data.valor as any;
+            setPaymentSettings({
+              pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+              pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+              pix_inscricao_familia: parsed.pix_inscricao_familia || parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+              pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+              pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
+              cartao_inscricao: parsed.cartao_inscricao || "",
+              cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
+              cartao_blusa: parsed.cartao_blusa || ""
+            });
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Erro ao carregar configurações do Supabase:", err);
+      }
+      
+      // Fallback para localStorage (ou se estiver em modo placeholder)
+      const saved = localStorage.getItem("payment_settings");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setPaymentSettings({
+          pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+          pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+          pix_inscricao_familia: parsed.pix_inscricao_familia || parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+          pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
+          pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
+          cartao_inscricao: parsed.cartao_inscricao || "",
+          cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
+          cartao_blusa: parsed.cartao_blusa || ""
+        });
+      }
+    };
+    
+    carregarConfiguracoes();
   }, []);
 
   const getCurrentPixKey = () => {

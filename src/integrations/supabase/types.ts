@@ -83,6 +83,26 @@ export interface Database {
           created_at?: string
         }
       }
+      configuracoes: {
+        Row: {
+          id: string
+          chave: string
+          valor: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          chave: string
+          valor: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          chave?: string
+          valor?: Json
+          created_at?: string
+        }
+      }
       financeiro: {
         Row: {
           id: string

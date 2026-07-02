@@ -102,10 +102,26 @@ export default function Dashboard() {
   const [centrosDeCusto, setCentrosDeCusto] = useState(["Semana de Musica", "Loja"]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("payment_settings");
-    if (saved) {
-      setPaymentSettings(JSON.parse(saved));
-    }
+    const carregarConfiguracoes = async () => {
+      if (!isUsingPlaceholder) {
+        try {
+          const { data, error } = await supabase.from('configuracoes').select('valor').eq('chave', 'payment_settings').maybeSingle();
+          if (data && data.valor) {
+            setPaymentSettings(data.valor as any);
+          } else {
+            const saved = localStorage.getItem("payment_settings");
+            if (saved) setPaymentSettings(JSON.parse(saved));
+          }
+        } catch (err) {
+          const saved = localStorage.getItem("payment_settings");
+          if (saved) setPaymentSettings(JSON.parse(saved));
+        }
+      } else {
+        const saved = localStorage.getItem("payment_settings");
+        if (saved) setPaymentSettings(JSON.parse(saved));
+      }
+    };
+    carregarConfiguracoes();
     
     const savedCentros = localStorage.getItem("financeiro_centros_custo");
     if (savedCentros) {
@@ -125,10 +141,27 @@ export default function Dashboard() {
     toast.success("Centro de Custo adicionado!");
   };
 
-  const handleSavePaymentSettings = (e: React.FormEvent) => {
+  const handleSavePaymentSettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("payment_settings", JSON.stringify(paymentSettings));
-    toast.success("Configurações Pix salvas com sucesso!");
+    if (!isUsingPlaceholder) {
+      try {
+        const { error } = await supabase.from('configuracoes').upsert({
+          chave: 'payment_settings',
+          valor: paymentSettings as any
+        }, { onConflict: 'chave' });
+        
+        if (error) throw error;
+        toast.success("Configurações salvas no sistema com sucesso!");
+        localStorage.setItem("payment_settings", JSON.stringify(paymentSettings)); // Backup local
+      } catch (err) {
+        console.error("Erro ao salvar config:", err);
+        toast.error("Erro ao sincronizar. Salvando apenas localmente.");
+        localStorage.setItem("payment_settings", JSON.stringify(paymentSettings));
+      }
+    } else {
+      localStorage.setItem("payment_settings", JSON.stringify(paymentSettings));
+      toast.success("Configurações salvas (Modo Local)!");
+    }
   };
 
   const handleToggleEntrega = async (id: string, nomeParticipante: string, jaEntregue: boolean) => {
