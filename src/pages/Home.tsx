@@ -568,8 +568,8 @@ export default function Home() {
             {/* Coluna Esquerda - Texto */}
             <div className="pl-4 md:pl-8">
               <div className="relative">
-                <span className="absolute -top-10 -left-12 text-8xl font-serif text-[#B38C53] opacity-60 leading-none">“</span>
-                <h2 className="text-[2.75rem] leading-[1.1] font-serif font-bold mb-6 text-[#2E3B2A] tracking-tight relative z-10">
+                <span className="absolute -top-6 -left-6 md:-top-10 md:-left-12 text-6xl md:text-8xl font-serif text-[#B38C53] opacity-60 leading-none">“</span>
+                <h2 className="text-3xl md:text-[2.75rem] leading-[1.2] md:leading-[1.1] font-serif font-bold mb-6 text-[#2E3B2A] tracking-tight relative z-10">
                   Louvem ao Senhor,<br/>todas as nações;<br/>exaltem-no, todos os<br/>povos!
                 </h2>
               </div>
@@ -611,17 +611,17 @@ export default function Home() {
 
             {/* Coluna Direita - Valores */}
             <div className="relative">
-              <div className="bg-[#FCFAF8] p-8 md:p-12 rounded-[2rem] shadow-[0_15px_40px_rgba(0,0,0,0.03)] border border-[#E8E4D9]">
+              <div className="bg-[#FCFAF8] p-5 sm:p-8 md:p-12 rounded-[2rem] shadow-[0_15px_40px_rgba(0,0,0,0.03)] border border-[#E8E4D9]">
                 
                 {/* Header do Card */}
                 <div className="flex flex-col items-center mb-10">
                   <div className="w-12 h-12 rounded-full border-2 border-[#B38C53] flex items-center justify-center mb-6">
                     <Music className="w-5 h-5 text-[#B38C53]" strokeWidth={2.5} />
                   </div>
-                  <div className="flex items-center w-full justify-center gap-6">
-                    <div className="h-[1px] w-12 bg-gradient-to-l from-[#B38C53] to-transparent"></div>
-                    <h3 className="font-serif font-bold text-2xl text-[#2E3B2A] whitespace-nowrap">Valores da Edição IV</h3>
-                    <div className="h-[1px] w-12 bg-gradient-to-r from-[#B38C53] to-transparent"></div>
+                  <div className="flex items-center w-full justify-center gap-3 sm:gap-6">
+                    <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-[#B38C53] to-transparent"></div>
+                    <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#2E3B2A] text-center">Valores da Edição IV</h3>
+                    <div className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-[#B38C53] to-transparent"></div>
                   </div>
                   <div className="mt-3 text-[#B38C53]">
                      {/* Leaf decoration simple svg */}
@@ -640,7 +640,7 @@ export default function Home() {
                 <div className="space-y-3">
                   
                   {/* Item 1 */}
-                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
                         <User className="w-5 h-5" strokeWidth={2} />
@@ -650,7 +650,7 @@ export default function Home() {
                         <span className="text-[#2E3B2A] text-xs">(1º Lote – até 31/07)</span>
                       </div>
                     </div>
-                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 110,00</span>
+                    <span className="font-bold text-[#4D5A42] self-end sm:self-auto">R$ 110,00</span>
                   </div>
 
 
@@ -848,8 +848,8 @@ export default function Home() {
                          <CalendarDays className="w-6 h-6 text-[#2E3B2A]" strokeWidth={1.5} />
                       </div>
                       <div>
-                        <h3 className="text-2xl md:text-3xl font-serif font-bold text-[#2E3B2A]">{dia.dia}</h3>
-                        <p className="text-[#B38C53] font-medium">{dia.dataEx}</p>
+                        <h3 className="text-xl md:text-3xl font-serif font-bold text-[#2E3B2A]">{dia.dia}</h3>
+                        <p className="text-[#B38C53] text-sm md:text-base font-medium">{dia.dataEx}</p>
                       </div>
                     </div>
                     <div className="hidden sm:flex items-center gap-2 bg-[#f4ebd9] px-4 py-2 rounded-full text-[#2E3B2A] font-semibold text-sm">
@@ -868,16 +868,18 @@ export default function Home() {
                           {/* Bolinha na linha */}
                           <div className="absolute left-[4.5px] w-[11px] h-[11px] rounded-full border-2 border-[#B38C53] bg-[#FCFAF8] z-10"></div>
                           
-                          <div className="flex items-center flex-1 pl-12 gap-4 md:gap-8">
-                            <div className="flex items-center gap-2 bg-[#f4ebd9]/60 px-4 py-2 rounded-xl text-[#4D5A42] font-semibold text-sm w-[100px] shrink-0 justify-center">
-                              <Clock className="w-4 h-4" /> {ev.h}
+                          <div className="flex flex-col sm:flex-row sm:items-center flex-1 pl-8 md:pl-12 gap-2 sm:gap-4 md:gap-8">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2 bg-[#f4ebd9]/60 px-3 sm:px-4 py-2 rounded-xl text-[#4D5A42] font-semibold text-xs sm:text-sm shrink-0 justify-center">
+                                <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {ev.h}
+                              </div>
+                              
+                              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#f4ebd9]/60 flex items-center justify-center shrink-0">
+                                <ev.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#4D5A42]" strokeWidth={2} />
+                              </div>
                             </div>
                             
-                            <div className="w-10 h-10 rounded-xl bg-[#f4ebd9]/60 flex items-center justify-center shrink-0">
-                              <ev.icon className="w-5 h-5 text-[#4D5A42]" strokeWidth={2} />
-                            </div>
-                            
-                            <span className="font-bold text-[#2E3B2A] text-lg">
+                            <span className="font-bold text-[#2E3B2A] text-base sm:text-lg">
                               {ev.t}
                             </span>
                           </div>
