@@ -349,7 +349,7 @@ export default function Dashboard() {
         const phone = telefone.replace(/\D/g, ''); // Limpar caracteres não numéricos
         if (phone.length >= 10) {
           const primeiroNome = nomeParticipante.split(" ")[0];
-          const msg = `Olá ${primeiroNome}, Graça e Paz! \uD83D\uDE4F\n\nSua inscrição na IV Semana de Música Cristã foi realizada com sucesso!\n\nLhe esperamos dia 07 de setembro. Esteja orando por nós!!`;
+          const msg = `Olá ${primeiroNome}, Graça e Paz! 🙏\n\nSua inscrição na IV Semana de Música Cristã foi realizada com sucesso!\n\nLhe esperamos dia 07 de setembro. Esteja orando por nós!!`;
           const waLink = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
           window.open(waLink, "_blank");
         }
