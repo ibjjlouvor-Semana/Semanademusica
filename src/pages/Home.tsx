@@ -1266,70 +1266,76 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="data_nascimento">Data de Nascimento</Label>
-                        <Input 
-                          id="data_nascimento" 
-                          name="data_nascimento" 
-                          type="date" 
-                          value={formData.data_nascimento} 
-                          onChange={handleInputChange} 
-                        />
-                      </div>
+                      {hasParticipation(formData.opcao_escolhida) && (
+                        <>
+                          <div className="space-y-2">
+                            <Label htmlFor="data_nascimento">Data de Nascimento</Label>
+                            <Input 
+                              id="data_nascimento" 
+                              name="data_nascimento" 
+                              type="date" 
+                              value={formData.data_nascimento} 
+                              onChange={handleInputChange} 
+                            />
+                          </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="hospedagem">Precisa de Hospedagem?</Label>
-                        <Select
-                          value={formData.hospedagem}
-                          onValueChange={(val) => handleSelectChange("hospedagem", val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                          <SelectContent className="bg-popover border text-foreground">
-                            <SelectItem value="Sim" className="hover:bg-accent focus:bg-accent">Sim, preciso de abrigo</SelectItem>
-                            <SelectItem value="Não" className="hover:bg-accent focus:bg-accent">Não, tenho local próprio</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="membro_familia">Faz parte de uma família já inscrita?</Label>
-                        <Select
-                          value={formData.membro_familia}
-                          onValueChange={(val) => handleSelectChange("membro_familia", val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                          <SelectContent className="bg-popover border text-foreground">
-                            <SelectItem value="Não" className="hover:bg-accent focus:bg-accent">Não (Inscrição Única / Principal)</SelectItem>
-                            <SelectItem value="Sim" className="hover:bg-accent focus:bg-accent">Sim, sou o 2º (ou mais) membro</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {formData.membro_familia === "Sim" ? (
-                        <div className="space-y-2 animate-fade-in">
-                          <Label htmlFor="membro_principal">Nome do Titular da Família <span className="text-red-500">*</span></Label>
-                          <Input 
-                            id="membro_principal" 
-                            name="membro_principal" 
-                            placeholder="Quem pagará o valor integral?" 
-                            value={formData.membro_principal} 
-                            onChange={handleInputChange} 
-                            className="border-primary/50 focus-visible:ring-primary"
-                          />
-                          <p className="text-[10px] text-primary font-medium mt-1">
-                            Você ganhará R$ 10 de desconto automático!
-                          </p>
-                        </div>
-                      ) : (
-                        <div></div>
+                          <div className="space-y-2">
+                            <Label htmlFor="hospedagem">Precisa de Hospedagem?</Label>
+                            <Select
+                              value={formData.hospedagem}
+                              onValueChange={(val) => handleSelectChange("hospedagem", val)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border text-foreground">
+                                <SelectItem value="Sim" className="hover:bg-accent focus:bg-accent">Sim, preciso de abrigo</SelectItem>
+                                <SelectItem value="Não" className="hover:bg-accent focus:bg-accent">Não, tenho local próprio</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </>
                       )}
                     </div>
+
+                    {hasParticipation(formData.opcao_escolhida) && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="membro_familia">Faz parte de uma família já inscrita?</Label>
+                          <Select
+                            value={formData.membro_familia}
+                            onValueChange={(val) => handleSelectChange("membro_familia", val)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione..." />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover border text-foreground">
+                              <SelectItem value="Não" className="hover:bg-accent focus:bg-accent">Não (Inscrição Única / Principal)</SelectItem>
+                              <SelectItem value="Sim" className="hover:bg-accent focus:bg-accent">Sim, sou o 2º (ou mais) membro</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {formData.membro_familia === "Sim" ? (
+                          <div className="space-y-2 animate-fade-in">
+                            <Label htmlFor="membro_principal">Nome do Titular da Família <span className="text-red-500">*</span></Label>
+                            <Input 
+                              id="membro_principal" 
+                              name="membro_principal" 
+                              placeholder="Quem pagará o valor integral?" 
+                              value={formData.membro_principal} 
+                              onChange={handleInputChange} 
+                              className="border-primary/50 focus-visible:ring-primary"
+                            />
+                            <p className="text-[10px] text-primary font-medium mt-1">
+                              Você ganhará R$ 10 de desconto automático!
+                            </p>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+                      </div>
+                    )}
 
                     {formData.hospedagem === "Sim" && (
                       <div className="mt-4 p-4 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50 text-xs text-muted-foreground space-y-2.5 animate-fade-in">
@@ -1349,27 +1355,29 @@ export default function Home() {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="col-span-2 space-y-2">
-                        <Label htmlFor="cidade">Cidade</Label>
-                        <Input 
-                          id="cidade" 
-                          name="cidade" 
-                          value={formData.cidade} 
-                          onChange={handleInputChange} 
-                        />
+                    {hasParticipation(formData.opcao_escolhida) && (
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="col-span-2 space-y-2">
+                          <Label htmlFor="cidade">Cidade</Label>
+                          <Input 
+                            id="cidade" 
+                            name="cidade" 
+                            value={formData.cidade} 
+                            onChange={handleInputChange} 
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="estado">Estado</Label>
+                          <Input 
+                            id="estado" 
+                            name="estado" 
+                            value={formData.estado} 
+                            maxLength={2} 
+                            onChange={handleInputChange} 
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="estado">Estado</Label>
-                        <Input 
-                          id="estado" 
-                          name="estado" 
-                          value={formData.estado} 
-                          maxLength={2} 
-                          onChange={handleInputChange} 
-                        />
-                      </div>
-                    </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="igreja">Igreja / Congregação (Opcional)</Label>
