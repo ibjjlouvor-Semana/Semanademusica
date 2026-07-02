@@ -426,7 +426,9 @@ export default function Dashboard() {
     setFinForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Adicionar lançamento financeiro manual
+  const [editingFinId, setEditingFinId] = useState<string | null>(null);
+
+  // Adicionar ou Editar lançamento financeiro manual
   const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!finForm.descricao) return toast.error("A descrição é obrigatória.");
@@ -443,15 +445,36 @@ export default function Dashboard() {
     };
 
     try {
-      if (!isUsingPlaceholder) {
-        const { error } = await supabase.from("financeiro").insert([transaction]);
-        if (error) throw error;
+      if (editingFinId) {
+        if (!isUsingPlaceholder) {
+          const { error } = await supabase.from("financeiro").update({
+            descricao: finForm.descricao,
+            tipo: finForm.tipo,
+            centro_custo: finForm.centro_custo,
+            valor: parseFloat(finForm.valor),
+            data: finForm.data,
+          }).eq("id", editingFinId);
+          if (error) throw error;
+        } else {
+          const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
+          const index = antigas.findIndex((t: any) => t.id === editingFinId);
+          if (index !== -1) {
+            antigas[index] = { ...antigas[index], ...finForm, valor: parseFloat(finForm.valor) };
+            localStorage.setItem("financeiro_transacoes", JSON.stringify(antigas));
+          }
+        }
+        toast.success("Lançamento atualizado!");
+        setEditingFinId(null);
       } else {
-        const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
-        localStorage.setItem("financeiro_transacoes", JSON.stringify([...antigas, transaction]));
+        if (!isUsingPlaceholder) {
+          const { error } = await supabase.from("financeiro").insert([transaction]);
+          if (error) throw error;
+        } else {
+          const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
+          localStorage.setItem("financeiro_transacoes", JSON.stringify([...antigas, transaction]));
+        }
+        toast.success("Lançamento financeiro adicionado!");
       }
-
-      toast.success("Lançamento financeiro adicionado!");
       setFinForm({
         descricao: "",
         tipo: "Entrada",
@@ -464,6 +487,28 @@ export default function Dashboard() {
       console.error(err);
       toast.error("Erro ao adicionar lançamento: " + err.message);
     }
+  };
+
+  const handleEditTransaction = (trans: any) => {
+    setFinForm({
+      descricao: trans.descricao,
+      tipo: trans.tipo,
+      centro_custo: trans.centro_custo,
+      valor: trans.valor.toString(),
+      data: trans.data,
+    });
+    setEditingFinId(trans.id);
+  };
+
+  const handleCancelEditFin = () => {
+    setFinForm({
+      descricao: "",
+      tipo: "Entrada",
+      centro_custo: "Semana de Musica",
+      valor: "",
+      data: new Date().toISOString().split("T")[0]
+    });
+    setEditingFinId(null);
   };
 
   // Excluir lançamento financeiro
@@ -1168,13 +1213,13 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
               
               {/* Coluna da Esquerda: Adicionar Lançamento */}
-              <Card className="lg:col-span-1">
-                <CardHeader>
-                  <CardTitle className="text-lg">Novo Lançamento</CardTitle>
-                  <CardDescription>Adicione receitas ou despesas aos centros de custo.</CardDescription>
+              <Card className="lg:col-span-1 border-primary/20">
+                <CardHeader className="bg-primary/5 border-b pb-4">
+                  <CardTitle className="text-primary">{editingFinId ? "Editar Lançamento" : "Novo Lançamento"}</CardTitle>
+                  <CardDescription>Registre entradas ou saídas manuais no caixa.</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleAddTransaction}>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-4">
                     <div className="space-y-2">
                       <Label htmlFor="descricao">Descrição</Label>
                       <Input 
@@ -1274,10 +1319,19 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter>
+                  <CardFooter className="flex-col gap-2">
                     <Button type="submit" className="w-full flex items-center justify-center gap-1">
-                      <Plus className="w-4 h-4" /> Registrar Lançamento
+                      {editingFinId ? (
+                        <>Salvar Alterações</>
+                      ) : (
+                        <><Plus className="w-4 h-4" /> Registrar Lançamento</>
+                      )}
                     </Button>
+                    {editingFinId && (
+                      <Button type="button" variant="ghost" onClick={handleCancelEditFin} className="w-full">
+                        Cancelar Edição
+                      </Button>
+                    )}
                   </CardFooter>
                 </form>
               </Card>
@@ -1378,7 +1432,15 @@ export default function Dashboard() {
                                   </span>
                                 )}
                               </td>
-                              <td className="px-6 py-4 text-right">
+                              <td className="px-6 py-4 text-right flex justify-end gap-1">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  onClick={() => handleEditTransaction(trans)}
+                                  className="text-muted-foreground hover:text-primary hover:bg-primary/10 h-8 w-8"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                </Button>
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
