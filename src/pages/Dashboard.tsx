@@ -729,16 +729,16 @@ export default function Dashboard() {
   const tamanhoOrder = ["PP", "P", "M", "G", "GG", "XG"];
   const tamanhoTotais = tamanhoOrder.map((tam) => ({
     tamanho: tam,
-    azulRoyal: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length,
-    azulRoyalBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length,
-    azulMarinho: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length,
-    azulMarinhoBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length,
+    verde: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length,
+    verdeBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length,
+    offwhite: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length,
+    offwhiteBaby: todasCamisas.filter((i) => i.camisa_tamanho === tam && i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length,
   }));
 
-  const totalAzulRoyal = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length;
-  const totalAzulRoyalBaby = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length;
-  const totalAzulMarinho = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length;
-  const totalAzulMarinhoBaby = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length;
+  const totalVerde = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Masculino").length;
+  const totalVerdeBaby = todasCamisas.filter((i) => i.camisa_estilo === "Verde" && i.camisa_tipo === "Feminino (Baby Look)").length;
+  const totalOffwhite = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Masculino").length;
+  const totalOffwhiteBaby = todasCamisas.filter((i) => i.camisa_estilo === "OffWhite" && i.camisa_tipo === "Feminino (Baby Look)").length;
 
   // XLSX export function
   const exportCSV = () => {
@@ -767,16 +767,16 @@ export default function Dashboard() {
     XLSX.utils.book_append_sheet(wb, ws1, "Planilha Detalhada");
 
     // --- ABA 2: Resumo por Modelo e Tamanho ---
-    const resumoHeaders = ["Tamanho", "Tulip - Masculino", "Tulip - Baby Look", "Clássica - Masculino", "Clássica - Baby Look", "Total por Tamanho"];
+    const resumoHeaders = ["Tamanho", "Verde - Masculino", "Verde - Baby Look", "OffWhite - Masculino", "OffWhite - Baby Look", "Total por Tamanho"];
     const resumoRows = tamanhoTotais.map((r) => [
       r.tamanho,
-      r.azulRoyal,
-      r.azulRoyalBaby,
-      r.azulMarinho,
-      r.azulMarinhoBaby,
-      r.azulRoyal + r.azulRoyalBaby + r.azulMarinho + r.azulMarinhoBaby,
+      r.verde,
+      r.verdeBaby,
+      r.offwhite,
+      r.offwhiteBaby,
+      r.verde + r.verdeBaby + r.offwhite + r.offwhiteBaby,
     ]);
-    resumoRows.push(["TOTAL", totalAzulRoyal, totalAzulRoyalBaby, totalAzulMarinho, totalAzulMarinhoBaby, todasCamisas.length]);
+    resumoRows.push(["TOTAL", totalVerde, totalVerdeBaby, totalOffwhite, totalOffwhiteBaby, todasCamisas.length]);
     const ws2 = XLSX.utils.aoa_to_sheet([resumoHeaders, ...resumoRows]);
     ws2["!cols"] = [{ wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 22 }, { wch: 22 }, { wch: 18 }];
     XLSX.utils.book_append_sheet(wb, ws2, "Resumo Gráfica");
@@ -809,20 +809,20 @@ export default function Dashboard() {
     lines.push("=== RESUMO POR MODELO E TAMANHO ===");
     lines.push("");
     lines.push("VERDE (Masculino)");
-    tamanhoTotais.forEach((t) => { if (t.azulRoyal > 0) lines.push(`  ${t.tamanho}: ${t.azulRoyal} un.`); });
-    lines.push(`  TOTAL: ${totalAzulRoyal} un.`);
+    tamanhoTotais.forEach((t) => { if (t.verde > 0) lines.push(`  ${t.tamanho}: ${t.verde} un.`); });
+    lines.push(`  TOTAL: ${totalVerde} un.`);
     lines.push("");
     lines.push("VERDE (Baby Look / Feminino)");
-    tamanhoTotais.forEach((t) => { if (t.azulRoyalBaby > 0) lines.push(`  ${t.tamanho}: ${t.azulRoyalBaby} un.`); });
-    lines.push(`  TOTAL: ${totalAzulRoyalBaby} un.`);
+    tamanhoTotais.forEach((t) => { if (t.verdeBaby > 0) lines.push(`  ${t.tamanho}: ${t.verdeBaby} un.`); });
+    lines.push(`  TOTAL: ${totalVerdeBaby} un.`);
     lines.push("");
     lines.push("OFFWHITE (Masculino)");
-    tamanhoTotais.forEach((t) => { if (t.azulMarinho > 0) lines.push(`  ${t.tamanho}: ${t.azulMarinho} un.`); });
-    lines.push(`  TOTAL: ${totalAzulMarinho} un.`);
+    tamanhoTotais.forEach((t) => { if (t.offwhite > 0) lines.push(`  ${t.tamanho}: ${t.offwhite} un.`); });
+    lines.push(`  TOTAL: ${totalOffwhite} un.`);
     lines.push("");
     lines.push("OFFWHITE (Baby Look / Feminino)");
-    tamanhoTotais.forEach((t) => { if (t.azulMarinhoBaby > 0) lines.push(`  ${t.tamanho}: ${t.azulMarinhoBaby} un.`); });
-    lines.push(`  TOTAL: ${totalAzulMarinhoBaby} un.`);
+    tamanhoTotais.forEach((t) => { if (t.offwhiteBaby > 0) lines.push(`  ${t.tamanho}: ${t.offwhiteBaby} un.`); });
+    lines.push(`  TOTAL: ${totalOffwhiteBaby} un.`);
     lines.push("");
     lines.push(`TOTAL GERAL: ${todasCamisas.length} camisas`);
     const BOM = "\uFEFF";
@@ -1685,26 +1685,26 @@ export default function Dashboard() {
                       <th className="px-4 py-3 text-left">Tamanho</th>
                       <th className="px-4 py-3">
                         <span className="inline-flex items-center gap-1">
-                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#6B1D2F"}}></span>
-                          Tulip (Masc.)
+                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#4C5F38"}}></span>
+                          Verde (Masc.)
                         </span>
                       </th>
                       <th className="px-4 py-3">
                         <span className="inline-flex items-center gap-1">
-                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#6B1D2F"}}></span>
-                          Tulip (Baby Look)
+                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#4C5F38"}}></span>
+                          Verde (Baby Look)
                         </span>
                       </th>
                       <th className="px-4 py-3">
                         <span className="inline-flex items-center gap-1">
-                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#18181B"}}></span>
-                          Clássica (Masc.)
+                          <span className="w-3 h-3 rounded-full inline-block border border-border" style={{backgroundColor:"#F5F5F0"}}></span>
+                          OffWhite (Masc.)
                         </span>
                       </th>
                       <th className="px-4 py-3">
                         <span className="inline-flex items-center gap-1">
-                          <span className="w-3 h-3 rounded-full inline-block" style={{backgroundColor:"#18181B"}}></span>
-                          Clássica (Baby Look)
+                          <span className="w-3 h-3 rounded-full inline-block border border-border" style={{backgroundColor:"#F5F5F0"}}></span>
+                          OffWhite (Baby Look)
                         </span>
                       </th>
                       <th className="px-4 py-3 font-bold text-foreground">Total / Tam.</th>
@@ -1712,21 +1712,21 @@ export default function Dashboard() {
                   </thead>
                   <tbody className="divide-y">
                     {tamanhoTotais.map((row) => {
-                      const rowTotal = row.azulRoyal + row.azulRoyalBaby + row.azulMarinho + row.azulMarinhoBaby;
+                      const rowTotal = row.verde + row.verdeBaby + row.offwhite + row.offwhiteBaby;
                       return (
                         <tr key={row.tamanho} className={rowTotal > 0 ? "hover:bg-secondary/20" : "opacity-40"}>
                           <td className="px-4 py-3 font-bold text-left text-primary font-mono">{row.tamanho}</td>
                           <td className="px-4 py-3">
-                            {row.azulRoyal > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-900/20 text-rose-700 dark:text-rose-300 font-bold text-sm">{row.azulRoyal}</span> : <span className="text-muted-foreground">—</span>}
+                            {row.verde > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 font-bold text-sm">{row.verde}</span> : <span className="text-muted-foreground">—</span>}
                           </td>
                           <td className="px-4 py-3">
-                            {row.azulRoyalBaby > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-900/20 text-rose-700 dark:text-rose-300 font-bold text-sm">{row.azulRoyalBaby}</span> : <span className="text-muted-foreground">—</span>}
+                            {row.verdeBaby > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 font-bold text-sm">{row.verdeBaby}</span> : <span className="text-muted-foreground">—</span>}
                           </td>
                           <td className="px-4 py-3">
-                            {row.azulMarinho > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-500/10 text-zinc-600 dark:text-zinc-300 font-bold text-sm">{row.azulMarinho}</span> : <span className="text-muted-foreground">—</span>}
+                            {row.offwhite > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-500/10 text-zinc-600 dark:text-zinc-300 font-bold text-sm">{row.offwhite}</span> : <span className="text-muted-foreground">—</span>}
                           </td>
                           <td className="px-4 py-3">
-                            {row.azulMarinhoBaby > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-500/10 text-zinc-600 dark:text-zinc-300 font-bold text-sm">{row.azulMarinhoBaby}</span> : <span className="text-muted-foreground">—</span>}
+                            {row.offwhiteBaby > 0 ? <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-500/10 text-zinc-600 dark:text-zinc-300 font-bold text-sm">{row.offwhiteBaby}</span> : <span className="text-muted-foreground">—</span>}
                           </td>
                           <td className="px-4 py-3 font-bold text-base">{rowTotal > 0 ? rowTotal : "—"}</td>
                         </tr>
@@ -1736,10 +1736,10 @@ export default function Dashboard() {
                   <tfoot className="border-t bg-secondary/30">
                     <tr className="font-bold text-sm">
                       <td className="px-4 py-3 text-left uppercase tracking-wider text-xs">TOTAL</td>
-                      <td className="px-4 py-3 text-primary">{totalAzulRoyal || "—"}</td>
-                      <td className="px-4 py-3 text-primary">{totalAzulRoyalBaby || "—"}</td>
-                      <td className="px-4 py-3 text-primary">{totalAzulMarinho || "—"}</td>
-                      <td className="px-4 py-3 text-primary">{totalAzulMarinhoBaby || "—"}</td>
+                      <td className="px-4 py-3 text-emerald-700 dark:text-emerald-300">{totalVerde || "—"}</td>
+                      <td className="px-4 py-3 text-emerald-700 dark:text-emerald-300">{totalVerdeBaby || "—"}</td>
+                      <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">{totalOffwhite || "—"}</td>
+                      <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">{totalOffwhiteBaby || "—"}</td>
                       <td className="px-4 py-3 text-lg text-primary">{todasCamisas.length}</td>
                     </tr>
                   </tfoot>
