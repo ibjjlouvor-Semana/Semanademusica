@@ -367,6 +367,7 @@ export default function Home() {
     } else if (step === 3) {
       setStep(4);
     }
+    setTimeout(() => scrollToSection("inscricao"), 50);
   };
 
   const prevStep = () => {
@@ -387,6 +388,7 @@ export default function Home() {
     } else if (step === 2) {
       setStep(1);
     }
+    setTimeout(() => scrollToSection("inscricao"), 50);
   };
 
   // Copiar chave PIX
