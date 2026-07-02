@@ -317,6 +317,7 @@ export default function Home() {
             ? "Selecione o seu naipe vocal." 
             : "Selecione o seu instrumento.";
         }
+        if (!formData.descricao_experiencia.trim()) return "Conte um pouco sobre sua experiência musical.";
       }
     }
     if (step === 3) {
@@ -1474,7 +1475,7 @@ export default function Home() {
                     )}
 
                     <div className="space-y-2">
-                      <Label htmlFor="descricao_experiencia">Experiência Musical (Opcional)</Label>
+                      <Label htmlFor="descricao_experiencia">Experiência Musical <span className="text-red-500">*</span></Label>
                       <textarea
                         id="descricao_experiencia"
                         name="descricao_experiencia"
