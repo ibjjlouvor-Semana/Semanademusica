@@ -541,7 +541,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="hero" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden print:hidden">
+      <section id="hero" className="relative pt-24 pb-20 lg:pt-32 lg:pb-32 overflow-hidden print:hidden">
         {/* Imagem de Fundo Consolidada (Art Direction para Mobile e Desktop) */}
         <div className="absolute inset-0 z-0">
           <img src="/hero-definitivo..jpeg" alt="Background Paisagem Desktop" className="hidden md:block w-full h-full object-cover object-[30%_center] opacity-100 transition-transform duration-[20s] hover:scale-105 ease-out" />
@@ -550,7 +550,7 @@ export default function Home() {
 
         {/* O uso do lg:px-[120px] alinha o texto ESQUERDO milimetricamente com a logo do cabeçalho! */}
         <div className="container mx-auto px-4 lg:px-[120px] relative z-20">
-          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-[-5vh] md:mt-8">
+          <div className="max-w-[500px] lg:max-w-[550px] xl:max-w-[650px] text-left mt-[-5vh] md:mt-2">
             
             {/* Badge */}
             <div className="mb-4 md:mb-5 lg:mb-6 animate-fade-in">
