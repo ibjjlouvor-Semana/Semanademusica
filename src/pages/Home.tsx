@@ -79,8 +79,8 @@ export default function Home() {
       setPaymentSettings({
         pix_inscricao: parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
         pix_inscricao_blusa: parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
-        pix_inscricao_familia: parsed.pix_inscricao_familia || "pix@semanademusicajijoca.com.br",
-        pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || "pix@semanademusicajijoca.com.br",
+        pix_inscricao_familia: parsed.pix_inscricao_familia || parsed.pix_inscricao || "pix@semanademusicajijoca.com.br",
+        pix_inscricao_blusa_familia: parsed.pix_inscricao_blusa_familia || parsed.pix_inscricao_blusa || "pix@semanademusicajijoca.com.br",
         pix_blusa: parsed.pix_blusa || "pix@semanademusicajijoca.com.br",
         cartao_inscricao: parsed.cartao_inscricao || "",
         cartao_inscricao_blusa: parsed.cartao_inscricao_blusa || "",
@@ -102,6 +102,19 @@ export default function Home() {
     if (op === "Apenas Camisa Oficial") return paymentSettings.cartao_blusa;
     if (op.includes("Camisa Oficial")) return paymentSettings.cartao_inscricao_blusa;
     return paymentSettings.cartao_inscricao;
+  };
+
+  const handleCartaoClick = () => {
+    const link = getCurrentCartaoLink();
+    if (!link || link.trim() === "") {
+      toast.error("O link de pagamento com cartão ainda não foi configurado pelo administrador.");
+      return;
+    }
+    let url = link.trim();
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    window.open(url, "_blank");
   };
 
   // Estados do formulário de inscrição
@@ -1683,7 +1696,7 @@ export default function Home() {
                         </div>
                         <Button 
                           type="button"
-                          onClick={() => window.open(getCurrentCartaoLink(), "_blank")}
+                          onClick={handleCartaoClick}
                           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12"
                         >
                           PAGAR COM CARTÃO AGORA
