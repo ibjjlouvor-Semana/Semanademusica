@@ -301,10 +301,13 @@ export default function Home() {
       if (!formData.email.trim()) return "E-mail é obrigatório.";
       if (!/\S+@\S+\.\S+/.test(formData.email)) return "E-mail inválido.";
       if (!formData.telefone.trim()) return "WhatsApp / Telefone é obrigatório.";
-      if (!formData.data_nascimento) return "Data de nascimento é obrigatória.";
-      if (!formData.cidade.trim()) return "Cidade é obrigatória.";
-      if (!formData.estado.trim()) return "Estado é obrigatória.";
-      if (formData.membro_familia === "Sim" && !formData.membro_principal.trim()) return "Informe o nome do membro principal da família.";
+      
+      if (hasParticipation(formData.opcao_escolhida)) {
+        if (!formData.data_nascimento) return "Data de nascimento é obrigatória.";
+        if (!formData.cidade.trim()) return "Cidade é obrigatória.";
+        if (!formData.estado.trim()) return "Estado é obrigatório.";
+        if (formData.membro_familia === "Sim" && !formData.membro_principal.trim()) return "Informe o nome do membro principal da família.";
+      }
     }
     if (step === 2) {
       if (hasParticipation(formData.opcao_escolhida)) {
