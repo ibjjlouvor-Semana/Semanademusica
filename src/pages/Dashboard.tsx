@@ -112,33 +112,66 @@ export default function Dashboard() {
             const saved = localStorage.getItem("payment_settings");
             if (saved) setPaymentSettings(JSON.parse(saved));
           }
+          
+          // Carregar centros de custo
+          const { data: dataCentros } = await supabase.from('configuracoes').select('valor').eq('chave', 'financeiro_centros_custo').maybeSingle();
+          if (dataCentros && dataCentros.valor) {
+            setCentrosDeCusto(dataCentros.valor as string[]);
+            localStorage.setItem("financeiro_centros_custo", JSON.stringify(dataCentros.valor));
+          } else {
+            const savedCentros = localStorage.getItem("financeiro_centros_custo");
+            if (savedCentros) setCentrosDeCusto(JSON.parse(savedCentros));
+          }
         } catch (err) {
           const saved = localStorage.getItem("payment_settings");
           if (saved) setPaymentSettings(JSON.parse(saved));
+          
+          const savedCentros = localStorage.getItem("financeiro_centros_custo");
+          if (savedCentros) setCentrosDeCusto(JSON.parse(savedCentros));
         }
       } else {
         const saved = localStorage.getItem("payment_settings");
         if (saved) setPaymentSettings(JSON.parse(saved));
+        
+        const savedCentros = localStorage.getItem("financeiro_centros_custo");
+        if (savedCentros) setCentrosDeCusto(JSON.parse(savedCentros));
       }
     };
     carregarConfiguracoes();
-    
-    const savedCentros = localStorage.getItem("financeiro_centros_custo");
-    if (savedCentros) {
-      setCentrosDeCusto(JSON.parse(savedCentros));
-    }
   }, []);
 
   const [novoCentroCusto, setNovoCentroCusto] = useState("");
-  const handleAddCentroCusto = (e: React.FormEvent) => {
+  const handleAddCentroCusto = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!novoCentroCusto.trim()) return;
     if (centrosDeCusto.includes(novoCentroCusto.trim())) return toast.error("Centro de custo já existe!");
+    
     const novaLista = [...centrosDeCusto, novoCentroCusto.trim()];
     setCentrosDeCusto(novaLista);
-    localStorage.setItem("financeiro_centros_custo", JSON.stringify(novaLista));
     setNovoCentroCusto("");
-    toast.success("Centro de Custo adicionado!");
+    
+    // Backup local
+    localStorage.setItem("financeiro_centros_custo", JSON.stringify(novaLista));
+
+    if (!isUsingPlaceholder) {
+      try {
+        const { error } = await supabase.from('configuracoes').upsert({
+          chave: 'financeiro_centros_custo',
+          valor: novaLista
+        }, { onConflict: 'chave' });
+        
+        if (error) {
+          console.error("Erro ao salvar centro de custo no supabase:", error);
+          toast.error("Erro ao sincronizar na nuvem. Salvo localmente.");
+        } else {
+          toast.success("Centro de Custo adicionado e sincronizado!");
+        }
+      } catch (err) {
+        toast.error("Erro ao sincronizar na nuvem. Salvo localmente.");
+      }
+    } else {
+      toast.success("Centro de Custo adicionado localmente!");
+    }
   };
 
   const handleSavePaymentSettings = async (e: React.FormEvent) => {

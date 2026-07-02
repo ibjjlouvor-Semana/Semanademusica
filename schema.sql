@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS public.financeiro (
     id text PRIMARY KEY,
     descricao text NOT NULL,
     tipo text NOT NULL CHECK (tipo IN ('Entrada', 'Saída')),
-    centro_custo text NOT NULL CHECK (centro_custo IN ('Semana de Musica', 'Loja')),
+    centro_custo text NOT NULL CHECK (centro_custo IN ('Semana de Musica', 'Loja', 'Equipe')),
     valor numeric(10, 2) NOT NULL,
     data date NOT NULL,
     created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
