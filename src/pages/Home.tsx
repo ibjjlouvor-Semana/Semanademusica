@@ -1718,8 +1718,11 @@ export default function Home() {
                         </div>
                         <div>
                           <h4 className="font-bold text-sm">Pagamento Seguro via Cartão</h4>
-                          <p className="text-xs text-muted-foreground mt-1 max-w-[250px]">
+                          <p className="text-xs text-muted-foreground mt-1 max-w-[250px] mx-auto">
                             Você será redirecionado para o nosso ambiente de pagamento seguro (Mercado Pago/PagSeguro).
+                          </p>
+                          <p className="text-[10px] text-amber-600 dark:text-amber-500 font-medium mt-2 bg-amber-50 dark:bg-amber-950/30 p-2 rounded-md max-w-[250px] mx-auto">
+                            ⚠️ O valor final no cartão terá acréscimo da taxa da maquininha/plataforma.
                           </p>
                         </div>
                         <Button 
