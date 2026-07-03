@@ -971,7 +971,7 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Aprenda respiração, dicção, afinação e divisão de vozes (Soprano, Contralto, Tenor e Baixo) sob a condução de professores experientes.
+                  Um espaço para aprimorarmos nossa voz juntos. Aprenderemos sobre respiração, afinação e divisão de vozes (Soprano, Contralto, Tenor e Baixo) em um ambiente de comunhão.
                 </p>
               </CardContent>
               <CardFooter className="pt-0">
