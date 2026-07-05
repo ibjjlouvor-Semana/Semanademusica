@@ -45,6 +45,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase, isUsingPlaceholder } from "@/integrations/supabase/client";
 
@@ -1537,8 +1538,39 @@ export default function Home() {
                     <div className="space-y-2">
                       <Label className="text-sm font-semibold">Selecione o Estilo da Blusa</Label>
                       <div className="grid grid-cols-2 gap-3 mb-4">
-                        <img src="/camisa-verde.jpeg" alt="Camisa Verde" className="w-full h-auto object-cover rounded-xl border border-border/50 shadow-sm" />
-                        <img src="/camisa-offwhite.jpeg" alt="Camisa OffWhite" className="w-full h-auto object-cover rounded-xl border border-border/50 shadow-sm" />
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="relative group cursor-zoom-in">
+                              <img src="/camisa-verde.jpeg" alt="Camisa Verde" className={`w-full h-auto object-cover rounded-xl border ${formData.camisa_estilo === 'Verde' ? 'border-primary ring-2 ring-primary/40' : 'border-border/50'} shadow-sm transition-transform group-hover:scale-[1.02]`} />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl pointer-events-none">
+                                <div className="bg-white/90 text-black px-3 py-1.5 rounded-full text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shadow-sm">
+                                  🔍 Ampliar
+                                </div>
+                              </div>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-md sm:max-w-2xl p-1 bg-transparent border-none shadow-none">
+                            <DialogTitle className="sr-only">Detalhes da Camisa Verde</DialogTitle>
+                            <img src="/camisa-verde.jpeg" alt="Camisa Verde" className="w-full h-auto object-contain rounded-xl shadow-2xl" />
+                          </DialogContent>
+                        </Dialog>
+
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="relative group cursor-zoom-in">
+                              <img src="/camisa-offwhite.jpeg" alt="Camisa OffWhite" className={`w-full h-auto object-cover rounded-xl border ${formData.camisa_estilo === 'OffWhite' ? 'border-primary ring-2 ring-primary/40' : 'border-border/50'} shadow-sm transition-transform group-hover:scale-[1.02]`} />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 transition-colors rounded-xl pointer-events-none">
+                                <div className="bg-white/90 text-black px-3 py-1.5 rounded-full text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shadow-sm">
+                                  🔍 Ampliar
+                                </div>
+                              </div>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-md sm:max-w-2xl p-1 bg-transparent border-none shadow-none">
+                            <DialogTitle className="sr-only">Detalhes da Camisa OffWhite</DialogTitle>
+                            <img src="/camisa-offwhite.jpeg" alt="Camisa OffWhite" className="w-full h-auto object-contain rounded-xl shadow-2xl" />
+                          </DialogContent>
+                        </Dialog>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         {[
