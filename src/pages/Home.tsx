@@ -1536,7 +1536,10 @@ export default function Home() {
                     {/* Estilo da Blusa */}
                     <div className="space-y-2">
                       <Label className="text-sm font-semibold">Selecione o Estilo da Blusa</Label>
-                      <img src="/camisas.jpg" alt="Modelos das Blusas" className="w-full h-auto object-cover rounded-xl border border-border/50 mb-4" />
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <img src="/camisa-verde.jpeg" alt="Camisa Verde" className="w-full h-auto object-cover rounded-xl border border-border/50 shadow-sm" />
+                        <img src="/camisa-offwhite.jpeg" alt="Camisa OffWhite" className="w-full h-auto object-cover rounded-xl border border-border/50 shadow-sm" />
+                      </div>
                       <div className="grid grid-cols-2 gap-4">
                         {[
                           { id: "Verde", nome: "Blusa Verde", desc: "Cor verde com estampa clássica", hex: "#4C5F38" },
