@@ -289,7 +289,7 @@ export default function Home() {
   };
 
   const hasParticipation = (opcao: string) => {
-    return opcao.includes("Lote") || opcao === "Apenas Inscrição" || opcao === "Inscrição + Camisa Oficial";
+    return opcao.includes("Lote") || opcao === "Inscrição" || opcao === "Inscrição + Camisa Oficial";
   };
 
   const hasShirt = (opcao: string) => {
@@ -696,7 +696,7 @@ export default function Home() {
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
                         <span className="text-[#2E3B2A] text-xs">(1º Lote – até 31/07)</span>
                       </div>
                     </div>
@@ -712,7 +712,7 @@ export default function Home() {
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
                         <span className="text-[#2E3B2A] text-xs">(2º Lote – até 23/08)</span>
                       </div>
                     </div>
@@ -726,7 +726,7 @@ export default function Home() {
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Apenas Inscrição</span>
+                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
                         <span className="text-[#2E3B2A] text-xs">(3º Lote – a partir de 24/08)</span>
                       </div>
                     </div>
@@ -1239,7 +1239,7 @@ export default function Home() {
                         {[
                           { 
                             id: "Primeiro Lote", 
-                            nome: "Apenas Inscrição (1º Lote)", 
+                            nome: "Inscrição (1º Lote)", 
                             valor: "R$ 110,00", 
                             desc: "Garante sua entrada na IV Semana de Música." 
                           },

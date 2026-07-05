@@ -536,7 +536,7 @@ export default function Dashboard() {
   const handleAddMock = () => {
     const nomes = ["Gleison Silva", "Renata Lima", "Moisés Alencar", "Débora Rodrigues", "Emanuel Santos"];
     const opcoesList = [
-      { opcao: "Apenas Inscrição", valor: 20 },
+      { opcao: "Inscrição", valor: 20 },
       { opcao: "Inscrição + Camisa Oficial", valor: 65 },
       { opcao: "Apenas Camisa Oficial", valor: 45 },
     ];
@@ -554,7 +554,7 @@ export default function Dashboard() {
       ? detalhesCorais[Math.floor(Math.random() * detalhesCorais.length)]
       : detalhesOrq[Math.floor(Math.random() * detalhesOrq.length)];
     const temInscricao = opcaoItem.opcao !== "Apenas Camisa Oficial";
-    const temCamisa = opcaoItem.opcao !== "Apenas Inscrição";
+    const temCamisa = opcaoItem.opcao !== "Inscrição";
 
     const mock = {
       id: crypto.randomUUID().substring(0, 8).toUpperCase(),
@@ -703,7 +703,7 @@ export default function Dashboard() {
       if (opcaoFiltro === "Todos") return true;
       if (opcaoFiltro === "Inscricao") {
         const op = ins.opcao_escolhida || "";
-        return op === "Apenas Inscrição" || op === "inscricao" || (!ins.camisa_tamanho && !!ins.tipo_participacao);
+        return op === "Inscrição" || op === "inscricao" || (!ins.camisa_tamanho && !!ins.tipo_participacao);
       }
       if (opcaoFiltro === "Camisa") {
         const op = ins.opcao_escolhida || "";
@@ -2168,7 +2168,7 @@ export default function Dashboard() {
               <CardContent>
                 <form onSubmit={handleSavePaymentSettings} className="space-y-6 max-w-2xl">
                   <div className="space-y-2">
-                    <Label htmlFor="pix_inscricao">Pix - Apenas Inscrição</Label>
+                    <Label htmlFor="pix_inscricao">Pix - Inscrição</Label>
                     <Input 
                       id="pix_inscricao"
                       placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
@@ -2177,7 +2177,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <div className="space-y-1 mt-4">
-                    <Label htmlFor="pix_inscricao_familia">Pix - Desconto Família (Apenas Inscrição)</Label>
+                    <Label htmlFor="pix_inscricao_familia">Pix - Desconto Família (Inscrição)</Label>
                     <Input 
                       id="pix_inscricao_familia"
                       placeholder="Ex: 00020101021126580014br.gov.bcb.pix..."
@@ -2217,7 +2217,7 @@ export default function Dashboard() {
                     <h4 className="text-md font-semibold mb-4 mt-2">Links de Pagamento (Cartão de Crédito)</h4>
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <Label htmlFor="cartao_inscricao">Link Externo - Apenas Inscrição</Label>
+                        <Label htmlFor="cartao_inscricao">Link Externo - Inscrição</Label>
                         <Input 
                           id="cartao_inscricao"
                           placeholder="Ex: https://mpago.la/..."
