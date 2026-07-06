@@ -407,6 +407,46 @@ export default function Dashboard() {
     }
   };
 
+  const handleAprovarCortesia = async (id: string, nomeParticipante: string, telefone?: string) => {
+    if (!confirm(`Deseja aprovar a inscrição de ${nomeParticipante} como CORTESIA? (O valor será zerado)`)) return;
+    
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase
+          .from("inscricoes")
+          .update({ status: "Cortesia", valor_total: 0 })
+          .eq("id", id);
+        if (error) throw error;
+      } else {
+        const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const atualizados = localData.map((i: any) => {
+          if (i.id === id) {
+            return { ...i, status: "Cortesia", valor_total: 0 };
+          }
+          return i;
+        });
+        localStorage.setItem("inscricoes", JSON.stringify(atualizados));
+      }
+      toast.success(`Inscrição de ${nomeParticipante} confirmada como Cortesia!`);
+      
+      await loadData();
+
+      // Abrir WhatsApp com mensagem automática
+      if (telefone) {
+        const phone = telefone.replace(/\D/g, ''); 
+        if (phone.length >= 10) {
+          const primeiroNome = nomeParticipante.split(" ")[0];
+          const msg = `Olá ${primeiroNome}, Graça e Paz! 🙏\n\nSua inscrição (Cortesia) na IV Semana de Música Cristã foi realizada com sucesso!\n\nLhe esperamos dia 07 de setembro. Esteja orando por nós!!`;
+          const waLink = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+          window.open(waLink, '_blank');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao aprovar cortesia");
+    }
+  };
+
   // Excluir Inscrição
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja remover esta inscrição?")) return;
@@ -1321,17 +1361,27 @@ export default function Dashboard() {
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end items-center gap-2">
                                 {ins.status === "Pendente" && (
-                                  <Button 
-                                    size="sm" 
-                                    onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
-                                    className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
-                                  >
-                                    <Check className="w-3.5 h-3.5" /> Aprovar & Avisar
-                                  </Button>
+                                  <>
+                                    <Button 
+                                      size="sm" 
+                                      onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
+                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
+                                    >
+                                      <Check className="w-3.5 h-3.5" /> Aprovar & Avisar
+                                    </Button>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline"
+                                      onClick={() => handleAprovarCortesia(ins.id, ins.nome, ins.telefone)}
+                                      className="border-purple-500/50 text-purple-600 hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-950 flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
+                                    >
+                                      Cortesia
+                                    </Button>
+                                  </>
                                 )}
                                 <Button 
                                   variant="ghost" 
-                                  size="icon" 
+                                  size="icon"  
                                   onClick={() => handleDelete(ins.id)}
                                   className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                                 >
