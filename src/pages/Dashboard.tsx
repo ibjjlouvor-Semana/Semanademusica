@@ -565,6 +565,27 @@ export default function Dashboard() {
     setEditingFinId(null);
   };
 
+  const handleUpdateCentroCusto = async (transId: string, novoCentro: string) => {
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase.from("financeiro").update({ centro_custo: novoCentro }).eq("id", transId);
+        if (error) throw error;
+      } else {
+        const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
+        const index = antigas.findIndex((t: any) => t.id === transId);
+        if (index !== -1) {
+          antigas[index].centro_custo = novoCentro;
+          localStorage.setItem("financeiro_transacoes", JSON.stringify(antigas));
+        }
+      }
+      toast.success("Centro de custo atualizado!");
+      loadData();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao atualizar centro de custo");
+    }
+  };
+
   // Excluir lançamento financeiro
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir esta transação?")) return;
@@ -1662,10 +1683,22 @@ export default function Dashboard() {
                                 <div className="text-[10px] text-muted-foreground font-mono">#{trans.id}</div>
                               </td>
                               <td className="px-6 py-4 text-xs">
-                                <Badge variant="secondary" className="flex items-center gap-1 w-fit bg-secondary/80">
-                                  <Tag className="w-3 h-3" />
-                                  {trans.centro_custo}
-                                </Badge>
+                                <Select 
+                                  value={trans.centro_custo} 
+                                  onValueChange={(val) => handleUpdateCentroCusto(trans.id, val)}
+                                >
+                                  <SelectTrigger className="h-7 text-xs w-fit bg-secondary/30 border-0 hover:bg-secondary/60">
+                                    <div className="flex items-center gap-1.5">
+                                      <Tag className="w-3 h-3" />
+                                      <span className="font-medium truncate max-w-[120px]">{trans.centro_custo}</span>
+                                    </div>
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {centrosDeCusto.map(cc => (
+                                      <SelectItem key={cc} value={cc} className="text-xs">{cc}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
                               </td>
                               <td className="px-6 py-4 font-mono font-bold whitespace-nowrap">
                                 {trans.tipo === "Entrada" ? (
