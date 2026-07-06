@@ -38,6 +38,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase, isUsingPlaceholder } from "@/integrations/supabase/client";
 import {
@@ -97,6 +98,19 @@ export default function Dashboard() {
     cartao_inscricao: "",
     cartao_inscricao_blusa: "",
     cartao_blusa: ""
+  });
+
+  const [isCortesiaModalOpen, setIsCortesiaModalOpen] = useState(false);
+  const [cortesiaForm, setCortesiaForm] = useState({
+    nome: "",
+    telefone: "",
+    opcao_escolhida: "Inscrição",
+    camisa_estilo: "Verde",
+    camisa_tipo: "Masculino / Tradicional",
+    camisa_tamanho: "M",
+    igreja: "",
+    tipo_participacao: "Coral",
+    instrumento_oficina: "Canto"
   });
 
   const [centrosDeCusto, setCentrosDeCusto] = useState(["Semana de Musica", "Loja"]);
@@ -656,8 +670,72 @@ export default function Dashboard() {
       loadData();
     } catch (err: any) {
       console.error(err);
-      toast.error("Erro ao adicionar vídeo: " + err.message);
+      toast.error("Erro ao adicionar falso inscrito");
     }
+  };
+
+  const handleSaveCortesia = async () => {
+    if (!cortesiaForm.nome || !cortesiaForm.telefone) {
+      toast.error("Nome e telefone são obrigatórios!");
+      return;
+    }
+    try {
+      const novaCortesia = {
+        id: crypto.randomUUID().substring(0, 8).toUpperCase(),
+        nome: cortesiaForm.nome,
+        email: "cortesia@semanademusica.com",
+        telefone: cortesiaForm.telefone,
+        data_nascimento: "2000-01-01",
+        cidade: "Jijoca de Jericoacoara",
+        estado: "CE",
+        igreja: cortesiaForm.igreja || "Não informada",
+        opcao_escolhida: cortesiaForm.opcao_escolhida,
+        camisa_estilo: cortesiaForm.opcao_escolhida.includes("Camisa") ? cortesiaForm.camisa_estilo : null,
+        camisa_tipo: cortesiaForm.opcao_escolhida.includes("Camisa") ? cortesiaForm.camisa_tipo : null,
+        camisa_tamanho: cortesiaForm.opcao_escolhida.includes("Camisa") ? cortesiaForm.camisa_tamanho : null,
+        tipo_participacao: cortesiaForm.opcao_escolhida !== "Apenas Camisa Oficial" ? cortesiaForm.tipo_participacao : null,
+        instrumento_oficina: cortesiaForm.opcao_escolhida !== "Apenas Camisa Oficial" ? cortesiaForm.instrumento_oficina : null,
+        nivel_experiencia: "Cortesia",
+        valor_total: 0,
+        status: "Cortesia",
+        created_at: new Date().toISOString()
+      };
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase.from('inscricoes').insert(novaCortesia);
+        if (error) throw error;
+      }
+      setInscricoes(prev => [novaCortesia, ...prev]);
+      setIsCortesiaModalOpen(false);
+      setCortesiaForm({ nome: "", telefone: "", opcao_escolhida: "Inscrição", camisa_estilo: "Verde", camisa_tipo: "Masculino / Tradicional", camisa_tamanho: "M", igreja: "", tipo_participacao: "Coral", instrumento_oficina: "Canto" });
+      toast.success("Cortesia concedida com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao salvar cortesia");
+    }
+  };
+
+  const exportInscricoesExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const headers = ["ID", "Nome", "Email", "Telefone", "Opção", "Participação", "Instrumento", "Nível", "Igreja", "Camisa", "Tamanho", "Status", "Valor (R$)"];
+    const rows = filteredInscricoes.map(i => [
+      i.id,
+      i.nome,
+      i.email,
+      i.telefone,
+      i.opcao_escolhida,
+      i.tipo_participacao || "-",
+      i.instrumento_oficina || "-",
+      i.nivel_experiencia || "-",
+      i.igreja || "-",
+      i.camisa_estilo ? `${i.camisa_estilo} (${i.camisa_tipo})` : "-",
+      i.camisa_tamanho || "-",
+      i.status,
+      i.valor_total
+    ]);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    XLSX.utils.book_append_sheet(wb, ws, "Inscricoes");
+    XLSX.writeFile(wb, `Inscricoes-Semana-Musica-${new Date().toISOString().split("T")[0]}.xlsx`);
+    toast.success("Planilha de Inscrições exportada com sucesso!");
   };
 
   const handleDeleteVideo = async (id: string) => {
@@ -945,8 +1023,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      {/* Header */}
+    <>
+      <div className="min-h-screen bg-background text-foreground p-4 md:p-8 print:hidden">
+        {/* Header */}
       <div className="container mx-auto max-w-6xl mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-2 transition-colors">
@@ -1054,6 +1133,119 @@ export default function Dashboard() {
                   </div>
                   
                   <div className="flex items-center gap-3">
+                    <Button variant="outline" size="sm" onClick={exportInscricoesExcel} className="hidden sm:flex items-center gap-1 text-xs">
+                      <Download className="w-3.5 h-3.5" /> Excel
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => window.print()} className="hidden sm:flex items-center gap-1 text-xs">
+                      <Printer className="w-3.5 h-3.5" /> PDF
+                    </Button>
+
+                    <Dialog open={isCortesiaModalOpen} onOpenChange={setIsCortesiaModalOpen}>
+                      <DialogTrigger asChild>
+                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1 text-xs">
+                          <Plus className="w-3.5 h-3.5" /> Conceder Cortesia
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Conceder Cortesia</DialogTitle>
+                          <DialogDescription>Cadastre manualmente uma inscrição ou blusa gratuita.</DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label>Nome Completo</Label>
+                            <Input value={cortesiaForm.nome} onChange={e => setCortesiaForm({...cortesiaForm, nome: e.target.value})} placeholder="Nome do contemplado" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Telefone / WhatsApp</Label>
+                            <Input value={cortesiaForm.telefone} onChange={e => setCortesiaForm({...cortesiaForm, telefone: e.target.value})} placeholder="(00) 00000-0000" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Igreja (Opcional)</Label>
+                            <Input value={cortesiaForm.igreja} onChange={e => setCortesiaForm({...cortesiaForm, igreja: e.target.value})} placeholder="Nome da Igreja" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Opção Concedida</Label>
+                            <Select value={cortesiaForm.opcao_escolhida} onValueChange={(v) => setCortesiaForm({...cortesiaForm, opcao_escolhida: v})}>
+                              <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Inscrição">Apenas Inscrição</SelectItem>
+                                <SelectItem value="Inscrição + Camisa Oficial">Inscrição + Camisa</SelectItem>
+                                <SelectItem value="Apenas Camisa Oficial">Apenas Camisa</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          {cortesiaForm.opcao_escolhida !== "Apenas Camisa Oficial" && (
+                            <>
+                              <div className="space-y-2">
+                                <Label>Foco de Participação</Label>
+                                <Select value={cortesiaForm.tipo_participacao} onValueChange={(v) => setCortesiaForm({...cortesiaForm, tipo_participacao: v})}>
+                                  <SelectTrigger><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Coral">Canto Coral</SelectItem>
+                                    <SelectItem value="Orquestra">Orquestra</SelectItem>
+                                    <SelectItem value="Masterclass">Masterclass</SelectItem>
+                                    <SelectItem value="Kids">Kids</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Instrumento / Voz</Label>
+                                <Input value={cortesiaForm.instrumento_oficina} onChange={e => setCortesiaForm({...cortesiaForm, instrumento_oficina: e.target.value})} placeholder="Ex: Canto, Violino, Teclado..." />
+                              </div>
+                            </>
+                          )}
+
+                          {cortesiaForm.opcao_escolhida.includes("Camisa") && (
+                            <div className="space-y-4 p-4 border rounded-md bg-secondary/20">
+                              <div className="font-semibold text-sm">Detalhes da Camisa</div>
+                              <div className="space-y-2">
+                                <Label>Cor/Estilo</Label>
+                                <Select value={cortesiaForm.camisa_estilo} onValueChange={(v) => setCortesiaForm({...cortesiaForm, camisa_estilo: v})}>
+                                  <SelectTrigger><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Verde">Verde</SelectItem>
+                                    <SelectItem value="OffWhite">OffWhite</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
+                                  <Label>Tipo</Label>
+                                  <Select value={cortesiaForm.camisa_tipo} onValueChange={(v) => setCortesiaForm({...cortesiaForm, camisa_tipo: v})}>
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Masculino / Tradicional">Tradicional</SelectItem>
+                                      <SelectItem value="Feminino (Baby Look)">Baby Look</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Tamanho</Label>
+                                  <Select value={cortesiaForm.camisa_tamanho} onValueChange={(v) => setCortesiaForm({...cortesiaForm, camisa_tamanho: v})}>
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="PP">PP</SelectItem>
+                                      <SelectItem value="P">P</SelectItem>
+                                      <SelectItem value="M">M</SelectItem>
+                                      <SelectItem value="G">G</SelectItem>
+                                      <SelectItem value="GG">GG</SelectItem>
+                                      <SelectItem value="XG">XG</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsCortesiaModalOpen(false)}>Cancelar</Button>
+                          <Button onClick={handleSaveCortesia}>Salvar Cortesia</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+
                     {isUsingPlaceholder && (
                       <Button variant="outline" size="sm" onClick={handleAddMock} className="border-dashed text-xs flex items-center gap-1">
                         <Plus className="w-3.5 h-3.5" /> Falso Inscrito
@@ -1115,6 +1307,10 @@ export default function Dashboard() {
                               {ins.status === "Confirmada" ? (
                                 <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-500/20 border-green-500/20 flex items-center gap-1 w-fit">
                                   <CheckCircle2 className="w-3.5 h-3.5" /> Confirmada (Paga)
+                                </Badge>
+                              ) : ins.status === "Cortesia" ? (
+                                <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 border-purple-500/20 flex items-center gap-1 w-fit">
+                                  <CheckCircle2 className="w-3.5 h-3.5" /> Cortesia
                                 </Badge>
                               ) : (
                                 <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 border-amber-500/20 flex items-center gap-1 w-fit">
@@ -2255,6 +2451,64 @@ export default function Dashboard() {
 
         </Tabs>
       </div>
-    </div>
+      </div>
+
+      {/* PRINT LAYOUT (PDF) */}
+      <div className="hidden print:block bg-white text-black p-8 font-sans w-full min-h-screen">
+        <div className="flex items-center justify-between mb-6 border-b-2 border-gray-200 pb-4">
+          <div className="flex items-center gap-4">
+            <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain grayscale" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Relatório de Inscrições</h1>
+              <p className="text-sm text-gray-600">IV Semana de Música Cristã de Jijoca • Emitido em {new Date().toLocaleDateString('pt-BR')}</p>
+            </div>
+          </div>
+          <div className="text-right text-sm">
+            <span className="bg-gray-100 text-gray-800 font-bold px-3 py-1.5 rounded-lg border">
+              Total: {filteredInscricoes.length} inscritos
+            </span>
+          </div>
+        </div>
+        
+        <table className="w-full text-sm text-left border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-100 text-gray-800">
+              <th className="border border-gray-300 p-2.5 font-bold uppercase text-[11px] tracking-wider">Participante</th>
+              <th className="border border-gray-300 p-2.5 font-bold uppercase text-[11px] tracking-wider">Opção / Foco</th>
+              <th className="border border-gray-300 p-2.5 font-bold uppercase text-[11px] tracking-wider">Igreja</th>
+              <th className="border border-gray-300 p-2.5 font-bold uppercase text-[11px] tracking-wider text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredInscricoes.map((ins, idx) => (
+              <tr key={ins.id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <td className="border border-gray-300 p-2">
+                  <div className="font-bold text-gray-900">{ins.nome}</div>
+                  <div className="text-gray-500 text-xs">{ins.telefone}</div>
+                </td>
+                <td className="border border-gray-300 p-2">
+                  <div className="font-semibold text-gray-800">{ins.opcao_escolhida}</div>
+                  {ins.tipo_participacao && (
+                    <div className="text-gray-600 text-xs mt-0.5">
+                      {ins.tipo_participacao} {ins.instrumento_oficina ? `• ${ins.instrumento_oficina}` : ''}
+                    </div>
+                  )}
+                </td>
+                <td className="border border-gray-300 p-2 text-gray-700">{ins.igreja || '-'}</td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <span className={`px-2 py-1 rounded text-xs font-bold border ${ins.status === 'Confirmada' ? 'bg-gray-200 text-gray-800 border-gray-300' : ins.status === 'Cortesia' ? 'bg-gray-100 text-gray-700 border-gray-300' : 'bg-white text-gray-500 border-gray-300'}`}>
+                    {ins.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        
+        <div className="mt-8 text-center text-xs text-gray-400">
+          Documento gerado automaticamente pelo Sistema de Gestão da Semana de Música Cristã.
+        </div>
+      </div>
+    </>
   );
 }
