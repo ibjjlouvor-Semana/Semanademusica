@@ -29,7 +29,8 @@ import {
   PackageCheck,
   Package,
   Youtube,
-  Settings
+  Settings,
+  Undo
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -444,6 +445,36 @@ export default function Dashboard() {
     } catch (error) {
       console.error(error);
       toast.error("Erro ao aprovar cortesia");
+    }
+  };
+
+  const handleDesfazerAprovacao = async (id: string, nomeParticipante: string) => {
+    if (!confirm(`Deseja desfazer a aprovação de ${nomeParticipante}? O status voltará para Pendente.`)) return;
+    
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase
+          .from("inscricoes")
+          .update({ status: "Pendente" })
+          .eq("id", id);
+        if (error) throw error;
+      } else {
+        const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const atualizados = localData.map((i: any) => {
+          if (i.id === id) {
+            return { ...i, status: "Pendente" };
+          }
+          return i;
+        });
+        localStorage.setItem("inscricoes", JSON.stringify(atualizados));
+      }
+      toast.success(`Aprovação de ${nomeParticipante} desfeita com sucesso!`);
+      toast.info("Atenção: Se um lançamento financeiro automático foi criado, você precisará excluí-lo manualmente na aba Caixa & Finanças.");
+      
+      await loadData();
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao desfazer aprovação");
     }
   };
 
@@ -1399,6 +1430,17 @@ export default function Dashboard() {
                                       Cortesia
                                     </Button>
                                   </>
+                                )}
+                                {(ins.status === "Confirmada" || ins.status === "Cortesia") && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"  
+                                    onClick={() => handleDesfazerAprovacao(ins.id, ins.nome)}
+                                    title="Desfazer Confirmação"
+                                    className="text-amber-500 hover:text-amber-600 hover:bg-amber-500/10 h-8 w-8"
+                                  >
+                                    <Undo className="w-3.5 h-3.5" />
+                                  </Button>
                                 )}
                                 <Button 
                                   variant="ghost" 
