@@ -445,7 +445,7 @@ export default function Home() {
         : formData.nome,
       email: formData.email,
       telefone: formData.telefone,
-      data_nascimento: formData.data_nascimento,
+      data_nascimento: formData.data_nascimento || "2000-01-01", // Evita erro no Postgres (invalid input syntax for type date: "") quando compra só camisa
       cidade: formData.cidade,
       estado: formData.estado,
       igreja: formData.igreja || null,
