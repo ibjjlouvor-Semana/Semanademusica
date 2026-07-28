@@ -236,6 +236,29 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdateCamisaInfo = async (id: string, campo: "camisa_estilo" | "camisa_tipo" | "camisa_tamanho", novoValor: string) => {
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase
+          .from("inscricoes")
+          .update({ [campo]: novoValor })
+          .eq("id", id);
+        if (error) throw error;
+      } else {
+        const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const atualizados = localData.map((i: any) =>
+          i.id === id ? { ...i, [campo]: novoValor } : i
+        );
+        localStorage.setItem("inscricoes", JSON.stringify(atualizados));
+      }
+      toast.success("Informação da camisa atualizada com sucesso!");
+      loadData();
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Erro ao atualizar camisa: " + error.message);
+    }
+  };
+
   const loadData = async () => {
     setLoading(true);
     try {
@@ -2290,27 +2313,57 @@ export default function Dashboard() {
                               <div className="text-xs text-muted-foreground italic">{ins.igreja || "—"}</div>
                             </td>
                             <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className="w-3 h-3 rounded-full shrink-0 border"
-                                  style={{ backgroundColor: ins.camisa_estilo === "Verde" ? "#4C5F38" : "#F5F5F0", color: ins.camisa_estilo === "OffWhite" ? "#000" : "#fff" }}
-                                />
-                                <span className="text-xs font-medium">
-                                  {ins.camisa_estilo === "Verde" ? "VERDE" : "OFFWHITE"}
-                                </span>
-                              </div>
+                              <Select 
+                                value={ins.camisa_estilo} 
+                                onValueChange={(val) => handleUpdateCamisaInfo(ins.id, "camisa_estilo", val)}
+                              >
+                                <SelectTrigger className="h-7 w-fit bg-secondary/20 border-0 hover:bg-secondary/50 text-xs px-2 gap-2">
+                                  <span
+                                    className="w-3 h-3 rounded-full shrink-0 border"
+                                    style={{ backgroundColor: ins.camisa_estilo === "Verde" ? "#4C5F38" : "#F5F5F0" }}
+                                  />
+                                  <span className="text-xs font-medium">
+                                    {ins.camisa_estilo === "Verde" ? "VERDE" : "OFFWHITE"}
+                                  </span>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Verde">VERDE</SelectItem>
+                                  <SelectItem value="OffWhite">OFFWHITE</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="px-4 py-3 text-xs">
-                              {ins.camisa_tipo === "Feminino (Baby Look)" ? (
-                                <Badge variant="secondary" className="text-[10px] bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20">Baby Look</Badge>
-                              ) : (
-                                <Badge variant="secondary" className="text-[10px]">Masculino</Badge>
-                              )}
+                              <Select 
+                                value={ins.camisa_tipo} 
+                                onValueChange={(val) => handleUpdateCamisaInfo(ins.id, "camisa_tipo", val)}
+                              >
+                                <SelectTrigger className="h-7 w-fit bg-secondary/20 border-0 hover:bg-secondary/50 text-xs px-2">
+                                  {ins.camisa_tipo === "Feminino (Baby Look)" ? (
+                                    <span className="text-pink-600 dark:text-pink-400 font-medium">Baby Look</span>
+                                  ) : (
+                                    <span className="font-medium">Masculino</span>
+                                  )}
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Masculino">Masculino</SelectItem>
+                                  <SelectItem value="Feminino (Baby Look)">Baby Look</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="px-4 py-3">
-                              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10 text-primary font-bold text-sm border border-primary/20">
-                                {ins.camisa_tamanho}
-                              </span>
+                              <Select 
+                                value={ins.camisa_tamanho} 
+                                onValueChange={(val) => handleUpdateCamisaInfo(ins.id, "camisa_tamanho", val)}
+                              >
+                                <SelectTrigger className="w-12 h-9 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm border border-primary/20 flex justify-center items-center px-1">
+                                  <span>{ins.camisa_tamanho}</span>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {["PP", "P", "M", "G", "GG", "XG"].map((tam) => (
+                                    <SelectItem key={tam} value={tam} className="font-bold">{tam}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="px-4 py-3 text-xs text-muted-foreground max-w-[180px]">
                               {ins.camisa_obs ? (
