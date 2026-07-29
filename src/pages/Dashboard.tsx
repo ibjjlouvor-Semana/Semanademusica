@@ -70,6 +70,8 @@ export default function Dashboard() {
   const [camisaFiltroEntrega, setCamisaFiltroEntrega] = useState("Todos");
   const [camisaSearch, setCamisaSearch] = useState("");
   const [opcaoFiltro, setOpcaoFiltro] = useState("Todos");
+  const [musicoFiltro, setMusicoFiltro] = useState("Todos");
+  const [musicoSearch, setMusicoSearch] = useState("");
   
   const [videos, setVideos] = useState<any[]>([]);
   const [videoForm, setVideoForm] = useState({
@@ -1137,6 +1139,48 @@ export default function Dashboard() {
     toast.success("Relatório financeiro exportado com sucesso!");
   };
 
+  // --- DADOS DE MÚSICOS (CORAL & ORQUESTRA) ---
+  const musicosInscritos = inscricoes.filter(
+    (i) => i.opcao_escolhida !== "Apenas Camisa Oficial" && (!!i.tipo_participacao || (!!i.instrumento_oficina && !i.instrumento_oficina.includes("Camisa")))
+  );
+
+  const filteredMusicos = musicosInscritos
+    .filter((i) => {
+      if (musicoFiltro === "Todos") return true;
+      if (musicoFiltro === "Coral") return i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"));
+      if (musicoFiltro === "Orquestra") return i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")));
+      return true;
+    })
+    .filter((i) =>
+      musicoSearch === "" ||
+      i.nome.toLowerCase().includes(musicoSearch.toLowerCase()) ||
+      (i.detalhe_participacao || "").toLowerCase().includes(musicoSearch.toLowerCase()) ||
+      (i.instrumento_oficina || "").toLowerCase().includes(musicoSearch.toLowerCase()) ||
+      (i.igreja || "").toLowerCase().includes(musicoSearch.toLowerCase()) ||
+      i.cidade.toLowerCase().includes(musicoSearch.toLowerCase())
+    );
+
+  const exportMusicosExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const headers = ["#", "Nome do Inscrito", "Telefone/WhatsApp", "Modalidade", "Naipe / Instrumento", "Experiência Musical", "Igreja", "Cidade", "Status"];
+    const rows = filteredMusicos.map((i, idx) => [
+      idx + 1,
+      i.nome,
+      i.telefone,
+      i.tipo_participacao || "Participante",
+      i.detalhe_participacao || i.instrumento_oficina || "—",
+      i.descricao_experiencia || i.nivel_experiencia || "—",
+      i.igreja || "Não informada",
+      `${i.cidade} - ${i.estado}`,
+      i.status
+    ]);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    ws["!cols"] = [{ wch: 5 }, { wch: 30 }, { wch: 18 }, { wch: 18 }, { wch: 22 }, { wch: 35 }, { wch: 25 }, { wch: 20 }, { wch: 15 }];
+    XLSX.utils.book_append_sheet(wb, ws, "Músicos Inscritos");
+    XLSX.writeFile(wb, `musicos_coral_orquestra_${new Date().toISOString().split("T")[0]}.xlsx`);
+    toast.success("Planilha de Músicos exportada com sucesso!");
+  };
+
   return (
     <>
       <div className="min-h-screen bg-background text-foreground p-4 md:p-8 print:hidden">
@@ -1178,6 +1222,9 @@ export default function Dashboard() {
           <TabsList className="bg-secondary/40 w-fit p-1 rounded-xl mb-6 flex gap-1">
             <TabsTrigger value="inscricoes" className="rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-semibold">
               <Users className="w-4 h-4" /> Inscrições
+            </TabsTrigger>
+            <TabsTrigger value="musicos" className="rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400">
+              <Music className="w-4 h-4" /> Coral & Orquestra
             </TabsTrigger>
             <TabsTrigger value="financeiro" className="rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-semibold">
               <DollarSign className="w-4 h-4" /> Caixa & Finanças
@@ -1474,6 +1521,207 @@ export default function Dashboard() {
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </Button>
                               </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ABA MÚSICOS: CORAL & ORQUESTRA (SEM BLUSAS) */}
+          <TabsContent value="musicos" className="space-y-6">
+            {/* Cards de Resumo Rápido dos Músicos */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <Card className="glass-card border-primary/20 bg-primary/5">
+                <CardHeader className="pb-2">
+                  <CardDescription className="flex items-center gap-1.5 text-xs text-primary font-semibold">
+                    <Music className="w-3.5 h-3.5" /> Total de Músicos Inscritos
+                  </CardDescription>
+                  <CardTitle className="text-3xl font-bold font-display text-primary">{musicosInscritos.length}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[11px] text-muted-foreground">Participantes de Oficinas & Práticas (Sem pedidos avulsos de blusas)</p>
+                </CardContent>
+              </Card>
+
+              <Card className="glass-card border-pink-500/20 bg-pink-500/5">
+                <CardHeader className="pb-2">
+                  <CardDescription className="flex items-center gap-1.5 text-xs text-pink-600 dark:text-pink-400 font-semibold">
+                    <Users className="w-3.5 h-3.5" /> Cantores (Coral)
+                  </CardDescription>
+                  <CardTitle className="text-3xl font-bold font-display text-pink-600 dark:text-pink-400">
+                    {musicosInscritos.filter((i) => i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"))).length}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[11px] text-muted-foreground">Inscritos divididos em naipes (Soprano, Contralto, Tenor, Baixo)</p>
+                </CardContent>
+              </Card>
+
+              <Card className="glass-card border-blue-500/20 bg-blue-500/5">
+                <CardHeader className="pb-2">
+                  <CardDescription className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-semibold">
+                    <Music className="w-3.5 h-3.5" /> Instrumentistas (Orquestra)
+                  </CardDescription>
+                  <CardTitle className="text-3xl font-bold font-display text-blue-600 dark:text-blue-400">
+                    {musicosInscritos.filter((i) => i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")))).length}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-[11px] text-muted-foreground">Inscritos em cordas, sopros, teclado, percussão e outros</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Planilha Principal de Músicos */}
+            <Card className="glass-card border-border">
+              <CardHeader className="pb-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+                      <Music className="w-5 h-5 text-primary" /> Lista Exclusiva de Músicos
+                    </CardTitle>
+                    <CardDescription className="text-xs text-muted-foreground">
+                      Visão focada na prática musical e nível técnico dos participantes (excluindo compras apenas de camisa).
+                    </CardDescription>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button onClick={exportMusicosExcel} variant="outline" size="sm" className="h-9 gap-1.5 text-xs bg-emerald-600/10 text-emerald-600 border-emerald-600/20 hover:bg-emerald-600/20 font-semibold">
+                      <Download className="w-3.5 h-3.5" /> Exportar Planilha Excel (.xlsx)
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-border/50 mt-4">
+                  {/* Botões de Filtro */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                    <Button
+                      size="sm"
+                      variant={musicoFiltro === "Todos" ? "default" : "outline"}
+                      onClick={() => setMusicoFiltro("Todos")}
+                      className="text-xs h-8 px-3 font-semibold"
+                    >
+                      Todos os Músicos ({musicosInscritos.length})
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={musicoFiltro === "Coral" ? "default" : "outline"}
+                      onClick={() => setMusicoFiltro("Coral")}
+                      className="text-xs h-8 px-3 font-semibold gap-1"
+                    >
+                      🎤 Apenas Coral ({musicosInscritos.filter((i) => i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"))).length})
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={musicoFiltro === "Orquestra" ? "default" : "outline"}
+                      onClick={() => setMusicoFiltro("Orquestra")}
+                      className="text-xs h-8 px-3 font-semibold gap-1"
+                    >
+                      🎻 Apenas Orquestra ({musicosInscritos.filter((i) => i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")))).length})
+                    </Button>
+                  </div>
+
+                  {/* Busca */}
+                  <div className="relative min-w-[240px]">
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar músico, instrumento, igreja..."
+                      value={musicoSearch}
+                      onChange={(e) => setMusicoSearch(e.target.value)}
+                      className="pl-9 h-8 text-xs bg-secondary/30"
+                    />
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="p-0">
+                {filteredMusicos.length === 0 ? (
+                  <div className="p-12 text-center text-muted-foreground">
+                    <Music className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                    <p className="text-base font-semibold">Nenhum músico encontrado.</p>
+                    <p className="text-xs text-muted-foreground mt-1">Tente mudar os filtros ou a busca acima.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="border-b bg-secondary/30 text-xs font-semibold text-muted-foreground">
+                          <th className="px-4 py-3">#</th>
+                          <th className="px-4 py-3">Inscrito & Contato</th>
+                          <th className="px-4 py-3">Modalidade</th>
+                          <th className="px-4 py-3">Naipe / Instrumento</th>
+                          <th className="px-4 py-3 min-w-[220px]">Experiência / Detalhes</th>
+                          <th className="px-4 py-3">Igreja & Cidade</th>
+                          <th className="px-4 py-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y border-t-0">
+                        {filteredMusicos.map((ins, idx) => (
+                          <tr key={ins.id} className="hover:bg-secondary/20 transition-colors">
+                            <td className="px-4 py-3 text-xs text-muted-foreground font-mono">{idx + 1}</td>
+                            <td className="px-4 py-3">
+                              <div className="font-bold text-sm text-foreground">{ins.nome}</div>
+                              {ins.telefone ? (
+                                <a
+                                  href={`https://wa.me/55${ins.telefone.replace(/\D/g, "")}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium hover:underline inline-flex items-center gap-1 mt-0.5"
+                                >
+                                  💬 {ins.telefone}
+                                </a>
+                              ) : (
+                                <span className="text-[11px] text-muted-foreground">—</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              {ins.tipo_participacao === "Coral" || (ins.instrumento_oficina && ins.instrumento_oficina.includes("Coral")) ? (
+                                <Badge className="bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20 text-xs font-semibold px-2 py-0.5 w-fit gap-1">
+                                  🎤 Coral
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 text-xs font-semibold px-2 py-0.5 w-fit gap-1">
+                                  🎻 Orquestra
+                                </Badge>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="font-bold text-sm text-primary">
+                                {ins.detalhe_participacao || ins.instrumento_oficina || "Não especificado"}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="bg-secondary/40 p-2 rounded-lg text-xs border border-border/50 text-foreground/90 max-w-[280px]">
+                                {ins.descricao_experiencia || ins.nivel_experiencia || <span className="italic text-muted-foreground">Nenhuma informação de experiência adicionada</span>}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-xs">
+                              <div className="font-semibold text-foreground flex items-center gap-1">
+                                ⛪ {ins.igreja || "Não informada"}
+                              </div>
+                              <div className="text-[11px] text-muted-foreground mt-0.5">
+                                📍 {ins.cidade} - {ins.estado}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              {ins.status === "Cortesia" ? (
+                                <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 text-[11px] font-bold">
+                                  Cortesia
+                                </Badge>
+                              ) : ins.status === "Confirmada" ? (
+                                <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 text-[11px] font-bold flex items-center gap-1 w-fit">
+                                  <CheckCircle2 className="w-3 h-3" /> Confirmada
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-[11px] font-bold flex items-center gap-1 w-fit">
+                                  <Clock className="w-3 h-3" /> Pendente
+                                </Badge>
+                              )}
                             </td>
                           </tr>
                         ))}
