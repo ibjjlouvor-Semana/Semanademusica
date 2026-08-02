@@ -642,6 +642,89 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdateValorTransacao = async (transId: string, valorAtual: any, descricao?: string) => {
+    const novoValorStr = prompt(
+      `Digite o novo valor promocional ou ajustado para este lançamento:\n(${descricao || "Transação"})`,
+      parseFloat(valorAtual || 0).toFixed(2)
+    );
+    if (novoValorStr === null) return;
+    
+    const novoValor = parseFloat(novoValorStr.replace(",", "."));
+    if (isNaN(novoValor) || novoValor < 0) {
+      toast.error("Por favor, insira um valor numérico válido.");
+      return;
+    }
+
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase.from("financeiro").update({ valor: novoValor }).eq("id", transId);
+        if (error) throw error;
+
+        // Tentar atualizar também a inscrição correspondente pelo nome, para manter sincronizado
+        if (descricao) {
+          const matchingIns = inscricoes.find(i => descricao.includes(i.nome));
+          if (matchingIns) {
+            await supabase.from("inscricoes").update({ valor_total: novoValor }).eq("id", matchingIns.id);
+          }
+        }
+      } else {
+        const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
+        const index = antigas.findIndex((t: any) => t.id === transId);
+        if (index !== -1) {
+          antigas[index].valor = novoValor;
+          localStorage.setItem("financeiro_transacoes", JSON.stringify(antigas));
+        }
+        
+        if (descricao) {
+          const insLocal = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+          const insIdx = insLocal.findIndex((i: any) => descricao.includes(i.nome));
+          if (insIdx !== -1) {
+            insLocal[insIdx].valor_total = novoValor;
+            localStorage.setItem("inscricoes", JSON.stringify(insLocal));
+          }
+        }
+      }
+      toast.success(`Valor atualizado para R$ ${novoValor.toFixed(2)} com sucesso!`);
+      loadData();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao atualizar o valor do lançamento.");
+    }
+  };
+
+  const handleUpdateValorInscricao = async (insId: string, nome: string, valorAtual: any) => {
+    const novoValorStr = prompt(
+      `Digite o novo valor para a inscrição de ${nome}:`,
+      parseFloat(valorAtual || 0).toFixed(2)
+    );
+    if (novoValorStr === null) return;
+    
+    const novoValor = parseFloat(novoValorStr.replace(",", "."));
+    if (isNaN(novoValor) || novoValor < 0) {
+      toast.error("Por favor, insira um valor numérico válido.");
+      return;
+    }
+
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase.from("inscricoes").update({ valor_total: novoValor }).eq("id", insId);
+        if (error) throw error;
+      } else {
+        const insLocal = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const insIdx = insLocal.findIndex((i: any) => i.id === insId);
+        if (insIdx !== -1) {
+          insLocal[insIdx].valor_total = novoValor;
+          localStorage.setItem("inscricoes", JSON.stringify(insLocal));
+        }
+      }
+      toast.success(`Valor da inscrição de ${nome} atualizado para R$ ${novoValor.toFixed(2)}!`);
+      loadData();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao atualizar o valor da inscrição.");
+    }
+  };
+
   // Excluir lançamento financeiro
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir esta transação?")) return;
@@ -1465,6 +1548,18 @@ export default function Dashboard() {
                               <div>{ins.telefone}</div>
                               <div className="text-muted-foreground italic truncate max-w-[150px] mt-0.5">{ins.igreja || "Sem igreja"}</div>
                             </td>
+                            <td className="px-6 py-4 font-mono text-xs font-bold whitespace-nowrap text-primary flex items-center gap-1.5">
+                              <span>R$ {ins.valor_total ? parseFloat(ins.valor_total).toFixed(2) : "0.00"}</span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleUpdateValorInscricao(ins.id, ins.nome, ins.valor_total)}
+                                title="Editar valor desta inscrição manualmente"
+                                className="h-6 w-6 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                              </Button>
+                            </td>
                             <td className="px-6 py-4">
                               {ins.status === "Confirmada" ? (
                                 <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 hover:bg-green-500/20 border-green-500/20 flex items-center gap-1 w-fit">
@@ -2013,7 +2108,7 @@ export default function Dashboard() {
                                   </SelectContent>
                                 </Select>
                               </td>
-                              <td className="px-6 py-4 font-mono font-bold whitespace-nowrap">
+                              <td className="px-6 py-4 font-mono font-bold whitespace-nowrap flex items-center gap-2">
                                 {trans.tipo === "Entrada" ? (
                                   <span className="text-green-600 dark:text-green-400">
                                     + R$ {parseFloat(trans.valor).toFixed(2)}
@@ -2023,6 +2118,15 @@ export default function Dashboard() {
                                     - R$ {parseFloat(trans.valor).toFixed(2)}
                                   </span>
                                 )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleUpdateValorTransacao(trans.id, trans.valor, trans.descricao)}
+                                  title="Editar valor manualmente (ex: promoção ou ajuste)"
+                                  className="h-6 w-6 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                </Button>
                               </td>
                               <td className="px-6 py-4 text-right flex justify-end gap-1">
                                 <Button 
