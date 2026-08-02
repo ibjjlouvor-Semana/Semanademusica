@@ -707,19 +707,16 @@ export default function Home() {
                   </div>
 
                   {/* Item 2 - Lote Atual / Em Vigor */}
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-white p-4.5 rounded-xl border-2 border-[#5C6652] shadow-md relative overflow-hidden">
-                    <div className="absolute top-0 right-0 bg-[#5C6652] text-white text-[10px] font-extrabold px-3 py-0.5 rounded-bl-lg tracking-wider uppercase">
-                      Lote Atual
-                    </div>
-                    <div className="flex items-center gap-4 pt-2 sm:pt-0">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-[#5C6652]/5 p-4 rounded-xl border-2 border-[#5C6652] shadow-md">
+                    <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0 shadow-sm">
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
-                          <span className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-extrabold animate-pulse uppercase">
-                            EM VIGOR
+                          <span className="bg-[#5C6652] text-white text-[10px] px-2 py-0.5 rounded font-extrabold tracking-wide uppercase shadow-2xs">
+                            Lote Atual
                           </span>
                         </div>
                         <span className="text-[#2E3B2A] font-medium text-xs mt-0.5">(2º Lote – até 23/08)</span>
