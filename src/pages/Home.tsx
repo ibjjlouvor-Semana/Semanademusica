@@ -158,7 +158,7 @@ export default function Home() {
     hospedagem: "Não",
     membro_familia: "Não",
     membro_principal: "",
-    opcao_escolhida: "Primeiro Lote", // Default
+    opcao_escolhida: "Segundo Lote", // Default (2º Lote agora ativo)
     tipo_participacao: "Coral",
     detalhe_participacao: "",
     descricao_experiencia: "",
@@ -304,7 +304,9 @@ export default function Home() {
     else if (formData.opcao_escolhida === "Primeiro Lote + Camisa Oficial") baseValue = 155;
     else if (formData.opcao_escolhida === "Apenas Camisa Oficial") baseValue = 45;
     else if (formData.opcao_escolhida === "Segundo Lote") baseValue = 120;
+    else if (formData.opcao_escolhida === "Segundo Lote + Camisa Oficial") baseValue = 165;
     else if (formData.opcao_escolhida === "Terceiro Lote") baseValue = 130;
+    else if (formData.opcao_escolhida === "Terceiro Lote + Camisa Oficial") baseValue = 175;
     
     // Promoção Família: R$ 10 de desconto se for o 2º ou mais membro
     if (formData.membro_familia === "Sim" && baseValue > 10) {
@@ -690,34 +692,40 @@ export default function Home() {
                 {/* Lista de Valores */}
                 <div className="space-y-3">
                   
-                  {/* Item 1 */}
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
+                  {/* Item 1 - Lote Encerrado */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-white/60 p-4 rounded-xl border border-[#E8E4D9] opacity-65">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-zinc-300 text-zinc-600 flex items-center justify-center shrink-0">
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
-                        <span className="text-[#2E3B2A] text-xs">(1º Lote – até 31/07)</span>
+                        <span className="text-zinc-500 font-bold text-sm line-through">Inscrição</span>
+                        <span className="text-zinc-500 text-xs">(1º Lote – até 31/07) • Encerrado</span>
                       </div>
                     </div>
-                    <span className="font-bold text-[#4D5A42] self-end sm:self-auto">R$ 110,00</span>
+                    <span className="font-bold text-zinc-400 self-end sm:self-auto line-through">R$ 110,00</span>
                   </div>
 
-
-
-                  {/* Item 3 */}
-                  <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#E8E4D9]">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0">
+                  {/* Item 2 - Lote Atual / Em Vigor */}
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center bg-white p-4.5 rounded-xl border-2 border-[#5C6652] shadow-md relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-[#5C6652] text-white text-[10px] font-extrabold px-3 py-0.5 rounded-bl-lg tracking-wider uppercase">
+                      Lote Atual
+                    </div>
+                    <div className="flex items-center gap-4 pt-2 sm:pt-0">
+                      <div className="w-10 h-10 rounded-full bg-[#5C6652] text-white flex items-center justify-center shrink-0 shadow-sm">
                         <User className="w-5 h-5" strokeWidth={2} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
-                        <span className="text-[#2E3B2A] text-xs">(2º Lote – até 23/08)</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#2E3B2A] font-bold text-sm">Inscrição</span>
+                          <span className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 rounded font-extrabold animate-pulse uppercase">
+                            EM VIGOR
+                          </span>
+                        </div>
+                        <span className="text-[#2E3B2A] font-medium text-xs mt-0.5">(2º Lote – até 23/08)</span>
                       </div>
                     </div>
-                    <span className="font-bold text-[#4D5A42] whitespace-nowrap">R$ 120,00</span>
+                    <span className="font-extrabold text-lg text-[#2E3B2A] self-end sm:self-auto whitespace-nowrap">R$ 120,00</span>
                   </div>
 
                   {/* Item 4 */}
@@ -1239,16 +1247,16 @@ export default function Home() {
                       <div className="grid grid-cols-1 gap-2.5">
                         {[
                           { 
-                            id: "Primeiro Lote", 
-                            nome: "Inscrição (1º Lote)", 
-                            valor: "R$ 110,00", 
-                            desc: "Garante sua entrada na IV Semana de Música." 
+                            id: "Segundo Lote", 
+                            nome: "Inscrição (2º Lote)", 
+                            valor: "R$ 120,00", 
+                            desc: "Garante sua entrada na IV Semana de Música (2º Lote ativo)." 
                           },
                           { 
-                            id: "Primeiro Lote + Camisa Oficial", 
+                            id: "Segundo Lote + Camisa Oficial", 
                             nome: "Inscrição + Camisa Oficial", 
-                            valor: "R$ 155,00", 
-                            desc: "Inscrição (1º Lote) e a Camisa oficial do evento." 
+                            valor: "R$ 165,00", 
+                            desc: "Inscrição (2º Lote) e a Camisa oficial do evento." 
                           },
                           { 
                             id: "Apenas Camisa Oficial", 
