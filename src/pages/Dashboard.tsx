@@ -1524,7 +1524,7 @@ export default function Dashboard() {
                           <th className="px-4 py-3">Código</th>
                           <th className="px-4 py-3">Participante</th>
                           <th className="px-4 py-3">Opção / Participação</th>
-                          <th className="px-4 py-3">Camisa / Hospedagem</th>
+                          <th className="px-4 py-3">Contato / Hospedagem</th>
                           <th className="px-4 py-3">Valor</th>
                           <th className="px-4 py-3">Status</th>
                           <th className="px-4 py-3 text-right">Ações</th>
@@ -1547,6 +1547,11 @@ export default function Dashboard() {
                             <td className="px-6 py-4 text-xs">
                               <div>{ins.telefone}</div>
                               <div className="text-muted-foreground italic truncate max-w-[150px] mt-0.5">{ins.igreja || "Sem igreja"}</div>
+                              {ins.hospedagem === "Sim" && (
+                                <Badge variant="secondary" className="mt-1 text-[9px] bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400">
+                                  Hospedagem: Sim
+                                </Badge>
+                              )}
                             </td>
                             <td className="px-6 py-4 font-mono text-xs font-bold whitespace-nowrap text-primary flex items-center gap-1.5">
                               <span>R$ {ins.valor_total ? parseFloat(ins.valor_total).toFixed(2) : "0.00"}</span>
