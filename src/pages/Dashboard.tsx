@@ -565,6 +565,14 @@ export default function Dashboard() {
             data: finForm.data,
           }).eq("id", editingFinId);
           if (error) throw error;
+          
+          // Sincronizar inscrição caso seja uma transação vinculada a um inscrito
+          if (finForm.descricao) {
+            const matchingIns = inscricoes.find(i => finForm.descricao.includes(i.nome));
+            if (matchingIns) {
+              await supabase.from("inscricoes").update({ valor_total: parseFloat(finForm.valor) }).eq("id", matchingIns.id);
+            }
+          }
         } else {
           const antigas = JSON.parse(localStorage.getItem("financeiro_transacoes") || "[]");
           const index = antigas.findIndex((t: any) => t.id === editingFinId);
@@ -572,8 +580,17 @@ export default function Dashboard() {
             antigas[index] = { ...antigas[index], ...finForm, valor: parseFloat(finForm.valor) };
             localStorage.setItem("financeiro_transacoes", JSON.stringify(antigas));
           }
+          
+          if (finForm.descricao) {
+            const insLocal = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+            const insIdx = insLocal.findIndex((i: any) => finForm.descricao.includes(i.nome));
+            if (insIdx !== -1) {
+              insLocal[insIdx].valor_total = parseFloat(finForm.valor);
+              localStorage.setItem("inscricoes", JSON.stringify(insLocal));
+            }
+          }
         }
-        toast.success("Lançamento atualizado!");
+        toast.success("Lançamento e valor sincronizados!");
         setEditingFinId(null);
       } else {
         if (!isUsingPlaceholder) {
