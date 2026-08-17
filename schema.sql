@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS public.inscricoes (
     camisa_tipo text, -- Masculino, Feminino (Baby Look)
     camisa_tamanho text, -- PP a XG
     camisa_obs text, -- Tamanhos especiais/observações
+    camisa_entregue boolean DEFAULT false, -- Controle de entrega da camisa
     valor_total numeric(10, 2) NOT NULL, -- R$ 20.00, R$ 45.00 ou R$ 65.00
     status text DEFAULT 'Pendente'::text,
     created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -33,6 +34,7 @@ ALTER TABLE public.inscricoes ENABLE ROW LEVEL SECURITY;
 -- Políticas de Acesso RLS para inscrições
 CREATE POLICY "Permitir inserção pública de inscrições" ON public.inscricoes FOR INSERT TO public WITH CHECK (true);
 CREATE POLICY "Permitir leitura pública das inscrições" ON public.inscricoes FOR SELECT TO public USING (true);
+CREATE POLICY "Permitir atualização pública de inscrições" ON public.inscricoes FOR UPDATE TO public USING (true);
 CREATE POLICY "Permitir deleção pública de inscrições" ON public.inscricoes FOR DELETE TO public USING (true);
 
 
@@ -53,6 +55,7 @@ ALTER TABLE public.financeiro ENABLE ROW LEVEL SECURITY;
 -- Políticas de Acesso RLS para financeiro
 CREATE POLICY "Permitir inserção pública de transações" ON public.financeiro FOR INSERT TO public WITH CHECK (true);
 CREATE POLICY "Permitir leitura pública de transações" ON public.financeiro FOR SELECT TO public USING (true);
+CREATE POLICY "Permitir atualização pública de transações" ON public.financeiro FOR UPDATE TO public USING (true);
 CREATE POLICY "Permitir deleção pública de transações" ON public.financeiro FOR DELETE TO public USING (true);
 
 -- 3. Criar tabela de Vídeos de Apresentação
