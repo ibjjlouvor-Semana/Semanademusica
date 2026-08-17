@@ -742,6 +742,33 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdateIgrejaInscricao = async (insId: string, nome: string, igrejaAtual?: string) => {
+    const novaIgreja = prompt(
+      `Editar nome da igreja para ${nome}:`,
+      igrejaAtual || ""
+    );
+    if (novaIgreja === null) return;
+    
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase.from("inscricoes").update({ igreja: novaIgreja.trim() }).eq("id", insId);
+        if (error) throw error;
+      } else {
+        const insLocal = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const insIdx = insLocal.findIndex((i: any) => i.id === insId);
+        if (insIdx !== -1) {
+          insLocal[insIdx].igreja = novaIgreja.trim();
+          localStorage.setItem("inscricoes", JSON.stringify(insLocal));
+        }
+      }
+      toast.success(`Igreja de ${nome} atualizada!`);
+      loadData();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao atualizar o nome da igreja.");
+    }
+  };
+
   // Excluir lançamento financeiro
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir esta transação?")) return;
@@ -1051,12 +1078,59 @@ export default function Dashboard() {
     .map(([name, value]) => ({ name, value }))
     .sort((a, b) => b.value - a.value);
 
+  // Normalização e padronização dos nomes de igrejas para agrupar variações (ex: IBJJ = Igreja Bíblica de Jijoca)
+  const normalizeChurchName = (name?: string): string => {
+    if (!name || !name.trim()) return "Não informada";
+    const clean = name.trim();
+    const lower = clean.toLowerCase();
+
+    if (lower === "ibjj" || lower === "jijoca" || lower.includes("jijoca de jericoacoara") || lower.includes("bíblica de jijoca") || lower.includes("biblica de jijoca")) {
+      return "Igreja Bíblica de Jijoca";
+    }
+    if (lower.includes("acaraú") || lower.includes("acarau")) {
+      return "Igreja Bíblica de Acaraú";
+    }
+    if (lower.includes("preá") || lower.includes("prea")) {
+      return "Igreja Bíblica do Preá";
+    }
+    if (lower.includes("pituba")) {
+      return "Igreja Batista Regular da Pituba";
+    }
+    if (lower.includes("luz do mundo")) {
+      return "Ig. Batista Luz do Mundo";
+    }
+    if (lower.includes("manancial")) {
+      return "Igreja Batista Manancial";
+    }
+    if (lower.includes("fonte de vida")) {
+      return "Igreja Bíblica Batista Fonte de Vida";
+    }
+    if (lower.includes("jereissati")) {
+      return "Igreja Bíblica Batista de Jereissati 3";
+    }
+    if (lower.includes("horizonte")) {
+      return "Igreja Bíblica de Horizonte";
+    }
+    if (lower.includes("aranaú") || lower.includes("aranau")) {
+      return "Bíblica Aranaú";
+    }
+
+    return clean
+      .split(/\s+/)
+      .map((word) => {
+        const wLower = word.toLowerCase();
+        if (["de", "do", "da", "dos", "das", "em", "e"].includes(wLower)) return wLower;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join(" ");
+  };
+
   // Igrejas (todos os inscritos com igreja preenchida)
   const igrejasCounts: Record<string, number> = {};
   inscricoes
     .filter((i) => i.igreja && i.igreja.trim() !== "")
     .forEach((i) => {
-      const ig = (i.igreja as string).trim();
+      const ig = normalizeChurchName(i.igreja);
       igrejasCounts[ig] = (igrejasCounts[ig] || 0) + 1;
     });
   const igrejasData = Object.entries(igrejasCounts)
@@ -1563,7 +1637,20 @@ export default function Dashboard() {
                             </td>
                             <td className="px-6 py-4 text-xs">
                               <div>{ins.telefone}</div>
-                              <div className="text-muted-foreground italic truncate max-w-[150px] mt-0.5">{ins.igreja || "Sem igreja"}</div>
+                              <div className="flex items-center gap-1 mt-0.5">
+                                <span className="text-muted-foreground italic truncate max-w-[150px]">
+                                  {ins.igreja || "Sem igreja"}
+                                </span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleUpdateIgrejaInscricao(ins.id, ins.nome, ins.igreja)}
+                                  title="Editar igreja do participante"
+                                  className="h-5 w-5 text-muted-foreground hover:text-primary hover:bg-primary/10 shrink-0"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                </Button>
+                              </div>
                               {ins.hospedagem === "Sim" && (
                                 <Badge variant="secondary" className="mt-1 text-[9px] bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400">
                                   Hospedagem: Sim
@@ -1819,7 +1906,16 @@ export default function Dashboard() {
                             </td>
                             <td className="px-4 py-3 text-xs">
                               <div className="font-semibold text-foreground flex items-center gap-1">
-                                ⛪ {ins.igreja || "Não informada"}
+                                <span>⛪ {ins.igreja || "Não informada"}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleUpdateIgrejaInscricao(ins.id, ins.nome, ins.igreja)}
+                                  title="Editar igreja do participante"
+                                  className="h-5 w-5 text-muted-foreground hover:text-primary hover:bg-primary/10 shrink-0"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                </Button>
                               </div>
                               <div className="text-[11px] text-muted-foreground mt-0.5">
                                 📍 {ins.cidade} - {ins.estado}
