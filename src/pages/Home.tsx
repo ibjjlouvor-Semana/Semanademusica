@@ -291,7 +291,7 @@ export default function Home() {
   };
 
   const hasParticipation = (opcao: string) => {
-    return opcao.includes("Lote") || opcao === "Inscrição" || opcao === "Inscrição + Camisa Oficial";
+    return opcao.includes("Lote") || opcao === "Inscrição" || opcao === "Inscrição + Camisa Oficial" || opcao === "Lista de Espera";
   };
 
   const hasShirt = (opcao: string) => {
@@ -301,7 +301,8 @@ export default function Home() {
   // Obter valor total baseado na opção escolhida
   const getValorTotal = () => {
     let baseValue = 0;
-    if (formData.opcao_escolhida === "Primeiro Lote") baseValue = 110;
+    if (formData.opcao_escolhida === "Lista de Espera") baseValue = 0;
+    else if (formData.opcao_escolhida === "Primeiro Lote") baseValue = 110;
     else if (formData.opcao_escolhida === "Primeiro Lote + Camisa Oficial") baseValue = 155;
     else if (formData.opcao_escolhida === "Apenas Camisa Oficial") baseValue = 45;
     else if (formData.opcao_escolhida === "Segundo Lote") baseValue = 120;
@@ -465,7 +466,7 @@ export default function Home() {
       camisa_obs: temCamisa ? formData.camisa_obs : null,
       
       valor_total: valor,
-      status: "Pendente", // Salvo inicialmente como Pendente
+      status: formData.opcao_escolhida === "Lista de Espera" ? "Lista de Espera" : "Pendente",
       created_at: new Date().toISOString(),
 
       // Mapeamento compatível para campos legados no banco
@@ -1263,6 +1264,13 @@ export default function Home() {
                             disponivel: true
                           },
                           { 
+                            id: "Lista de Espera", 
+                            nome: "Entrar na Lista de Espera (Gratuito)", 
+                            valor: "R$ 0,00", 
+                            desc: "Receba notificação se abrir vaga no Coral ou Orquestra. Sem pagamento agora.",
+                            disponivel: true
+                          },
+                          { 
                             id: "Segundo Lote", 
                             nome: "Inscrição (2º Lote)", 
                             valor: "R$ 120,00", 
@@ -1719,132 +1727,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Seleção de Método de Pagamento */}
-                    <div className="space-y-2">
-                      <Label className="text-sm font-semibold">Forma de Pagamento</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button 
-                          type="button"
-                          variant={metodoPagamento === "PIX" ? "default" : "outline"}
-                          className={`h-12 ${metodoPagamento === "PIX" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
-                          onClick={() => setMetodoPagamento("PIX")}
-                        >
-                          PIX (Sem Taxas)
-                        </Button>
-                        <Button 
-                          type="button"
-                          variant={metodoPagamento === "CARTAO" ? "default" : "outline"}
-                          className={`h-12 ${metodoPagamento === "CARTAO" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
-                          onClick={() => setMetodoPagamento("CARTAO")}
-                        >
-                          Cartão de Crédito
-                        </Button>
-                      </div>
-                    </div>
-
-                    {metodoPagamento === "PIX" && (
-                      <>
-                        {/* QR Code PIX */}
-                        <div className="flex flex-col items-center justify-center p-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
-                          <div className="w-40 h-40 bg-white p-2.5 rounded-xl border flex items-center justify-center relative overflow-hidden">
-                            <img 
-                              src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(getCurrentPixKey())}&margin=0`}
-                              alt="QR Code PIX"
-                              className="w-full h-full object-contain"
-                            />
-                          </div>
-                          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
-                            Escaneie para Pagar
-                          </span>
-                        </div>
-
-                        {/* Copia e Cola */}
-                        <div className="space-y-1.5">
-                          <Label className="text-xs text-muted-foreground">Chave PIX Copia e Cola:</Label>
-                          <div className="flex gap-2">
-                            <Input 
-                              readOnly 
-                              value={getCurrentPixKey()} 
-                              className="font-mono text-xs h-9 bg-secondary/30 select-all"
-                            />
-                            <Button 
-                              type="button" 
-                              size="icon" 
-                              variant="outline" 
-                              onClick={handleCopyPix}
-                              className="h-9 w-9 shrink-0 active:scale-95"
-                            >
-                              <Copy className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {metodoPagamento === "CARTAO" && (
-                      <div className="flex flex-col items-center justify-center p-6 bg-secondary/30 rounded-2xl border border-border text-center space-y-4">
-                        <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-sm">Pagamento Seguro via Cartão</h4>
-                          <p className="text-xs text-muted-foreground mt-1 max-w-[250px] mx-auto">
-                            Você será redirecionado para o nosso ambiente de pagamento seguro (Mercado Pago/PagSeguro).
-                          </p>
-                          <p className="text-[10px] text-amber-600 dark:text-amber-500 font-medium mt-2 bg-amber-50 dark:bg-amber-950/30 p-2 rounded-md max-w-[250px] mx-auto">
-                            ⚠️ O valor final no cartão terá acréscimo da taxa da maquininha/plataforma.
-                          </p>
-                        </div>
-                        <Button 
-                          type="button"
-                          onClick={handleCartaoClick}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12"
-                        >
-                          PAGAR COM CARTÃO AGORA
-                        </Button>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-2 font-semibold">
-                          Retorne aqui e clique em Concluir após o pagamento.
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Termo de Consentimento */}
-                    <div className="flex items-start space-x-2.5 pt-2">
-                      <input 
-                        type="checkbox" 
-                        id="consent" 
-                        checked={consent}
-                        onChange={(e) => setConsent(e.target.checked)}
-                        className="h-4.5 w-4.5 rounded border-gray-300 text-primary focus:ring-primary mt-0.5 cursor-pointer"
-                      />
-                      <label htmlFor="consent" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
-                        Autorizo o uso de minha imagem e voz gravados em fotos ou vídeos da IV Semana de Música Cristã de Jijoca para divulgação de futuras edições e atividades da Igreja IBJJ.
-                      </label>
-                    </div>
-
-                    <div className="p-3 bg-primary/5 rounded-xl border border-primary/20 flex gap-2 items-start text-xs text-muted-foreground">
-                      <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                      <span>
-                        Realize o PIX e clique em <strong>Concluir Inscrição</strong>. Sua inscrição entrará em análise e será confirmada após conciliação bancária da nossa equipe.
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* ETAPA 5: ANÁLISE / VOUCHER COMPLETO */}
-                {step === 5 && inscricaoConfirmada && (
-                  <div className="space-y-6">
-                    {/* Mensagem Principal */}
-                    <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl text-center space-y-2 print:hidden">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-1 animate-pulse">
-                        <Clock className="w-6 h-6" />
-                      </div>
-                      <h3 className="font-display font-bold text-lg text-primary">Inscrição em análise</h3>
-                      <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                        Será enviado um e-mail com a confirmação da sua inscrição assim que validarmos o pagamento do PIX de <strong>R$ {inscricaoConfirmada.valor_total.toFixed(2)}</strong>.
-                      </p>
-                    </div>
-
                     {/* Voucher de Inscrição */}
                     <div id="voucher-print" className="p-6 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-6 text-zinc-900 dark:text-zinc-50 shadow-md relative overflow-hidden print:shadow-none print:border-none print:p-0">
                       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent print:hidden"></div>
@@ -1974,7 +1856,7 @@ export default function Home() {
                       <ArrowLeft className="w-4 h-4" /> Voltar
                     </Button>
                     <Button type="submit" disabled={loading} className="bg-primary hover:bg-primary/90 flex items-center gap-1">
-                      {loading ? "Processando..." : "Concluir Inscrição"}
+                      {loading ? "Processando..." : formData.opcao_escolhida === "Lista de Espera" ? "Entrar na Lista de Espera" : "Concluir Inscrição"}
                     </Button>
                   </>
                 )}

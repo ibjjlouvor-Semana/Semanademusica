@@ -1007,6 +1007,7 @@ export default function Dashboard() {
   const totalInscritos = inscricoes.length;
   const totalConfirmados = inscricoes.filter((i) => i.status === "Confirmada").length;
   const totalPendentes = inscricoes.filter((i) => i.status === "Pendente").length;
+  const totalListaEspera = inscricoes.filter((i) => i.status === "Lista de Espera" || i.opcao_escolhida === "Lista de Espera").length;
 
   // Financeiro
   const receitasTotais = transacoes
@@ -1034,6 +1035,9 @@ export default function Dashboard() {
       if (opcaoFiltro === "Combo") {
         const op = ins.opcao_escolhida || "";
         return op === "Inscrição + Camisa Oficial" || (!!ins.tipo_participacao && !!ins.camisa_tamanho);
+      }
+      if (opcaoFiltro === "ListaDeEspera") {
+        return ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera";
       }
       return true;
     })
@@ -1421,13 +1425,13 @@ export default function Dashboard() {
           <TabsContent value="inscricoes" className="space-y-6">
             
             {/* Cards de Métricas de Inscrições */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="pb-2">
                   <CardDescription className="flex items-center gap-1.5">
                     <Users className="w-4 h-4 text-primary" /> Total Inscritos
                   </CardDescription>
-                  <CardTitle className="text-4xl font-bold font-display">{totalInscritos}</CardTitle>
+                  <CardTitle className="text-3xl font-bold font-display">{totalInscritos}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-muted-foreground">Inscrições recebidas</p>
@@ -1437,24 +1441,36 @@ export default function Dashboard() {
               <Card className="border-amber-500/20">
                 <CardHeader className="pb-2">
                   <CardDescription className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
-                    <Clock className="w-4 h-4 text-amber-500" /> Em Análise (Aguardando PIX)
+                    <Clock className="w-4 h-4 text-amber-500" /> Em Análise (PIX)
                   </CardDescription>
-                  <CardTitle className="text-4xl font-bold font-display text-amber-600 dark:text-amber-400">{totalPendentes}</CardTitle>
+                  <CardTitle className="text-3xl font-bold font-display text-amber-600 dark:text-amber-400">{totalPendentes}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-muted-foreground">Aguardando comprovação</p>
                 </CardContent>
               </Card>
 
+              <Card className="border-amber-500/30 bg-amber-500/5">
+                <CardHeader className="pb-2">
+                  <CardDescription className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-semibold">
+                    <Clock className="w-4 h-4 text-amber-500" /> Lista de Espera
+                  </CardDescription>
+                  <CardTitle className="text-3xl font-bold font-display text-amber-600 dark:text-amber-400">{totalListaEspera}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground">Aguardando vaga</p>
+                </CardContent>
+              </Card>
+
               <Card className="border-green-500/20">
                 <CardHeader className="pb-2">
                   <CardDescription className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" /> Inscrições Confirmadas
+                    <CheckCircle2 className="w-4 h-4 text-green-500" /> Confirmadas
                   </CardDescription>
-                  <CardTitle className="text-4xl font-bold font-display text-green-600 dark:text-green-400">{totalConfirmados}</CardTitle>
+                  <CardTitle className="text-3xl font-bold font-display text-green-600 dark:text-green-400">{totalConfirmados}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xs text-muted-foreground">Participantes garantidos nas salas</p>
+                  <p className="text-xs text-muted-foreground">Vagas garantidas</p>
                 </CardContent>
               </Card>
             </div>
@@ -1678,6 +1694,10 @@ export default function Dashboard() {
                                 <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 border-purple-500/20 flex items-center gap-1 w-fit">
                                   <CheckCircle2 className="w-3.5 h-3.5" /> Cortesia
                                 </Badge>
+                              ) : ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera" ? (
+                                <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 border-amber-500/20 flex items-center gap-1 w-fit">
+                                  <Clock className="w-3.5 h-3.5" /> Lista de Espera
+                                </Badge>
                               ) : (
                                 <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 border-amber-500/20 flex items-center gap-1 w-fit">
                                   <Clock className="w-3.5 h-3.5" /> Em Análise (PIX)
@@ -1686,14 +1706,14 @@ export default function Dashboard() {
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end items-center gap-2">
-                                {ins.status === "Pendente" && (
+                                {(ins.status === "Pendente" || ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera") && (
                                   <>
                                     <Button 
                                       size="sm" 
                                       onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
-                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
+                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95 font-semibold"
                                     >
-                                      <Check className="w-3.5 h-3.5" /> Aprovar & Avisar
+                                      <Check className="w-3.5 h-3.5" /> {ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera" ? "Aprovar Vaga" : "Aprovar & Avisar"}
                                     </Button>
                                     <Button 
                                       size="sm" 
