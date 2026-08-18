@@ -30,7 +30,8 @@ import {
   Package,
   Youtube,
   Settings,
-  Undo
+  Undo,
+  Pencil
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -100,7 +101,6 @@ export default function Dashboard() {
     pix_blusa: "",
     cartao_inscricao: "",
     cartao_inscricao_blusa: "",
-    cartao_blusa: ""
   });
 
   const [isCortesiaModalOpen, setIsCortesiaModalOpen] = useState(false);
@@ -115,6 +115,113 @@ export default function Dashboard() {
     tipo_participacao: "Coral",
     instrumento_oficina: "Canto"
   });
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingInscricao, setEditingInscricao] = useState<any>(null);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    nome: "",
+    email: "",
+    telefone: "",
+    data_nascimento: "",
+    cidade: "",
+    estado: "",
+    igreja: "",
+    hospedagem: "Não",
+    opcao_escolhida: "Inscrição + Camisa Oficial",
+    tipo_participacao: "Coral",
+    detalhe_participacao: "",
+    instrumento_oficina: "",
+    nivel_experiencia: "Intermediário",
+    descricao_experiencia: "",
+    camisa_estilo: "Verde",
+    camisa_tipo: "Masculino",
+    camisa_tamanho: "M",
+    camisa_obs: "",
+    status: "Pendente",
+    valor_total: 0
+  });
+
+  const handleOpenEditModal = (ins: any) => {
+    setEditingInscricao(ins);
+    setEditFormData({
+      nome: ins.nome || "",
+      email: ins.email || "",
+      telefone: ins.telefone || "",
+      data_nascimento: ins.data_nascimento || "",
+      cidade: ins.cidade || "",
+      estado: ins.estado || "",
+      igreja: ins.igreja || "",
+      hospedagem: ins.hospedagem || "Não",
+      opcao_escolhida: ins.opcao_escolhida || "Inscrição",
+      tipo_participacao: ins.tipo_participacao || "Coral",
+      detalhe_participacao: ins.detalhe_participacao || "",
+      instrumento_oficina: ins.instrumento_oficina || "",
+      nivel_experiencia: ins.nivel_experiencia || "Intermediário",
+      descricao_experiencia: ins.descricao_experiencia || "",
+      camisa_estilo: ins.camisa_estilo || "Verde",
+      camisa_tipo: ins.camisa_tipo || "Masculino",
+      camisa_tamanho: ins.camisa_tamanho || "M",
+      camisa_obs: ins.camisa_obs || "",
+      status: ins.status || "Pendente",
+      valor_total: ins.valor_total || 0
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEditInscricao = async () => {
+    if (!editingInscricao?.id) return;
+    try {
+      setLoadingEdit(true);
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase
+          .from("inscricoes")
+          .update({
+            nome: editFormData.nome,
+            email: editFormData.email,
+            telefone: editFormData.telefone,
+            data_nascimento: editFormData.data_nascimento,
+            cidade: editFormData.cidade,
+            estado: editFormData.estado,
+            igreja: editFormData.igreja,
+            hospedagem: editFormData.hospedagem,
+            opcao_escolhida: editFormData.opcao_escolhida,
+            tipo_participacao: editFormData.tipo_participacao,
+            detalhe_participacao: editFormData.detalhe_participacao,
+            instrumento_oficina: editFormData.instrumento_oficina,
+            nivel_experiencia: editFormData.nivel_experiencia,
+            descricao_experiencia: editFormData.descricao_experiencia,
+            camisa_estilo: editFormData.camisa_estilo,
+            camisa_tipo: editFormData.camisa_tipo,
+            camisa_tamanho: editFormData.camisa_tamanho,
+            camisa_obs: editFormData.camisa_obs,
+            status: editFormData.status,
+            valor_total: editFormData.valor_total
+          })
+          .eq("id", editingInscricao.id);
+        if (error) throw error;
+      } else {
+        const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const atualizados = localData.map((i: any) => {
+          if (i.id === editingInscricao.id) {
+            return { ...i, ...editFormData };
+          }
+          return i;
+        });
+        localStorage.setItem("inscricoes", JSON.stringify(atualizados));
+      }
+
+      toast.success(`Inscrição de ${editFormData.nome} atualizada com sucesso!`);
+      setIsEditModalOpen(false);
+      setEditingInscricao(null);
+      await loadData();
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao salvar alterações da inscrição: " + err.message);
+    } finally {
+      setLoadingEdit(false);
+    }
+  };
 
   const [centrosDeCusto, setCentrosDeCusto] = useState(["Semana de Musica", "Loja"]);
 
@@ -1826,6 +1933,15 @@ export default function Dashboard() {
                                 <Button 
                                   variant="ghost" 
                                   size="icon"  
+                                  onClick={() => handleOpenEditModal(ins)}
+                                  title="Editar todas as informações do participante"
+                                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950 h-8 w-8"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"  
                                   onClick={() => handleDelete(ins.id)}
                                   className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8"
                                 >
@@ -1969,6 +2085,7 @@ export default function Dashboard() {
                           <th className="px-4 py-3 min-w-[220px]">Experiência / Detalhes</th>
                           <th className="px-4 py-3">Igreja & Cidade</th>
                           <th className="px-4 py-3">Status</th>
+                          <th className="px-4 py-3 text-right">Ações</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y border-t-0">
@@ -2042,6 +2159,17 @@ export default function Dashboard() {
                                   <Clock className="w-3 h-3" /> Pendente
                                 </Badge>
                               )}
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleOpenEditModal(ins)}
+                                title="Editar dados do músico"
+                                className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
                             </td>
                           </tr>
                         ))}
@@ -3264,6 +3392,280 @@ export default function Dashboard() {
           Documento gerado automaticamente pelo Sistema de Gestão da Semana de Música Cristã.
         </div>
       </div>
+
+      {/* MODAL DE EDIÇÃO COMPLETA DA INSCRIÇÃO */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+              <Pencil className="w-5 h-5 text-primary" /> Editar Dados do Inscrito (#{editingInscricao?.id})
+            </DialogTitle>
+            <DialogDescription>
+              Altere qualquer informação do participante. Todas as alterações serão salvas imediatamente.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-2">
+            {/* Seção 1: Dados Pessoais e Contato */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">1. Dados Pessoais & Contato</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs">Nome Completo</Label>
+                  <Input 
+                    value={editFormData.nome} 
+                    onChange={(e) => setEditFormData({ ...editFormData, nome: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">E-mail</Label>
+                  <Input 
+                    type="email"
+                    value={editFormData.email} 
+                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Telefone / WhatsApp</Label>
+                  <Input 
+                    value={editFormData.telefone} 
+                    onChange={(e) => setEditFormData({ ...editFormData, telefone: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Data de Nascimento</Label>
+                  <Input 
+                    type="date"
+                    value={editFormData.data_nascimento} 
+                    onChange={(e) => setEditFormData({ ...editFormData, data_nascimento: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Cidade</Label>
+                  <Input 
+                    value={editFormData.cidade} 
+                    onChange={(e) => setEditFormData({ ...editFormData, cidade: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Estado (UF)</Label>
+                  <Input 
+                    value={editFormData.estado} 
+                    onChange={(e) => setEditFormData({ ...editFormData, estado: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1 sm:col-span-2">
+                  <Label className="text-xs">Igreja</Label>
+                  <Input 
+                    value={editFormData.igreja} 
+                    onChange={(e) => setEditFormData({ ...editFormData, igreja: e.target.value })}
+                    placeholder="Ex: Igreja Bíblica de Jijoca"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Precisa de Hospedagem?</Label>
+                  <Select 
+                    value={editFormData.hospedagem} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, hospedagem: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Sim">Sim (Precisa de Hospedagem)</SelectItem>
+                      <SelectItem value="Não">Não (Hospedagem Própria)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* Seção 2: Participação, Naipe e Instrumento */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">2. Participação, Naipe & Instrumento</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs">Foco de Participação</Label>
+                  <Select 
+                    value={editFormData.tipo_participacao} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, tipo_participacao: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Coral">Coral</SelectItem>
+                      <SelectItem value="Orquestra">Orquestra</SelectItem>
+                      <SelectItem value="Nenhum">Nenhum (Apenas Ouvinte / Camisa)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Naipe de Voz / Instrumento</Label>
+                  <Input 
+                    value={editFormData.detalhe_participacao} 
+                    onChange={(e) => setEditFormData({ ...editFormData, detalhe_participacao: e.target.value })}
+                    placeholder="Ex: Soprano, Tenor, Violino, Clarinete, Sax Alto, etc."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Instrumento / Oficina Principal</Label>
+                  <Input 
+                    value={editFormData.instrumento_oficina} 
+                    onChange={(e) => setEditFormData({ ...editFormData, instrumento_oficina: e.target.value })}
+                    placeholder="Ex: Canto, Violão, Bateria, Flauta"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Nível de Experiência</Label>
+                  <Select 
+                    value={editFormData.nivel_experiencia} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, nivel_experiencia: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Iniciante">Iniciante</SelectItem>
+                      <SelectItem value="Intermediário">Intermediário</SelectItem>
+                      <SelectItem value="Avançado">Avançado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1 sm:col-span-2">
+                  <Label className="text-xs">Descrição da Experiência Musical</Label>
+                  <Input 
+                    value={editFormData.descricao_experiencia} 
+                    onChange={(e) => setEditFormData({ ...editFormData, descricao_experiencia: e.target.value })}
+                    placeholder="Resumo da experiência na igreja/estudos"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Seção 3: Blusa Oficial */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">3. Camisa / Blusa Oficial</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs">Estilo / Cor</Label>
+                  <Select 
+                    value={editFormData.camisa_estilo} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, camisa_estilo: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Verde">Verde (Oficial)</SelectItem>
+                      <SelectItem value="OffWhite">OffWhite (Clássica)</SelectItem>
+                      <SelectItem value="Nenhuma">Nenhuma Camisa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Modelagem</Label>
+                  <Select 
+                    value={editFormData.camisa_tipo} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, camisa_tipo: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Masculino">Masculino / Tradicional</SelectItem>
+                      <SelectItem value="Feminino (Baby Look)">Feminino (Baby Look)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Tamanho</Label>
+                  <Select 
+                    value={editFormData.camisa_tamanho} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, camisa_tamanho: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Tamanho" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["PP", "P", "M", "G", "GG", "XG"].map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1 sm:col-span-3">
+                  <Label className="text-xs">Observações da Blusa</Label>
+                  <Input 
+                    value={editFormData.camisa_obs} 
+                    onChange={(e) => setEditFormData({ ...editFormData, camisa_obs: e.target.value })}
+                    placeholder="Tamanho infantil, manga longa, etc."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Seção 4: Status e Financeiro */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-xs uppercase tracking-wider text-primary border-b pb-1">4. Opção, Status & Financeiro</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs">Opção Adquirida</Label>
+                  <Select 
+                    value={editFormData.opcao_escolhida} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, opcao_escolhida: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Opção" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Inscrição + Camisa Oficial">Inscrição + Camisa Oficial</SelectItem>
+                      <SelectItem value="Inscrição">Apenas Inscrição</SelectItem>
+                      <SelectItem value="Apenas Camisa Oficial">Apenas Camisa Oficial</SelectItem>
+                      <SelectItem value="Lista de Espera">Lista de Espera</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Status da Inscrição</Label>
+                  <Select 
+                    value={editFormData.status} 
+                    onValueChange={(val) => setEditFormData({ ...editFormData, status: val })}
+                  >
+                    <SelectTrigger className="h-9 text-xs">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Confirmada">Confirmada (Paga)</SelectItem>
+                      <SelectItem value="Pendente">Em Análise (Pendente)</SelectItem>
+                      <SelectItem value="Cortesia">Cortesia</SelectItem>
+                      <SelectItem value="Lista de Espera">Lista de Espera</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Valor Total (R$)</Label>
+                  <Input 
+                    type="number"
+                    step="0.01"
+                    value={editFormData.valor_total} 
+                    onChange={(e) => setEditFormData({ ...editFormData, valor_total: parseFloat(e.target.value) || 0 })}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="pt-2 gap-2">
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveEditInscricao} disabled={loadingEdit} className="bg-primary hover:bg-primary/90 font-bold">
+              {loadingEdit ? "Salvando..." : "Salvar Alterações"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
