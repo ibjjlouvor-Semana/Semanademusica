@@ -1705,124 +1705,298 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* ETAPA 4: PAGAMENTO PIX & CONCORDÂNCIA */}
+                {/* ETAPA 4: PAGAMENTO PIX OU LISTA DE ESPERA */}
                 {step === 4 && (
-                  <div className="space-y-5">
-                    {/* Resumo da Inscrição */}
-                    <div className="p-4 bg-secondary/50 rounded-xl border text-xs space-y-2">
-                      <h4 className="font-bold text-sm border-b pb-1 mb-1">Resumo do Pedido</h4>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Inscrito:</span> <span className="font-bold">{formData.nome}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Opção Escolhida:</span> <span className="font-bold">{formData.opcao_escolhida}</span>
-                      </div>
-                      {hasParticipation(formData.opcao_escolhida) && (
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Foco:</span> <span className="font-bold">{formData.tipo_participacao} ({formData.detalhe_participacao || "Não definido"})</span>
+                  formData.opcao_escolhida === "Lista de Espera" ? (
+                    <div className="space-y-4 py-2 animate-fade-in">
+                      <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs space-y-2">
+                        <div className="font-bold text-sm flex items-center gap-2">
+                          <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" /> Cadastro na Lista de Espera (Gratuito)
                         </div>
-                      )}
-                      {hasShirt(formData.opcao_escolhida) && (
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Camisa:</span> <span className="font-bold">{formData.camisa_estilo} ({formData.camisa_tipo} - {formData.camisa_tamanho})</span>
-                        </div>
-                      )}
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Precisa de Hospedagem:</span> <span className="font-bold">{formData.hospedagem}</span>
+                        <p className="leading-relaxed text-xs">
+                          Você não precisará realizar nenhum pagamento agora! O seu cadastro ficará salvo e, caso surja alguma vaga disponível no <strong>{formData.tipo_participacao || "evento"}</strong>, nossa equipe entrará em contato com você via WhatsApp.
+                        </p>
                       </div>
-                      <div className="flex justify-between border-t pt-2 mt-1">
-                        <span className="text-muted-foreground font-semibold text-sm">Valor Total:</span> 
-                        <span className="font-bold text-primary text-base font-mono">R$ {getValorTotal().toFixed(2)}</span>
+
+                      {/* Termo de Consentimento */}
+                      <div className="flex items-start space-x-2.5 pt-2">
+                        <input 
+                          type="checkbox" 
+                          id="consent" 
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                          className="h-4.5 w-4.5 rounded border-gray-300 text-primary focus:ring-primary mt-0.5 cursor-pointer"
+                        />
+                        <label htmlFor="consent" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
+                          Autorizo a equipe da IV Semana de Música Cristã de Jijoca a entrar em contato comigo pelo WhatsApp fornecido caso surjam vagas.
+                        </label>
                       </div>
                     </div>
-
-                    {/* Voucher de Inscrição */}
-                    <div id="voucher-print" className="p-6 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-6 text-zinc-900 dark:text-zinc-50 shadow-md relative overflow-hidden print:shadow-none print:border-none print:p-0">
-                      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent print:hidden"></div>
-                      
-                      <div className="text-center border-b pb-4 space-y-2">
-                        <div className="flex items-center justify-center gap-4">
-                          <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
-                          <div className="bg-white p-1 rounded border border-zinc-200 inline-block">
-                            <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-10 object-contain" />
+                  ) : (
+                    <div className="space-y-4 animate-fade-in">
+                      {/* Resumo da Inscrição */}
+                      <div className="p-4 bg-secondary/50 rounded-xl border text-xs space-y-2">
+                        <h4 className="font-bold text-sm border-b pb-1 mb-1">Resumo do Pedido</h4>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Inscrito:</span> <span className="font-bold">{formData.nome}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Opção Escolhida:</span> <span className="font-bold">{formData.opcao_escolhida}</span>
+                        </div>
+                        {hasParticipation(formData.opcao_escolhida) && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Foco:</span> <span className="font-bold">{formData.tipo_participacao} ({formData.detalhe_participacao || "Não definido"})</span>
                           </div>
+                        )}
+                        {hasShirt(formData.opcao_escolhida) && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Camisa:</span> <span className="font-bold">{formData.camisa_estilo} ({formData.camisa_tipo} - {formData.camisa_tamanho})</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Precisa de Hospedagem:</span> <span className="font-bold">{formData.hospedagem}</span>
                         </div>
-                        <div>
-                          <h3 className="font-display font-bold text-base leading-tight">IV Semana de Música Cristã</h3>
-                          <p className="text-[10px] text-zinc-500">Realização: Igreja Bíblica de Jijoca</p>
+                        <div className="flex justify-between border-t pt-2 mt-1">
+                          <span className="text-muted-foreground font-semibold text-sm">Valor Total:</span> 
+                          <span className="font-bold text-primary text-base font-mono">R$ {getValorTotal().toFixed(2)}</span>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
-                        <div>
-                          <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">INSCRITO</span>
-                          <span className="font-bold text-sm block truncate">{inscricaoConfirmada.nome}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">CÓDIGO</span>
-                          <span className="font-mono font-bold text-sm text-primary">#{inscricaoConfirmada.id}</span>
-                        </div>
-
-                        <div>
-                          <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">OPÇÃO ADQUIRIDA</span>
-                          <span className="font-bold block">{inscricaoConfirmada.opcao_escolhida}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">VALOR TOTAL</span>
-                          <span className="font-bold block text-primary font-mono">R$ {inscricaoConfirmada.valor_total.toFixed(2)}</span>
-                        </div>
-
-                        {hasParticipation(inscricaoConfirmada.opcao_escolhida) && (
-                          <>
-                            <div>
-                              <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">PARTICIPAÇÃO</span>
-                              <span className="font-bold block">{inscricaoConfirmada.tipo_participacao}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">FOCO / DETALHE</span>
-                              <span className="font-bold block">{inscricaoConfirmada.detalhe_participacao || "Não definido"}</span>
-                            </div>
-                          </>
-                        )}
-
-                        {hasShirt(inscricaoConfirmada.opcao_escolhida) && (
-                          <>
-                            <div>
-                              <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">BLUSA (ESTILO/TIPO)</span>
-                              <span className="font-bold block text-[11px] truncate">{inscricaoConfirmada.camisa_estilo} ({inscricaoConfirmada.camisa_tipo})</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">TAMANHO</span>
-                              <span className="font-bold block">{inscricaoConfirmada.camisa_tamanho}</span>
-                            </div>
-                          </>
-                        )}
-
-                        <div className="col-span-2">
-                          <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">HOSPEDAGEM</span>
-                          <span className="font-bold block">{inscricaoConfirmada.hospedagem === "Sim" ? "Precisa de Hospedagem (Solicitado)" : "Não precisa de Hospedagem"}</span>
-                        </div>
-
-                        <div className="col-span-2 pt-2.5 border-t flex justify-between items-center text-[10px]">
-                          <span>DATA: 07 a 13 de Setembro de 2026</span>
-                          <span className="font-bold text-amber-600 dark:text-amber-400 uppercase">AGUARDANDO VALIDAÇÃO DO PIX</span>
+                      {/* Seleção do Método de Pagamento */}
+                      <div className="space-y-2">
+                        <Label className="text-xs font-semibold">Escolha a Forma de Pagamento</Label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Button 
+                            type="button"
+                            variant={metodoPagamento === "PIX" ? "default" : "outline"}
+                            className={`h-12 ${metodoPagamento === "PIX" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
+                            onClick={() => setMetodoPagamento("PIX")}
+                          >
+                            PIX (Sem Taxas)
+                          </Button>
+                          <Button 
+                            type="button"
+                            variant={metodoPagamento === "CARTAO" ? "default" : "outline"}
+                            className={`h-12 ${metodoPagamento === "CARTAO" ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background" : ""}`}
+                            onClick={() => setMetodoPagamento("CARTAO")}
+                          >
+                            Cartão de Crédito
+                          </Button>
                         </div>
                       </div>
 
-                      <div className="flex flex-col items-center justify-center pt-2">
-                        <div className="w-20 h-20 bg-zinc-100 p-1.5 rounded-lg border flex items-center justify-center">
-                          <img 
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${inscricaoConfirmada.id}&margin=0`}
-                            alt="QR Code de Credenciamento"
-                            className="w-full h-full object-contain"
-                          />
+                      {metodoPagamento === "PIX" && (
+                        <>
+                          {/* QR Code PIX */}
+                          <div className="flex flex-col items-center justify-center p-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
+                            <div className="w-40 h-40 bg-white p-2.5 rounded-xl border flex items-center justify-center relative overflow-hidden">
+                              <img 
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(getCurrentPixKey())}&margin=0`}
+                                alt="QR Code PIX"
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-2">
+                              Escaneie para Pagar
+                            </span>
+                          </div>
+
+                          {/* Copia e Cola */}
+                          <div className="space-y-1.5">
+                            <Label className="text-xs text-muted-foreground">Chave PIX Copia e Cola:</Label>
+                            <div className="flex gap-2">
+                              <Input 
+                                readOnly 
+                                value={getCurrentPixKey()} 
+                                className="font-mono text-xs h-9 bg-secondary/30 select-all"
+                              />
+                              <Button 
+                                type="button" 
+                                size="icon" 
+                                variant="outline" 
+                                onClick={handleCopyPix}
+                                className="h-9 w-9 shrink-0 active:scale-95"
+                              >
+                                <Copy className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {metodoPagamento === "CARTAO" && (
+                        <div className="flex flex-col items-center justify-center p-6 bg-secondary/30 rounded-2xl border border-border text-center space-y-4">
+                          <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-sm">Pagamento Seguro via Cartão</h4>
+                            <p className="text-xs text-muted-foreground mt-1 max-w-[250px] mx-auto">
+                              Você será redirecionado para o nosso ambiente de pagamento seguro (Mercado Pago/PagSeguro).
+                            </p>
+                            <p className="text-[10px] text-amber-600 dark:text-amber-500 font-medium mt-2 bg-amber-50 dark:bg-amber-950/30 p-2 rounded-md max-w-[250px] mx-auto">
+                              ⚠️ O valor final no cartão terá acréscimo da taxa da maquininha/plataforma.
+                            </p>
+                          </div>
+                          <Button 
+                            type="button"
+                            onClick={handleCartaoClick}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold h-12"
+                          >
+                            PAGAR COM CARTÃO AGORA
+                          </Button>
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-2 font-semibold">
+                            Retorne aqui e clique em Concluir após o pagamento.
+                          </p>
                         </div>
-                        <span className="text-[8px] text-zinc-400 font-semibold mt-2 uppercase tracking-widest text-center">
-                          A confirmação da sua inscrição será enviada via whatsapp
+                      )}
+
+                      {/* Termo de Consentimento */}
+                      <div className="flex items-start space-x-2.5 pt-2">
+                        <input 
+                          type="checkbox" 
+                          id="consent" 
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                          className="h-4.5 w-4.5 rounded border-gray-300 text-primary focus:ring-primary mt-0.5 cursor-pointer"
+                        />
+                        <label htmlFor="consent" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
+                          Autorizo o uso de minha imagem e voz gravados em fotos ou vídeos da IV Semana de Música Cristã de Jijoca para divulgação de futuras edições e atividades da Igreja IBJJ.
+                        </label>
+                      </div>
+
+                      <div className="p-3 bg-primary/5 rounded-xl border border-primary/20 flex gap-2 items-start text-xs text-muted-foreground">
+                        <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <span>
+                          Realize o PIX e clique em <strong>Concluir Inscrição</strong>. Sua inscrição entrará em análise e será confirmada após conciliação bancária da nossa equipe.
                         </span>
                       </div>
                     </div>
-                  </div>
+                  )
+                )}
+
+                {/* ETAPA 5: VOUCHER COMPLETO OU LISTA DE ESPERA */}
+                {step === 5 && inscricaoConfirmada && (
+                  inscricaoConfirmada.status === "Lista de Espera" || inscricaoConfirmada.opcao_escolhida === "Lista de Espera" ? (
+                    <div className="space-y-6 text-center py-4 animate-fade-in">
+                      <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto border border-amber-500/20">
+                        <Clock className="w-8 h-8 animate-pulse" />
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="font-display font-bold text-2xl text-amber-700 dark:text-amber-400">Você está na Lista de Espera!</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                          Seu cadastro foi realizado com sucesso. Se uma vaga for liberada para o <strong>{inscricaoConfirmada.tipo_participacao || "evento"}</strong>, nossa equipe entrará em contato diretamente com você pelo WhatsApp!
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-secondary/40 border border-border text-xs text-left max-w-md mx-auto space-y-2 font-mono">
+                        <div className="flex justify-between"><span className="text-muted-foreground">Código de Espera:</span> <span className="font-bold text-primary">#{inscricaoConfirmada.id}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Nome:</span> <span className="font-bold text-foreground">{inscricaoConfirmada.nome}</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Foco Desejado:</span> <span className="font-bold text-foreground">{inscricaoConfirmada.tipo_participacao} ({inscricaoConfirmada.detalhe_participacao || "Geral"})</span></div>
+                        <div className="flex justify-between"><span className="text-muted-foreground">Status:</span> <span className="font-bold text-amber-600">Lista de Espera (Gratuito)</span></div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6 animate-fade-in">
+                      {/* Mensagem Principal */}
+                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl text-center space-y-2 print:hidden">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-1 animate-pulse">
+                          <Clock className="w-6 h-6" />
+                        </div>
+                        <h3 className="font-display font-bold text-lg text-primary">Inscrição em análise</h3>
+                        <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                          Será enviado um e-mail com a confirmação da sua inscrição assim que validarmos o pagamento do PIX de <strong>R$ {inscricaoConfirmada.valor_total.toFixed(2)}</strong>.
+                        </p>
+                      </div>
+
+                      {/* Voucher de Inscrição */}
+                      <div id="voucher-print" className="p-6 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl space-y-6 text-zinc-900 dark:text-zinc-50 shadow-md relative overflow-hidden print:shadow-none print:border-none print:p-0">
+                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent print:hidden"></div>
+                        
+                        <div className="text-center border-b pb-4 space-y-2">
+                          <div className="flex items-center justify-center gap-4">
+                            <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" style={{ filter: "brightness(0) invert(26%) sepia(26%) saturate(1637%) hue-rotate(180deg) brightness(97%) contrast(88%)" }} />
+                            <div className="bg-white p-1 rounded border border-zinc-200 inline-block">
+                              <img src="/logo-igreja.png" alt="Igreja Bíblica de Jijoca" className="h-10 object-contain" />
+                            </div>
+                          </div>
+                          <div>
+                            <h3 className="font-display font-bold text-base leading-tight">IV Semana de Música Cristã</h3>
+                            <p className="text-[10px] text-zinc-500">Realização: Igreja Bíblica de Jijoca</p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
+                          <div>
+                            <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">INSCRITO</span>
+                            <span className="font-bold text-sm block truncate">{inscricaoConfirmada.nome}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">CÓDIGO</span>
+                            <span className="font-mono font-bold text-sm text-primary">#{inscricaoConfirmada.id}</span>
+                          </div>
+
+                          <div>
+                            <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">OPÇÃO ADQUIRIDA</span>
+                            <span className="font-bold block">{inscricaoConfirmada.opcao_escolhida}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">VALOR TOTAL</span>
+                            <span className="font-bold block text-primary font-mono">R$ {inscricaoConfirmada.valor_total.toFixed(2)}</span>
+                          </div>
+
+                          {hasParticipation(inscricaoConfirmada.opcao_escolhida) && (
+                            <>
+                              <div>
+                                <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">PARTICIPAÇÃO</span>
+                                <span className="font-bold block">{inscricaoConfirmada.tipo_participacao}</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">FOCO / DETALHE</span>
+                                <span className="font-bold block">{inscricaoConfirmada.detalhe_participacao || "Não definido"}</span>
+                              </div>
+                            </>
+                          )}
+
+                          {hasShirt(inscricaoConfirmada.opcao_escolhida) && (
+                            <>
+                              <div>
+                                <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">BLUSA (ESTILO/TIPO)</span>
+                                <span className="font-bold block text-[11px] truncate">{inscricaoConfirmada.camisa_estilo} ({inscricaoConfirmada.camisa_tipo})</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">TAMANHO</span>
+                                <span className="font-bold block">{inscricaoConfirmada.camisa_tamanho}</span>
+                              </div>
+                            </>
+                          )}
+
+                          <div className="col-span-2">
+                            <span className="text-zinc-400 block font-semibold text-[9px] uppercase tracking-wider">HOSPEDAGEM</span>
+                            <span className="font-bold block">{inscricaoConfirmada.hospedagem === "Sim" ? "Precisa de Hospedagem (Solicitado)" : "Não precisa de Hospedagem"}</span>
+                          </div>
+
+                          <div className="col-span-2 pt-2.5 border-t flex justify-between items-center text-[10px]">
+                            <span>DATA: 07 a 13 de Setembro de 2026</span>
+                            <span className="font-bold text-amber-600 dark:text-amber-400 uppercase">AGUARDANDO VALIDAÇÃO DO PIX</span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center pt-2">
+                          <div className="w-20 h-20 bg-zinc-100 p-1.5 rounded-lg border flex items-center justify-center">
+                            <img 
+                              src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${inscricaoConfirmada.id}&margin=0`}
+                              alt="QR Code de Credenciamento"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <span className="text-[8px] text-zinc-400 font-semibold mt-2 uppercase tracking-widest text-center">
+                            A confirmação da sua inscrição será enviada via whatsapp
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )
                 )}
 
               </CardContent>
