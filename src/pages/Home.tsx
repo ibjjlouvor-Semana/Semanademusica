@@ -158,7 +158,7 @@ export default function Home() {
     hospedagem: "Não",
     membro_familia: "Não",
     membro_principal: "",
-    opcao_escolhida: "Segundo Lote", // Default (2º Lote agora ativo)
+    opcao_escolhida: "Apenas Camisa Oficial", // Inscrições encerradas - Padrão é apenas camisa
     tipo_participacao: "Coral",
     detalhe_participacao: "",
     descricao_experiencia: "",
@@ -982,13 +982,12 @@ export default function Home() {
               </CardContent>
               <CardFooter className="pt-0">
                 <Button variant="ghost" size="sm" onClick={() => {
-                  handleSelectChange("opcao_escolhida", "Inscrição + Camisa Oficial");
-                  handleSelectChange("tipo_participacao", "Coral");
+                  handleSelectChange("opcao_escolhida", "Apenas Camisa Oficial");
                   scrollToSection("inscricao");
                   setStep(1);
-                  toast.success("Opção 'Inscrição + Camisa' e foco 'Coral' selecionados!");
+                  toast.info("Inscrições para o Coral encerradas! A Blusa Oficial ainda pode ser pedida.");
                 }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1 active:scale-[0.98] transition-transform">
-                  Escolher Coral <ArrowRight className="w-4 h-4" />
+                  Pedir Blusa Oficial <ArrowRight className="w-4 h-4" />
                 </Button>
               </CardFooter>
             </Card>
@@ -1013,13 +1012,12 @@ export default function Home() {
               </CardContent>
               <CardFooter className="pt-0">
                 <Button variant="ghost" size="sm" onClick={() => {
-                  handleSelectChange("opcao_escolhida", "Inscrição + Camisa Oficial");
-                  handleSelectChange("tipo_participacao", "Orquestra");
+                  handleSelectChange("opcao_escolhida", "Apenas Camisa Oficial");
                   scrollToSection("inscricao");
                   setStep(1);
-                  toast.success("Opção 'Inscrição + Camisa' e foco 'Orquestra' selecionados!");
+                  toast.info("Inscrições para a Orquestra encerradas! A Blusa Oficial ainda pode ser pedida.");
                 }} className="w-full text-primary hover:text-primary hover:bg-primary/5 font-semibold flex items-center justify-center gap-1 active:scale-[0.98] transition-transform">
-                  Escolher Orquestra <ArrowRight className="w-4 h-4" />
+                  Pedir Blusa Oficial <ArrowRight className="w-4 h-4" />
                 </Button>
               </CardFooter>
             </Card>
@@ -1238,41 +1236,72 @@ export default function Home() {
                 {/* ETAPA 1: DADOS PESSOAIS & OPÇÃO DE ENTRADA */}
                 {step === 1 && (
                   <div className="space-y-5">
+                    {/* Banner de Aviso de Inscrições Encerradas */}
+                    <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-center space-y-2.5 animate-fade-in">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold text-xs uppercase tracking-wider">
+                        <AlertCircle className="w-4 h-4" /> Inscrições Encerradas!
+                      </div>
+                      <p className="text-xs sm:text-sm font-semibold text-foreground leading-relaxed italic">
+                        "Graças ao Senhor Soberano, Fechamos as nossas inscrições!!! Muito Obrigado a Todos que se inscreveram, e fiquem em oração pela Semana de Música!!"
+                      </p>
+                      <div className="pt-2 border-t border-amber-500/20 text-xs font-bold text-primary flex items-center justify-center gap-1.5">
+                        <Shirt className="w-4 h-4" /> A Blusa ainda pode ser pedida abaixo!
+                      </div>
+                    </div>
+
                     {/* Opções de Entrada */}
                     <div className="space-y-2">
-                      <Label className="text-sm font-semibold">Escolha sua Opção</Label>
+                      <Label className="text-sm font-semibold">Opção de Compra</Label>
                       <div className="grid grid-cols-1 gap-2.5">
                         {[
+                          { 
+                            id: "Apenas Camisa Oficial", 
+                            nome: "Apenas Camisa Oficial (Disponível)", 
+                            valor: "R$ 45,00", 
+                            desc: "Garanta a blusa comemorativa oficial da IV Semana de Música.",
+                            disponivel: true
+                          },
                           { 
                             id: "Segundo Lote", 
                             nome: "Inscrição (2º Lote)", 
                             valor: "R$ 120,00", 
-                            desc: "Garante sua entrada na IV Semana de Música (2º Lote ativo)." 
+                            desc: "Entrada nas oficinas, coral e grande orquestra.",
+                            disponivel: false 
                           },
                           { 
                             id: "Segundo Lote + Camisa Oficial", 
                             nome: "Inscrição + Camisa Oficial", 
                             valor: "R$ 165,00", 
-                            desc: "Inscrição (2º Lote) e a Camisa oficial do evento." 
-                          },
-                          { 
-                            id: "Apenas Camisa Oficial", 
-                            nome: "Apenas Camisa Oficial", 
-                            valor: "R$ 45,00", 
-                            desc: "Somente a blusa comemorativa (não inclui entrada)." 
+                            desc: "Inscrição e camisa oficial inclusa.",
+                            disponivel: false 
                           }
                         ].map((opcao) => (
                           <div
                             key={opcao.id}
-                            onClick={() => handleSelectChange("opcao_escolhida", opcao.id)}
-                            className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all duration-200 select-none flex flex-col justify-between ${
-                              formData.opcao_escolhida === opcao.id
-                                ? "bg-primary/10 border-primary shadow-sm"
-                                : "hover:bg-secondary/40 border-input"
+                            onClick={() => {
+                              if (!opcao.disponivel) {
+                                toast.error("As inscrições para o evento foram encerradas! Você ainda pode pedir a Blusa Oficial.");
+                                return;
+                              }
+                              handleSelectChange("opcao_escolhida", opcao.id);
+                            }}
+                            className={`p-3.5 rounded-xl border text-left transition-all duration-200 select-none flex flex-col justify-between ${
+                              !opcao.disponivel
+                                ? "opacity-50 bg-secondary/20 border-input cursor-not-allowed"
+                                : formData.opcao_escolhida === opcao.id
+                                ? "bg-primary/10 border-primary shadow-sm cursor-pointer"
+                                : "hover:bg-secondary/40 border-input cursor-pointer"
                             }`}
                           >
                             <div className="flex justify-between items-center w-full mb-1">
-                              <span className="font-bold text-sm">{opcao.nome}</span>
+                              <span className="font-bold text-sm flex items-center gap-2">
+                                {opcao.nome}
+                                {!opcao.disponivel && (
+                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-destructive/30 text-destructive bg-destructive/5 font-semibold">
+                                    ENCERRADA
+                                  </Badge>
+                                )}
+                              </span>
                               <span className="font-mono text-primary font-bold text-sm">{opcao.valor}</span>
                             </div>
                             <span className="text-xs text-muted-foreground leading-snug">{opcao.desc}</span>

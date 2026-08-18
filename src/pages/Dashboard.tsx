@@ -1478,14 +1478,14 @@ export default function Dashboard() {
 
                     <Dialog open={isCortesiaModalOpen} onOpenChange={setIsCortesiaModalOpen}>
                       <DialogTrigger asChild>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1 text-xs">
-                          <Plus className="w-3.5 h-3.5" /> Conceder Cortesia
+                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1.5 text-xs font-semibold">
+                          <Plus className="w-4 h-4" /> Adicionar Inscrição Manual / Cortesia
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
-                          <DialogTitle>Conceder Cortesia</DialogTitle>
-                          <DialogDescription>Cadastre manualmente uma inscrição ou blusa gratuita.</DialogDescription>
+                          <DialogTitle>Adicionar Inscrição Manual / Cortesia</DialogTitle>
+                          <DialogDescription>Cadastre manualmente qualquer participante (mesmo após o encerramento público) ou conceda uma cortesia.</DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                           <div className="space-y-2">
