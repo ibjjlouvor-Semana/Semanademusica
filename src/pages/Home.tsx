@@ -537,8 +537,8 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button onClick={() => scrollToSection("inscricao")} className="bg-[#5E654C] hover:bg-[#5E654C]/90 text-white h-10 rounded-full px-6">
-              Inscrever-se
+            <Button onClick={() => scrollToSection("inscricao")} className="bg-[#5E654C] hover:bg-[#5E654C]/90 text-white h-10 rounded-full px-6 font-semibold text-xs sm:text-sm">
+              Inscrições Encerradas
             </Button>
           </div>
         </div>
