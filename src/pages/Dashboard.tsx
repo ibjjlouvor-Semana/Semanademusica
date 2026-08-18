@@ -433,6 +433,55 @@ export default function Dashboard() {
     }
   };
 
+  const handleAprovarListaEspera = async (id: string, nomeParticipante: string, opcaoEscolhida: string, telefone?: string, tipoParticipacao?: string) => {
+    const valorInput = prompt(`Aprovar vaga da Lista de Espera para ${nomeParticipante}.\n\nQual valor pago pela inscrição? (Digite 0 para Isento/Cortesia, ou digite o valor ex: 120):`, "120");
+    if (valorInput === null) return;
+
+    const valorFinal = parseFloat(valorInput) || 0;
+    const novoStatus = valorFinal === 0 ? "Cortesia" : "Confirmada";
+
+    try {
+      if (!isUsingPlaceholder) {
+        const { error } = await supabase
+          .from("inscricoes")
+          .update({ status: novoStatus, valor_total: valorFinal })
+          .eq("id", id);
+        if (error) throw error;
+      } else {
+        const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
+        const atualizados = localData.map((i: any) => {
+          if (i.id === id) {
+            return { ...i, status: novoStatus, valor_total: valorFinal };
+          }
+          return i;
+        });
+        localStorage.setItem("inscricoes", JSON.stringify(atualizados));
+      }
+
+      toast.success(`Vaga da Lista de Espera aprovada com sucesso para ${nomeParticipante}!`);
+
+      if (valorFinal > 0) {
+        await createPixTransaction(nomeParticipante, opcaoEscolhida, valorFinal.toString());
+      }
+
+      await loadData();
+
+      // Abrir WhatsApp com mensagem comemorativa de vaga liberada
+      if (telefone) {
+        const phone = telefone.replace(/\D/g, ''); 
+        if (phone.length >= 10) {
+          const primeiroNome = nomeParticipante.split(" ")[0];
+          const msg = `Olá ${primeiroNome}, Graça e Paz! 🙏\n\nBoas notícias!! Uma vaga foi LIBERADA para você na IV Semana de Música Cristã!\n\nSua inscrição para o ${tipoParticipacao || "evento"} foi APROVADA. Te esperamos dia 07 de setembro! 🎵`;
+          const waLink = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+          window.open(waLink, '_blank');
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Erro ao aprovar vaga da lista de espera: " + error.message);
+    }
+  };
+
   const handleAprovarCortesia = async (id: string, nomeParticipante: string, telefone?: string) => {
     if (!confirm(`Deseja aprovar a inscrição de ${nomeParticipante} como CORTESIA? (O valor será zerado)`)) return;
     
@@ -1598,6 +1647,26 @@ export default function Dashboard() {
                       </DialogContent>
                     </Dialog>
 
+                    {/* Filtros Rápidos de Categoria */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <Button
+                        size="sm"
+                        variant={opcaoFiltro === "Todos" ? "default" : "outline"}
+                        onClick={() => setOpcaoFiltro("Todos")}
+                        className="text-xs h-8"
+                      >
+                        Todos ({totalInscritos})
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={opcaoFiltro === "ListaDeEspera" ? "default" : "outline"}
+                        onClick={() => setOpcaoFiltro(opcaoFiltro === "ListaDeEspera" ? "Todos" : "ListaDeEspera")}
+                        className={`text-xs h-8 font-semibold ${opcaoFiltro === "ListaDeEspera" ? "bg-amber-600 hover:bg-amber-700 text-white" : "border-amber-500/40 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10"}`}
+                      >
+                        ⏳ Lista de Espera ({totalListaEspera})
+                      </Button>
+                    </div>
+
                     {isUsingPlaceholder && (
                       <Button variant="outline" size="sm" onClick={handleAddMock} className="border-dashed text-xs flex items-center gap-1">
                         <Plus className="w-3.5 h-3.5" /> Falso Inscrito
@@ -1706,14 +1775,14 @@ export default function Dashboard() {
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end items-center gap-2">
-                                {(ins.status === "Pendente" || ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera") && (
+                                {(ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera") ? (
                                   <>
                                     <Button 
                                       size="sm" 
-                                      onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
-                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95 font-semibold"
+                                      onClick={() => handleAprovarListaEspera(ins.id, ins.nome, ins.opcao_escolhida || 'Inscrição', ins.telefone, ins.tipo_participacao)}
+                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-3 h-8 active:scale-95 font-bold shadow-sm"
                                     >
-                                      <Check className="w-3.5 h-3.5" /> {ins.status === "Lista de Espera" || ins.opcao_escolhida === "Lista de Espera" ? "Aprovar Vaga" : "Aprovar & Avisar"}
+                                      <Check className="w-3.5 h-3.5" /> Aprovar Vaga
                                     </Button>
                                     <Button 
                                       size="sm" 
@@ -1724,7 +1793,25 @@ export default function Dashboard() {
                                       Cortesia
                                     </Button>
                                   </>
-                                )}
+                                ) : ins.status === "Pendente" ? (
+                                  <>
+                                    <Button 
+                                      size="sm" 
+                                      onClick={() => handleApprove(ins.id, ins.nome, ins.opcao_escolhida || ins.instrumento_oficina || 'Inscrição', ins.telefone, ins.valor_total)}
+                                      className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95 font-semibold"
+                                    >
+                                      <Check className="w-3.5 h-3.5" /> Aprovar & Avisar
+                                    </Button>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline"
+                                      onClick={() => handleAprovarCortesia(ins.id, ins.nome, ins.telefone)}
+                                      className="border-purple-500/50 text-purple-600 hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-950 flex items-center gap-1 text-xs px-2.5 h-8 active:scale-95"
+                                    >
+                                      Cortesia
+                                    </Button>
+                                  </>
+                                ) : null}
                                 {(ins.status === "Confirmada" || ins.status === "Cortesia") && (
                                   <Button 
                                     variant="ghost" 
