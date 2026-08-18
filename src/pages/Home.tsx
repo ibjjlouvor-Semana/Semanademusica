@@ -538,8 +538,14 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button onClick={() => scrollToSection("inscricao")} className="bg-[#5E654C] hover:bg-[#5E654C]/90 text-white h-10 rounded-full px-6 font-semibold text-xs sm:text-sm">
-              Inscrições Encerradas
+            <Button 
+              onClick={() => {
+                handleSelectChange("opcao_escolhida", "Lista de Espera");
+                scrollToSection("inscricao");
+              }} 
+              className="bg-[#5E654C] hover:bg-[#5E654C]/90 text-white h-10 rounded-full px-6 font-semibold text-xs sm:text-sm"
+            >
+              Entrar na Lista de Espera
             </Button>
           </div>
         </div>
@@ -587,10 +593,13 @@ export default function Home() {
             {/* Botões */}
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in [animation-delay:400ms]">
               <Button 
-                onClick={() => scrollToSection("inscricao")} 
-                className="h-[50px] lg:h-[55px] w-full sm:w-[220px] lg:w-[240px] rounded-[14px] bg-[#5E654C] hover:bg-[#4A503A] text-white text-base lg:text-lg font-medium shadow-xl shadow-[#5E654C]/20 transition-all hover:-translate-y-1"
+                onClick={() => {
+                  handleSelectChange("opcao_escolhida", "Lista de Espera");
+                  scrollToSection("inscricao");
+                }} 
+                className="h-[50px] lg:h-[55px] w-full sm:w-[260px] lg:w-[280px] rounded-[14px] bg-[#5E654C] hover:bg-[#4A503A] text-white text-base lg:text-lg font-medium shadow-xl shadow-[#5E654C]/20 transition-all hover:-translate-y-1"
               >
-                Quero Participar <ArrowRight className="w-4 lg:w-5 h-4 lg:h-5 ml-2" />
+                Entrar na Lista de Espera <ArrowRight className="w-4 lg:w-5 h-4 lg:h-5 ml-2" />
               </Button>
               
               <Button 
