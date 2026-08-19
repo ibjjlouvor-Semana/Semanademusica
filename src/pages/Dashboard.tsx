@@ -144,6 +144,7 @@ export default function Dashboard() {
 
   const handleOpenEditModal = (ins: any) => {
     setEditingInscricao(ins);
+    const temCamisa = !!ins.camisa_estilo && ins.camisa_estilo !== "Nenhuma";
     setEditFormData({
       nome: ins.nome || "",
       email: ins.email || "",
@@ -159,7 +160,7 @@ export default function Dashboard() {
       instrumento_oficina: ins.instrumento_oficina || "",
       nivel_experiencia: ins.nivel_experiencia || "Intermediário",
       descricao_experiencia: ins.descricao_experiencia || "",
-      camisa_estilo: ins.camisa_estilo || "Verde",
+      camisa_estilo: temCamisa ? ins.camisa_estilo : "Nenhuma",
       camisa_tipo: ins.camisa_tipo || "Masculino",
       camisa_tamanho: ins.camisa_tamanho || "M",
       camisa_obs: ins.camisa_obs || "",
@@ -173,38 +174,42 @@ export default function Dashboard() {
     if (!editingInscricao?.id) return;
     try {
       setLoadingEdit(true);
+      const temCamisa = editFormData.camisa_estilo && editFormData.camisa_estilo !== "Nenhuma";
+
+      const payload = {
+        nome: editFormData.nome,
+        email: editFormData.email,
+        telefone: editFormData.telefone,
+        data_nascimento: editFormData.data_nascimento,
+        cidade: editFormData.cidade,
+        estado: editFormData.estado,
+        igreja: editFormData.igreja,
+        hospedagem: editFormData.hospedagem,
+        opcao_escolhida: editFormData.opcao_escolhida,
+        tipo_participacao: editFormData.tipo_participacao,
+        detalhe_participacao: editFormData.detalhe_participacao,
+        instrumento_oficina: editFormData.instrumento_oficina,
+        nivel_experiencia: editFormData.nivel_experiencia,
+        descricao_experiencia: editFormData.descricao_experiencia,
+        camisa_estilo: temCamisa ? editFormData.camisa_estilo : null,
+        camisa_tipo: temCamisa ? editFormData.camisa_tipo : null,
+        camisa_tamanho: temCamisa ? editFormData.camisa_tamanho : null,
+        camisa_obs: temCamisa ? editFormData.camisa_obs : null,
+        status: editFormData.status,
+        valor_total: editFormData.valor_total
+      };
+
       if (!isUsingPlaceholder) {
         const { error } = await supabase
           .from("inscricoes")
-          .update({
-            nome: editFormData.nome,
-            email: editFormData.email,
-            telefone: editFormData.telefone,
-            data_nascimento: editFormData.data_nascimento,
-            cidade: editFormData.cidade,
-            estado: editFormData.estado,
-            igreja: editFormData.igreja,
-            hospedagem: editFormData.hospedagem,
-            opcao_escolhida: editFormData.opcao_escolhida,
-            tipo_participacao: editFormData.tipo_participacao,
-            detalhe_participacao: editFormData.detalhe_participacao,
-            instrumento_oficina: editFormData.instrumento_oficina,
-            nivel_experiencia: editFormData.nivel_experiencia,
-            descricao_experiencia: editFormData.descricao_experiencia,
-            camisa_estilo: editFormData.camisa_estilo,
-            camisa_tipo: editFormData.camisa_tipo,
-            camisa_tamanho: editFormData.camisa_tamanho,
-            camisa_obs: editFormData.camisa_obs,
-            status: editFormData.status,
-            valor_total: editFormData.valor_total
-          })
+          .update(payload)
           .eq("id", editingInscricao.id);
         if (error) throw error;
       } else {
         const localData = JSON.parse(localStorage.getItem("inscricoes") || "[]");
         const atualizados = localData.map((i: any) => {
           if (i.id === editingInscricao.id) {
-            return { ...i, ...editFormData };
+            return { ...i, ...payload };
           }
           return i;
         });
@@ -3551,7 +3556,19 @@ export default function Dashboard() {
                   <Label className="text-xs">Estilo / Cor</Label>
                   <Select 
                     value={editFormData.camisa_estilo} 
-                    onValueChange={(val) => setEditFormData({ ...editFormData, camisa_estilo: val })}
+                    onValueChange={(val) => {
+                      const next = { ...editFormData, camisa_estilo: val };
+                      if (val === "Nenhuma") {
+                        if (editFormData.opcao_escolhida === "Inscrição + Camisa Oficial") {
+                          next.opcao_escolhida = "Inscrição";
+                        }
+                      } else {
+                        if (editFormData.opcao_escolhida === "Inscrição") {
+                          next.opcao_escolhida = "Inscrição + Camisa Oficial";
+                        }
+                      }
+                      setEditFormData(next);
+                    }}
                   >
                     <SelectTrigger className="h-9 text-xs">
                       <SelectValue placeholder="Selecione..." />
@@ -3613,7 +3630,15 @@ export default function Dashboard() {
                   <Label className="text-xs">Opção Adquirida</Label>
                   <Select 
                     value={editFormData.opcao_escolhida} 
-                    onValueChange={(val) => setEditFormData({ ...editFormData, opcao_escolhida: val })}
+                    onValueChange={(val) => {
+                      const next = { ...editFormData, opcao_escolhida: val };
+                      if (val === "Inscrição") {
+                        next.camisa_estilo = "Nenhuma";
+                      } else if ((val === "Inscrição + Camisa Oficial" || val === "Apenas Camisa Oficial") && editFormData.camisa_estilo === "Nenhuma") {
+                        next.camisa_estilo = "Verde";
+                      }
+                      setEditFormData(next);
+                    }}
                   >
                     <SelectTrigger className="h-9 text-xs">
                       <SelectValue placeholder="Opção" />
