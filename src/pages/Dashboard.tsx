@@ -31,7 +31,8 @@ import {
   Youtube,
   Settings,
   Undo,
-  Pencil
+  Pencil,
+  ArrowUpDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -72,6 +73,9 @@ export default function Dashboard() {
   const [camisaSearch, setCamisaSearch] = useState("");
   const [opcaoFiltro, setOpcaoFiltro] = useState("Todos");
   const [musicoFiltro, setMusicoFiltro] = useState("Todos");
+  const [musicoNaipeFiltro, setMusicoNaipeFiltro] = useState("Todos");
+  const [musicoOrdenacao, setMusicoOrdenacao] = useState("naipe");
+  const [inscricaoOrdenacao, setInscricaoOrdenacao] = useState("padrao");
   const [musicoSearch, setMusicoSearch] = useState("");
   
   const [videos, setVideos] = useState<any[]>([]);
@@ -1206,9 +1210,30 @@ export default function Dashboard() {
       ins.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ins.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (ins.instrumento_oficina || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (ins.detalhe_participacao || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (ins.opcao_escolhida || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       ins.cidade.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+    .sort((a, b) => {
+      if (inscricaoOrdenacao === "naipe") {
+        const valA = (a.detalhe_participacao || a.instrumento_oficina || "ZZZ").trim();
+        const valB = (b.detalhe_participacao || b.instrumento_oficina || "ZZZ").trim();
+        const comp = valA.localeCompare(valB, "pt-BR");
+        if (comp !== 0) return comp;
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      if (inscricaoOrdenacao === "nome") {
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      if (inscricaoOrdenacao === "igreja") {
+        const igA = a.igreja || "ZZZ";
+        const igB = b.igreja || "ZZZ";
+        const comp = igA.localeCompare(igB, "pt-BR");
+        if (comp !== 0) return comp;
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      return 0;
+    });
 
   const filteredTransacoes = transacoes
     .filter((t) => centroFiltro === "Todos" ? true : t.centro_custo === centroFiltro)
@@ -1483,12 +1508,26 @@ export default function Dashboard() {
     (i) => i.opcao_escolhida !== "Apenas Camisa Oficial" && (!!i.tipo_participacao || (!!i.instrumento_oficina && !i.instrumento_oficina.includes("Camisa")))
   );
 
+  // Lista única de Naipes / Instrumentos para o filtro
+  const listNaipesInstrumentos = Array.from(
+    new Set(
+      musicosInscritos
+        .map((i) => (i.detalhe_participacao || i.instrumento_oficina || "").trim())
+        .filter((v) => v !== "" && v !== "—")
+    )
+  ).sort((a, b) => a.localeCompare(b, "pt-BR"));
+
   const filteredMusicos = musicosInscritos
     .filter((i) => {
       if (musicoFiltro === "Todos") return true;
       if (musicoFiltro === "Coral") return i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"));
       if (musicoFiltro === "Orquestra") return i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")));
       return true;
+    })
+    .filter((i) => {
+      if (musicoNaipeFiltro === "Todos") return true;
+      const val = (i.detalhe_participacao || i.instrumento_oficina || "").trim();
+      return val.toLowerCase() === musicoNaipeFiltro.toLowerCase();
     })
     .filter((i) =>
       musicoSearch === "" ||
@@ -1497,7 +1536,34 @@ export default function Dashboard() {
       (i.instrumento_oficina || "").toLowerCase().includes(musicoSearch.toLowerCase()) ||
       (i.igreja || "").toLowerCase().includes(musicoSearch.toLowerCase()) ||
       i.cidade.toLowerCase().includes(musicoSearch.toLowerCase())
-    );
+    )
+    .sort((a, b) => {
+      if (musicoOrdenacao === "naipe") {
+        const valA = (a.detalhe_participacao || a.instrumento_oficina || "ZZZ").trim();
+        const valB = (b.detalhe_participacao || b.instrumento_oficina || "ZZZ").trim();
+        const comp = valA.localeCompare(valB, "pt-BR");
+        if (comp !== 0) return comp;
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      if (musicoOrdenacao === "nome") {
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      if (musicoOrdenacao === "modalidade") {
+        const modA = a.tipo_participacao || "";
+        const modB = b.tipo_participacao || "";
+        const comp = modA.localeCompare(modB, "pt-BR");
+        if (comp !== 0) return comp;
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      if (musicoOrdenacao === "igreja") {
+        const igA = a.igreja || "ZZZ";
+        const igB = b.igreja || "ZZZ";
+        const comp = igA.localeCompare(igB, "pt-BR");
+        if (comp !== 0) return comp;
+        return a.nome.localeCompare(b.nome, "pt-BR");
+      }
+      return 0;
+    });
 
   const exportMusicosExcel = () => {
     const wb = XLSX.utils.book_new();
@@ -1784,6 +1850,19 @@ export default function Dashboard() {
                         <Plus className="w-3.5 h-3.5" /> Falso Inscrito
                       </Button>
                     )}
+
+                    <Select value={inscricaoOrdenacao} onValueChange={setInscricaoOrdenacao}>
+                      <SelectTrigger className="h-9 text-xs min-w-[170px] bg-secondary/30">
+                        <SelectValue placeholder="Classificar por..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="padrao">🔢 Ordem de Inscrição (#ID)</SelectItem>
+                        <SelectItem value="naipe">🎵 Naipe / Instrumento</SelectItem>
+                        <SelectItem value="nome">👤 Nome (A-Z)</SelectItem>
+                        <SelectItem value="igreja">⛪ Igreja (A-Z)</SelectItem>
+                      </SelectContent>
+                    </Select>
+
                     <div className="relative w-full sm:w-64">
                       <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                       <Input 
@@ -1807,12 +1886,45 @@ export default function Dashboard() {
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
-                      <thead className="bg-secondary/40 text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b">
+                      <thead className="bg-secondary/40 text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b select-none">
                         <tr>
-                          <th className="px-4 py-3">Código</th>
-                          <th className="px-4 py-3">Participante</th>
-                          <th className="px-4 py-3">Opção / Participação</th>
-                          <th className="px-4 py-3">Contato / Hospedagem</th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setInscricaoOrdenacao("padrao")}
+                            title="Ordenar por código ID"
+                          >
+                            Código
+                          </th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setInscricaoOrdenacao(inscricaoOrdenacao === "nome" ? "padrao" : "nome")}
+                            title="Clique para ordenar por nome"
+                          >
+                            <span className="flex items-center gap-1">
+                              Participante
+                              <ArrowUpDown className={`w-3 h-3 ${inscricaoOrdenacao === "nome" ? "text-primary font-bold" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
+                          <th 
+                            className={`px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors ${inscricaoOrdenacao === "naipe" ? "text-primary font-bold" : ""}`}
+                            onClick={() => setInscricaoOrdenacao(inscricaoOrdenacao === "naipe" ? "padrao" : "naipe")}
+                            title="Clique para ordenar por naipe / instrumento"
+                          >
+                            <span className="flex items-center gap-1">
+                              🎵 Opção / Participação
+                              <ArrowUpDown className={`w-3.5 h-3.5 ${inscricaoOrdenacao === "naipe" ? "text-primary" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setInscricaoOrdenacao(inscricaoOrdenacao === "igreja" ? "padrao" : "igreja")}
+                            title="Clique para ordenar por igreja"
+                          >
+                            <span className="flex items-center gap-1">
+                              Contato / Hospedagem
+                              <ArrowUpDown className={`w-3 h-3 ${inscricaoOrdenacao === "igreja" ? "text-primary font-bold" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
                           <th className="px-4 py-3">Valor</th>
                           <th className="px-4 py-3">Status</th>
                           <th className="px-4 py-3 text-right">Ações</th>
@@ -2029,44 +2141,76 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-border/50 mt-4">
-                  {/* Botões de Filtro */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    <Button
-                      size="sm"
-                      variant={musicoFiltro === "Todos" ? "default" : "outline"}
-                      onClick={() => setMusicoFiltro("Todos")}
-                      className="text-xs h-8 px-3 font-semibold"
-                    >
-                      Todos os Músicos ({musicosInscritos.length})
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={musicoFiltro === "Coral" ? "default" : "outline"}
-                      onClick={() => setMusicoFiltro("Coral")}
-                      className="text-xs h-8 px-3 font-semibold gap-1"
-                    >
-                      🎤 Apenas Coral ({musicosInscritos.filter((i) => i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"))).length})
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={musicoFiltro === "Orquestra" ? "default" : "outline"}
-                      onClick={() => setMusicoFiltro("Orquestra")}
-                      className="text-xs h-8 px-3 font-semibold gap-1"
-                    >
-                      🎻 Apenas Orquestra ({musicosInscritos.filter((i) => i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")))).length})
-                    </Button>
-                  </div>
+                <div className="flex flex-col gap-3 pt-4 border-t border-border/50 mt-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    {/* Botões de Filtro */}
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                      <Button
+                        size="sm"
+                        variant={musicoFiltro === "Todos" ? "default" : "outline"}
+                        onClick={() => setMusicoFiltro("Todos")}
+                        className="text-xs h-8 px-3 font-semibold"
+                      >
+                        Todos ({musicosInscritos.length})
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={musicoFiltro === "Coral" ? "default" : "outline"}
+                        onClick={() => setMusicoFiltro("Coral")}
+                        className="text-xs h-8 px-3 font-semibold gap-1"
+                      >
+                        🎤 Coral ({musicosInscritos.filter((i) => i.tipo_participacao === "Coral" || (i.instrumento_oficina && i.instrumento_oficina.includes("Coral"))).length})
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={musicoFiltro === "Orquestra" ? "default" : "outline"}
+                        onClick={() => setMusicoFiltro("Orquestra")}
+                        className="text-xs h-8 px-3 font-semibold gap-1"
+                      >
+                        🎻 Orquestra ({musicosInscritos.filter((i) => i.tipo_participacao === "Orquestra" || (i.instrumento_oficina && (i.instrumento_oficina.includes("Orquestra") || i.instrumento_oficina.includes("Instrumental")))).length})
+                      </Button>
+                    </div>
 
-                  {/* Busca */}
-                  <div className="relative min-w-[240px]">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      placeholder="Buscar músico, instrumento, igreja..."
-                      value={musicoSearch}
-                      onChange={(e) => setMusicoSearch(e.target.value)}
-                      className="pl-9 h-8 text-xs bg-secondary/30"
-                    />
+                    {/* Filtros e Classificação por Naipe / Instrumento */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Select value={musicoNaipeFiltro} onValueChange={setMusicoNaipeFiltro}>
+                        <SelectTrigger className="h-8 text-xs min-w-[160px] bg-secondary/30">
+                          <SelectValue placeholder="Filtrar por Naipe" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Todos">Todos Naipes / Instrumentos</SelectItem>
+                          {listNaipesInstrumentos.map((item) => (
+                            <SelectItem key={item} value={item}>
+                              {item}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <Select value={musicoOrdenacao} onValueChange={setMusicoOrdenacao}>
+                        <SelectTrigger className="h-8 text-xs min-w-[185px] bg-secondary/30 font-semibold border-primary/30">
+                          <SelectValue placeholder="Classificar por..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="naipe">🎵 Classificar: Naipe / Instrumento</SelectItem>
+                          <SelectItem value="nome">👤 Classificar: Nome (A-Z)</SelectItem>
+                          <SelectItem value="modalidade">🎤 Classificar: Modalidade</SelectItem>
+                          <SelectItem value="igreja">⛪ Classificar: Igreja</SelectItem>
+                          <SelectItem value="id">🔢 Ordem de Inscrição</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {/* Busca */}
+                      <div className="relative min-w-[180px]">
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          placeholder="Buscar músico..."
+                          value={musicoSearch}
+                          onChange={(e) => setMusicoSearch(e.target.value)}
+                          className="pl-9 h-8 text-xs bg-secondary/30"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
@@ -2082,13 +2226,49 @@ export default function Dashboard() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="border-b bg-secondary/30 text-xs font-semibold text-muted-foreground">
+                        <tr className="border-b bg-secondary/30 text-xs font-semibold text-muted-foreground select-none">
                           <th className="px-4 py-3">#</th>
-                          <th className="px-4 py-3">Inscrito & Contato</th>
-                          <th className="px-4 py-3">Modalidade</th>
-                          <th className="px-4 py-3">Naipe / Instrumento</th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setMusicoOrdenacao(musicoOrdenacao === "nome" ? "id" : "nome")}
+                            title="Clique para ordenar por nome"
+                          >
+                            <span className="flex items-center gap-1">
+                              Inscrito & Contato
+                              <ArrowUpDown className={`w-3 h-3 ${musicoOrdenacao === "nome" ? "text-primary font-bold" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setMusicoOrdenacao(musicoOrdenacao === "modalidade" ? "id" : "modalidade")}
+                            title="Clique para ordenar por modalidade"
+                          >
+                            <span className="flex items-center gap-1">
+                              Modalidade
+                              <ArrowUpDown className={`w-3 h-3 ${musicoOrdenacao === "modalidade" ? "text-primary font-bold" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
+                          <th 
+                            className={`px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors ${musicoOrdenacao === "naipe" ? "bg-primary/10 text-primary font-bold" : ""}`}
+                            onClick={() => setMusicoOrdenacao(musicoOrdenacao === "naipe" ? "id" : "naipe")}
+                            title="Clique para ordenar por Naipe / Instrumento"
+                          >
+                            <span className="flex items-center gap-1">
+                              🎵 Naipe / Instrumento
+                              <ArrowUpDown className={`w-3.5 h-3.5 ${musicoOrdenacao === "naipe" ? "text-primary" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
                           <th className="px-4 py-3 min-w-[220px]">Experiência / Detalhes</th>
-                          <th className="px-4 py-3">Igreja & Cidade</th>
+                          <th 
+                            className="px-4 py-3 cursor-pointer hover:bg-secondary/50 transition-colors"
+                            onClick={() => setMusicoOrdenacao(musicoOrdenacao === "igreja" ? "id" : "igreja")}
+                            title="Clique para ordenar por igreja"
+                          >
+                            <span className="flex items-center gap-1">
+                              Igreja & Cidade
+                              <ArrowUpDown className={`w-3 h-3 ${musicoOrdenacao === "igreja" ? "text-primary font-bold" : "text-muted-foreground"}`} />
+                            </span>
+                          </th>
                           <th className="px-4 py-3">Status</th>
                           <th className="px-4 py-3 text-right">Ações</th>
                         </tr>
